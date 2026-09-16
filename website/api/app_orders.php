@@ -14,6 +14,10 @@ function app_orders_json(int $status, array $payload): void
 
 function app_orders_api_key(): string
 {
+    if (defined('BULAKENA_APP_API_KEY') && trim((string) BULAKENA_APP_API_KEY) !== '') {
+        return trim((string) BULAKENA_APP_API_KEY);
+    }
+
     $key = getenv('BULAKENA_APP_API_KEY');
     if (is_string($key) && trim($key) !== '') {
         return trim($key);
