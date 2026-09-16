@@ -1,0 +1,723 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart | Bulakena Garden</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Lora:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style-luxury.css">
+  <style>
+    body { background: linear-gradient(160deg,#edf7f0 0%,#f4faf5 55%,#e8f4f0 100%); min-height:100vh; }
+
+    /* -- HERO -- */
+    .cart-hero{
+      background:linear-gradient(155deg,var(--dark) 0%,var(--g1) 55%,var(--b1) 100%);
+      padding:3.5rem 0 3rem;
+      position:relative; overflow:hidden;
+    }
+    .cart-hero::before{content:'';position:absolute;border-radius:50%;width:420px;height:420px;background:var(--g3);opacity:.12;filter:blur(80px);top:-130px;left:-90px;animation:orbFloat 14s ease-in-out infinite;}
+    .cart-hero::after{content:'';position:absolute;border-radius:50%;width:320px;height:320px;background:var(--b3);opacity:.1;filter:blur(70px);bottom:-90px;right:-70px;animation:orbFloat 18s ease-in-out infinite reverse;}
+    @keyframes orbFloat{0%,100%{transform:translate(0,0)}33%{transform:translate(22px,-18px)}66%{transform:translate(-14px,14px)}}
+    .cart-hero .container{position:relative;z-index:1;}
+    .cart-hero-eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g4);font-weight:600;display:flex;align-items:center;gap:.5rem;margin-bottom:.65rem;}
+    .cart-hero-eyebrow::before{content:'';width:28px;height:1.5px;background:var(--g4);}
+    .cart-hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.6rem);font-weight:300;color:white;line-height:1.1;margin-bottom:.65rem;}
+    .cart-hero h1 em{font-style:italic;color:var(--g4);}
+    .cart-hero p{color:rgba(255,255,255,.66);font-size:.97rem;max-width:520px;line-height:1.75;}
+
+    /* -- HEADER -- */
+    .cart-section-title{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--dark);margin:0;}
+    .cart-section-subtitle{font-size:.92rem;color:var(--muted);margin:0;}
+
+    /* -- EMPTY STATE -- */
+    .cart-empty{
+      background:white;
+      border-radius:var(--radius-lg);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-sm);
+      padding:4.5rem 2rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+    }
+    .cart-empty-inner{max-width:520px;}
+    .cart-empty-icon{font-size:3.5rem;display:block;margin-bottom:1.2rem;}
+    .cart-empty h3{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--dark);margin-bottom:.5rem;}
+    .cart-empty p{color:var(--muted);max-width:420px;margin:0 auto 1.8rem;font-size:.95rem;line-height:1.7;}
+
+    /* -- CART LIST -- */
+    .cart-list-card{background:white;border-radius:var(--radius-lg);border:1px solid var(--border);box-shadow:var(--shadow-sm);overflow:hidden;}
+    .cart-list-head{
+      padding:1.2rem 1.6rem;
+      border-bottom:1px solid var(--border);
+      background:var(--section-alt);
+      display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    }
+    .cart-list-head-left{display:flex;align-items:center;gap:.75rem;}
+    .cart-head-label{
+      font-size:.72rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-weight:700;
+      color:var(--muted);
+    }
+    .cart-items{padding:.2rem 1.6rem 1.2rem;}
+    .cart-item{
+      display:grid;
+      grid-template-columns: 36px 1.6fr 160px 120px;
+      gap:1rem;
+      align-items:center;
+      padding:1.25rem 0;
+      border-bottom:1px solid var(--border);
+      animation: cardIn .45s ease both;
+    }
+    .cart-item:last-child{border-bottom:none;}
+    @keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+    .cart-item-main{display:flex;gap:1rem;min-width:0;align-items:center;}
+    .cart-item-media{
+      width:74px;height:74px;border-radius:14px;overflow:hidden;flex-shrink:0;
+      background:var(--section-alt);border:1px solid var(--border);
+    }
+    .cart-item-media img{width:100%;height:100%;object-fit:cover;display:block;}
+    .cart-item-title{font-size:.95rem;font-weight:600;color:var(--dark);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .cart-item-desc{font-size:.78rem;color:var(--muted);margin-top:.2rem;line-height:1.5;max-width:42ch;}
+    .cart-item-price{margin-top:.45rem;font-size:.85rem;color:var(--text);font-weight:700;}
+
+    .qty-stepper{
+      display:inline-flex;align-items:center;justify-content:center;
+      border:1px solid var(--border);
+      border-radius:2rem;
+      overflow:hidden;
+      background:white;
+    }
+    .qty-btn{
+      border:none;background:var(--section-alt);
+      padding:.45rem .7rem;
+      font-weight:700;
+      color:var(--text);
+      transition:var(--transition);
+    }
+    .qty-btn:hover{background:rgba(45,158,104,.10);}
+    .qty-val{min-width:34px;text-align:center;padding:0 .55rem;font-weight:600;color:var(--dark);font-size:.9rem;}
+    .cart-item-actions{display:flex;flex-direction:column;align-items:center;gap:.55rem;}
+    .cart-remove{
+      border:none;background:transparent;
+      color:#b02a37;
+      font-size:.78rem;
+      text-decoration:none;
+      padding:0;
+    }
+    .cart-remove:hover{text-decoration:underline;}
+    .cart-item-total{justify-self:end;font-weight:800;color:var(--dark);}
+
+    /* -- SUMMARY -- */
+    .cart-summary-card{
+      background:white;border-radius:var(--radius-lg);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-sm);
+      overflow:hidden;
+      position:sticky;
+      top: calc(var(--nav-h) + 1.25rem);
+    }
+    .cart-summary-head{
+      padding:1.2rem 1.6rem;
+      border-bottom:1px solid var(--border);
+      background:var(--section-alt);
+    }
+    .cart-summary-head h5{
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.35rem;
+      margin:0;
+      color:var(--dark);
+      font-weight:500;
+    }
+    .cart-summary-body{padding:1.2rem 1.6rem 1.6rem;}
+    .summary-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.35rem 0;color:var(--text);}
+    .summary-row span:first-child{color:var(--muted);}
+    .summary-total{
+      margin-top:.75rem;
+      padding-top:1rem;
+      border-top:1px solid var(--border);
+    }
+    .summary-total .summary-row span:last-child{
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.55rem;
+      font-weight:700;
+      color:var(--g2);
+    }
+    .btn-checkout-lux{
+      width:100%;
+      background:linear-gradient(135deg,var(--g1),var(--g2));
+      color:white;
+      border:none;
+      border-radius:2rem;
+      padding:.7rem 1rem;
+      font-weight:700;
+      letter-spacing:.04em;
+      transition:var(--transition);
+      box-shadow:0 10px 26px rgba(13,74,47,.18);
+      font-family:'DM Sans',sans-serif;
+    }
+    .btn-checkout-lux:hover{transform:translateY(-1px);box-shadow:0 14px 32px rgba(13,74,47,.22);}
+    .btn-clear-lux{
+      width:100%;
+      margin-top:.6rem;
+      border-radius:2rem;
+      padding:.65rem 1rem;
+      font-weight:700;
+      font-family:'DM Sans',sans-serif;
+    }
+
+    @media (max-width: 991.98px){
+      .cart-summary-card{position:static;top:auto;}
+    }
+    @media (max-width: 768px){
+      .cart-list-head{padding:1rem 1.2rem;}
+      .cart-items{padding:0 1.2rem 1rem;}
+      .cart-item{grid-template-columns: 32px 1fr; grid-template-areas:
+        "check main"
+        "check qty"
+        "check total"; align-items:start; gap:.85rem; }
+      .cart-item-check{grid-area:check; padding-top:.2rem;}
+      .cart-item-main{grid-area:main;}
+      .cart-item-actions{grid-area:qty; align-items:flex-start; flex-direction:row; justify-content:space-between; width:100%;}
+      .cart-item-total{grid-area:total; justify-self:start;}
+      .cart-item-desc{max-width:none;}
+    }
+  </style>
+</head>
+<body class="cart-page">
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="../images/logo.JPG" alt="Logo" class="logo-img rounded-circle">
+        <span class="brand-text">Bulakena<span style="color:var(--g3)">Garden</span></span>
+      </a>
+      <button class="navbar-toggler nav-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="nav-toggle-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarMenu">
+        <ul class="navbar-nav mb-2 mb-lg-0 fw-semibold">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="products.html">Products</a></li>
+          <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="aboutus.html">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="contactus.html">Contact</a></li>
+        </ul>
+        <div class="auth-controls auth-pending ms-lg-3">
+          <button type="button" class="btn btn-success px-4 js-auth-login">Login</button>
+          <div class="dropdown d-none js-auth-menu">
+            <button class="btn auth-profile-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="auth-avatar">U</span><span class="auth-label">Profile</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+              <li><h6 class="dropdown-header js-auth-email"></h6></li>
+              <li><button type="button" class="dropdown-item js-auth-account">Account</button></li>
+              <li><button type="button" class="dropdown-item js-auth-orders">My Orders</button></li>
+              <li><button type="button" class="dropdown-item js-auth-appointments">My Appointments</button></li>
+              <li><button type="button" class="dropdown-item js-auth-signout">Sign out</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="cart-hero">
+    <div class="container">
+      <div class="cart-hero-eyebrow">Shop</div>
+      <h1>Your <em>Cart</em></h1>
+      <p>Review your selected items and proceed to checkout when you're ready.</p>
+    </div>
+  </div>
+
+  <main class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" style="margin-bottom:1.5rem;">
+      <ol class="breadcrumb" style="font-size:.82rem;background:none;padding:0;margin:0;">
+        <li class="breadcrumb-item"><a href="index.html" style="color:var(--g2);text-decoration:none;">Home</a></li>
+        <li class="breadcrumb-item"><a href="products.html" style="color:var(--g2);text-decoration:none;">Products</a></li>
+        <li class="breadcrumb-item active" style="color:var(--muted);">Cart</li>
+      </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="cart-section-title">Your Cart</h2>
+        <p class="cart-section-subtitle">Select what you want to checkout and adjust quantities anytime.</p>
+      </div>
+    </div>
+
+    <!-- Empty -->
+    <div id="cartEmpty" class="cart-empty d-none">
+      <div class="cart-empty-inner">
+        <h3>Your cart is empty</h3>
+        <p>Ready to find your new favorite plants? Browse our premium collection and add items to your cart.</p>
+        <a href="products.html" class="btnx primary">Shop Now &rarr;</a>
+      </div>
+    </div>
+
+    <div class="row g-4 align-items-start">
+      <div class="col-lg-8">
+        <div id="cartList" class="d-none">
+          <div class="cart-list-card">
+            <div class="cart-list-head">
+              <div class="cart-list-head-left">
+                <input type="checkbox" id="selectAllCheckbox" class="form-check-input" title="Select all items" style="width:1.1em;height:1.1em;accent-color:var(--g2);cursor:pointer;">
+                <div class="cart-head-label">Selected Items</div>
+              </div>
+              <div class="cart-head-label">Quantity &middot; Total</div>
+            </div>
+            <div id="js-cart-items" class="cart-items"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div id="cartSummary" class="d-none">
+          <div class="cart-summary-card">
+            <div class="cart-summary-head">
+              <h5>Order Summary</h5>
+            </div>
+            <div class="cart-summary-body">
+              <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="subtotalAmt">PHP 0.00</span>
+              </div>
+              <div class="summary-total">
+                <div class="summary-row">
+                  <span>Total</span>
+                  <span id="checkoutTotal">PHP 0.00</span>
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <button id="checkoutBtn" class="btn-checkout-lux" type="button">Checkout &middot; Continue</button>
+                <button id="clearCartBtn" type="button" class="btn btn-outline-danger btn-clear-lux">Clear Cart</button>
+              </div>
+
+              <div style="margin-top:1rem;font-size:.82rem;color:var(--muted);line-height:1.6;">
+                Tip: uncheck items you don't want to include in checkout.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-brand-logo">Bulakena <span>Garden</span></a>
+        <p>Where nature becomes art. Serving Bulacan and the Philippines with premium plants, landscapes, and garden design since 2009.</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/BulkenaGarden" class="social-link" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="products.html?type=Indoor">Indoor Plants</a></li>
+          <li><a href="products.html?type=Outdoor">Outdoor Plants</a></li>
+          <li><a href="products.html?type=Hanging%20Plants">Hanging Plants</a></li>
+          <li><a href="products.html?type=Table%20Plants">Table Plants</a></li>
+          <li><a href="products.html?type=Furniture">Garden Furniture</a></li>
+          <li><a href="products.html?type=Planter">Garden Planters</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html#gardening">Gardening</a></li>
+          <li><a href="services.html#landscaping">Landscaping</a></li>
+          <li><a href="services.html#consultations">Consultations</a></li>
+          <li><a href="services.html#booking">Book a Service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="aboutus.html">About Us</a></li>
+          <li><a href="contactus.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Bulakena Garden. All rights reserved. Made with &#127793; in Talisay</p>
+    </div>
+  </div>
+</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    /* -- NAV SCROLL -- */
+    const mainNav = document.getElementById('mainNav');
+    if (mainNav) window.addEventListener('scroll', () => mainNav.classList.toggle('scrolled', window.scrollY > 60));
+
+    function escapeHtml(s){
+      return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function formatPeso(n){
+      if (n == null) return 'PHP 0.00';
+      return 'PHP ' + Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function resolveCartAsset(path) {
+      var value = String(path || '').trim().replace(/\\/g, '/');
+      if (!value) return '../images/logo.JPG';
+      if (/^(https?:)?\/\//i.test(value) || value.charAt(0) === '/') return value;
+      if (value.indexOf('../') === 0) return value;
+      if (value.indexOf('uploads/') === 0 || value.indexOf('images/') === 0) return '../' + value;
+      if (value.indexOf('products/') === 0 || value.indexOf('reviews/') === 0 || value.indexOf('feedback/') === 0) return '../uploads/' + value;
+      return value;
+    }
+
+    function requireLogin() {
+      if (window.getCurrentUser && typeof window.getCurrentUser === 'function') {
+        var user = window.getCurrentUser();
+        if (!user) {
+          if (window.openAuthModal) window.openAuthModal('signin');
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function normalizeEmail(email){
+      return String(email || "").trim().toLowerCase();
+    }
+
+    var sessionEmailCache = '';
+    function getSessionEmail() {
+      return sessionEmailCache;
+    }
+
+    function loadSessionEmail() {
+      if (window.BulakenaAuth && typeof window.BulakenaAuth.refreshSession === 'function') {
+        return window.BulakenaAuth.refreshSession({ silent: true }).then(function() {
+          sessionEmailCache = (window.BulakenaAuth.getSessionEmail && window.BulakenaAuth.getSessionEmail()) || '';
+          return sessionEmailCache;
+        }).catch(function() { return ''; });
+      }
+      return fetch('api/session_check.php', { credentials: 'same-origin' })
+        .then(r => r.json())
+        .then(data => {
+          sessionEmailCache = data && data.authenticated && data.user ? String(data.user.email || '') : '';
+          return sessionEmailCache;
+        })
+        .catch(() => '');
+    }
+
+    function getCartStorageKey() {
+      var rawEmail = getSessionEmail();
+      var email = normalizeEmail(rawEmail);
+      console.log('[CART] getCartStorageKey ? Raw email:', rawEmail, 'Normalized:', email);
+      if (!email) {
+        console.warn('[CART] getCartStorageKey - No email found in localStorage');
+        return null;
+      }
+      var key = 'bulakena_cart_v1:' + email;
+      console.log('[CART] getCartStorageKey ? Final key:', key);
+      return key;
+    }
+
+    function getCartItems() {
+      try {
+        console.log('[CART] getCartItems - Starting cart data lookup...');
+        
+        // First try the per-user key
+        var key = getCartStorageKey();
+        if (key) {
+          var rawValue = localStorage.getItem(key);
+          console.log('[CART] getCartItems ? Checking per-user key:', key);
+          console.log('[CART] getCartItems ? Raw value from key:', rawValue);
+          if (rawValue) {
+            var items = JSON.parse(rawValue);
+            if (items && Array.isArray(items) && items.length > 0) {
+              console.log('[CART] Found items in user key:', key, items);
+              return items.map(normalizeCartItem);
+            }
+          }
+          // If a per-user key exists but has no items, do NOT fall back to other
+          // users' cart keys - return an empty cart for this user instead.
+          console.log('[CART] Per-user key present but empty, returning empty cart for current user');
+          return [];
+        }
+        
+        // If no per-user key or empty, scan all localStorage for cart-like keys
+        console.log('[CART] getCartItems - Scanning all localStorage keys...');
+        var allKeys = [];
+        for (var i = 0; i < localStorage.length; i++) {
+          allKeys.push(localStorage.key(i));
+        }
+        console.log('[CART] getCartItems ? All localStorage keys:', allKeys);
+        
+        for (var i = 0; i < localStorage.length; i++) {
+          var storageKey = localStorage.key(i);
+          if (storageKey && (storageKey.startsWith('bulakena_cart') || storageKey === 'cart' || storageKey === 'cartItems')) {
+            var rawVal = localStorage.getItem(storageKey);
+            console.log('[CART] getCartItems ? Checking key:', storageKey, 'Raw value:', rawVal);
+            if (rawVal) {
+              var items = JSON.parse(rawVal);
+              if (items && Array.isArray(items) && items.length > 0) {
+                console.log('[CART] Found items in key:', storageKey, items);
+                return items.map(normalizeCartItem);
+              }
+            }
+          }
+        }
+        
+        console.log('[CART] getCartItems - No cart items found in any storage key');
+        return [];
+      } catch (e) {
+        console.error('[CART] Error reading cart items:', e);
+        return [];
+      }
+    }
+
+    function saveCartItems(items) {
+      try {
+        var key = getCartStorageKey();
+        if (key) {
+          localStorage.setItem(key, JSON.stringify(items));
+        }
+      } catch (e) { 
+        console.error('Error saving cart items:', e);
+      }
+    }
+
+    function normalizeCartItem(item) {
+      var sizeLabel = String(item && (item.sizeLabel || item.size_label) || '').trim();
+      var numericId = Number(item && item.id) || 0;
+      var cartKey = String(item && (item.cartKey || item.cart_key) || '').trim();
+      if (!cartKey) {
+        cartKey = String(numericId) + (sizeLabel ? ('::' + sizeLabel.toLowerCase()) : '');
+      }
+      return {
+        id: numericId,
+        cartKey: cartKey,
+        title: String(item && item.title || ''),
+        desc: String(item && item.desc || ''),
+        price: Number(item && item.price) || 0,
+        qty: Math.max(1, Number(item && item.qty) || 1),
+        img: resolveCartAsset(item && item.img),
+        selected: item && item.selected !== false,
+        sizeLabel: sizeLabel
+      };
+    }
+
+    function renderCart() {
+      const items = getCartItems();
+      const empty = document.getElementById('cartEmpty');
+      const list = document.getElementById('cartList');
+      const summary = document.getElementById('cartSummary');
+      const itemsContainer = document.getElementById('js-cart-items');
+
+      if (!items.length) {
+        empty.classList.remove('d-none');
+        list.classList.add('d-none');
+        summary.classList.add('d-none');
+        return;
+      }
+
+      empty.classList.add('d-none');
+      list.classList.remove('d-none');
+      summary.classList.remove('d-none');
+
+      let total = 0;
+      itemsContainer.innerHTML = items.map((item, idx) => {
+        const itemTotal = item.price * item.qty;
+        const isChecked = item.selected !== false; // Default to true if not set
+        if (isChecked) total += itemTotal;
+        return `
+          <div class="cart-item" style="animation-delay:${idx * 0.06}s">
+            <div class="cart-item-check">
+              <input type="checkbox" class="form-check-input item-checkbox" data-key="${item.cartKey}" ${isChecked ? 'checked' : ''} style="width:1.1em;height:1.1em;accent-color:var(--g2);cursor:pointer;">
+            </div>
+
+            <div class="cart-item-main">
+              <div class="cart-item-media">
+                <img src="${escapeHtml(resolveCartAsset(item.img))}" alt="${escapeHtml(item.title)}" onerror="this.onerror=null;this.src='../images/logo.JPG';">
+              </div>
+              <div style="min-width:0;">
+                <div class="cart-item-title">${escapeHtml(item.title || 'Item')}</div>
+                <div class="cart-item-desc">${escapeHtml(item.desc ? item.desc.substring(0, 90) : '')}${item.sizeLabel ? '<br><strong>Size:</strong> ' + escapeHtml(item.sizeLabel) : ''}</div>
+                <div class="cart-item-price">${formatPeso(item.price)}</div>
+              </div>
+            </div>
+
+            <div class="cart-item-actions">
+              <div class="qty-stepper" aria-label="Quantity selector">
+                <button type="button" class="qty-btn" data-action="minus" data-key="${item.cartKey}" aria-label="Decrease quantity">-</button>
+                <span class="qty-val" aria-label="Quantity">${item.qty}</span>
+                <button type="button" class="qty-btn" data-action="plus" data-key="${item.cartKey}" aria-label="Increase quantity">+</button>
+              </div>
+              <button type="button" class="cart-remove" data-action="remove" data-key="${item.cartKey}">Remove</button>
+            </div>
+
+            <div class="cart-item-total">${formatPeso(itemTotal)}</div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('subtotalAmt').textContent = formatPeso(total);
+      document.getElementById('checkoutTotal').textContent = formatPeso(total);
+
+      // Handle checkbox changes
+      itemsContainer.querySelectorAll('.item-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+          const items = getCartItems();
+          const target = items.find(item => String(item.cartKey) === String(this.dataset.key));
+          if (!target) return;
+          target.selected = this.checked;
+          saveCartItems(items);
+          updateTotals();
+        });
+      });
+
+      // Handle select all checkbox
+      const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+      if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+          const items = getCartItems();
+          items.forEach(item => item.selected = this.checked);
+          saveCartItems(items);
+          renderCart();
+        });
+      }
+
+      // Attach action handlers
+      itemsContainer.querySelectorAll('[data-action]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const action = this.dataset.action;
+          const items = getCartItems();
+          const idx = items.findIndex(item => String(item.cartKey) === String(this.dataset.key));
+          if (idx < 0) return;
+          
+          if (action === 'plus') {
+            items[idx].qty += 1;
+          } else if (action === 'minus') {
+            if (items[idx].qty > 1) items[idx].qty -= 1;
+          } else if (action === 'remove') {
+            items.splice(idx, 1);
+          }
+          
+          saveCartItems(items);
+          renderCart();
+        });
+      });
+    }
+
+    function ensureLoginForCart() {
+      if (!requireLogin()) {
+        window.location.href = 'products.html';
+        return false;
+      }
+      return true;
+    }
+
+    function updateTotals() {
+      const items = getCartItems();
+      let total = 0;
+      items.forEach(item => {
+        if (item.selected !== false) {
+          total += item.price * item.qty;
+        }
+      });
+      document.getElementById('subtotalAmt').textContent = formatPeso(total);
+      document.getElementById('checkoutTotal').textContent = formatPeso(total);
+    }
+
+    function getSelectedItems() {
+      const items = getCartItems();
+      return items.filter(item => item.selected !== false);
+    }
+
+    function clearAllCartStorage() {
+      try {
+        // Clear the primary user key
+        var key = getCartStorageKey();
+        if (key) {
+          localStorage.removeItem(key);
+        }
+        
+        // Clear all fallback cart keys
+        var keysToRemove = [];
+        for (var i = 0; i < localStorage.length; i++) {
+          var storageKey = localStorage.key(i);
+          if (storageKey && (storageKey.startsWith('bulakena_cart') || storageKey === 'cart' || storageKey === 'cartItems')) {
+            keysToRemove.push(storageKey);
+          }
+        }
+        
+        keysToRemove.forEach(function(storageKey) {
+          localStorage.removeItem(storageKey);
+        });
+        
+        console.log('[CART] Cleared all cart storage keys:', keysToRemove);
+      } catch (e) {
+        console.error('Error clearing cart storage:', e);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadSessionEmail().then(function() {
+        console.log('=== CART PAGE LOADED ===');
+        console.log('[CART] Window globals available:', {
+          hasGetCurrentUser: typeof window.getCurrentUser === 'function',
+          hasOpenAuthModal: typeof window.openAuthModal === 'function',
+          hasBulakenaCart: typeof window.BulakenaCart === 'object'
+        });
+        console.log('[CART] Session email getter result:', getSessionEmail());
+        console.log('[CART] Cart storage key:', getCartStorageKey());
+        
+        if (!ensureLoginForCart()) {
+          console.log('[CART] User not logged in, redirecting to products.html');
+          return;
+        }
+
+        console.log('[CART] User authenticated, rendering cart...');
+        renderCart();
+
+        document.getElementById('clearCartBtn').addEventListener('click', function() {
+          if (confirm('Clear your cart?')) {
+            clearAllCartStorage();
+            renderCart();
+          }
+        });
+
+        document.getElementById('checkoutBtn').addEventListener('click', function() {
+          const selectedItems = getSelectedItems();
+          if (!selectedItems.length) {
+            alert('Please select at least one item to checkout');
+            return;
+          }
+          
+          try {
+            localStorage.setItem('bulakena_checkout_items', JSON.stringify(selectedItems));
+            window.location.href = 'checkout.html';
+          } catch(e) {
+            console.error('Checkout failed:', e);
+            alert('Checkout failed. Please try again.');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1097 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulakena Garden | Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <!-- External CSS -->
+  <link rel="stylesheet" href="admin.css?v=orders-date-filter-20260902">
+  <style>
+    body.admin-auth-pending #admin-login-screen,
+    body.admin-auth-pending #admin-app-shell {
+      display: none;
+    }
+    body.admin-auth-pending,
+    body.admin-auth-guest {
+      display: block;
+    }
+    body.admin-auth-guest #admin-app-shell {
+      display: none;
+    }
+    body.admin-auth-ready #admin-login-screen {
+      display: none;
+    }
+    body.admin-auth-ready #admin-app-shell {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+      flex: 1 1 auto;
+    }
+    .admin-login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(93,203,165,.26), transparent 36%),
+        radial-gradient(circle at bottom right, rgba(8,116,91,.18), transparent 30%),
+        linear-gradient(160deg, #f3fbf7 0%, #eaf5ef 45%, #dcefe6 100%);
+    }
+    .admin-login-card {
+      width: min(100%, 420px);
+      background: rgba(255,255,255,.96);
+      border: 1px solid rgba(8,116,91,.10);
+      border-radius: 24px;
+      box-shadow: 0 24px 60px rgba(8,116,91,.14);
+      padding: 28px;
+    }
+    .admin-login-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-weight: 700;
+      color: var(--green-1, #08745b);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-size: .78rem;
+    }
+    .admin-login-title {
+      font-family: 'Lora', serif;
+      font-size: 2rem;
+      color: #173328;
+      margin-bottom: 8px;
+    }
+    .admin-login-copy {
+      color: #5f726a;
+      font-size: .95rem;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .admin-login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .admin-login-form .form-label {
+      font-size: .78rem;
+      font-weight: 700;
+      color: #5f726a;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .admin-login-form .form-control {
+      min-height: 48px;
+      border-radius: 14px;
+      border: 1px solid #d8e7e0;
+      background: #f8fcfa;
+    }
+    .admin-login-form .form-control:focus {
+      border-color: var(--green-3, #5dcca5);
+      box-shadow: 0 0 0 .22rem rgba(93,203,165,.18);
+      background: #fff;
+    }
+    .admin-password-wrap {
+      position: relative;
+    }
+    .admin-password-wrap .form-control {
+      padding-right: 3rem;
+    }
+    .admin-password-toggle {
+      position: absolute;
+      top: 50%;
+      right: .7rem;
+      transform: translateY(-50%);
+      width: 2rem;
+      height: 2rem;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--green-1, #08745b);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .admin-password-toggle:hover,
+    .admin-password-toggle:focus {
+      background: rgba(93,203,165,.14);
+      outline: none;
+    }
+    .admin-login-feedback {
+      min-height: 22px;
+      margin: 0;
+      font-size: .88rem;
+      color: #bf3f3f;
+    }
+    .admin-login-feedback.success {
+      color: var(--green-1, #08745b);
+    }
+    .admin-login-meta {
+      margin-top: 18px;
+      font-size: .82rem;
+      color: #70817a;
+      text-align: center;
+    }
+    #sidebar {
+      height: 100vh;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(93,203,165,.4) transparent;
+    }
+    #sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+    #sidebar::-webkit-scrollbar-thumb {
+      background: rgba(93,203,165,.4);
+      border-radius: 3px;
+    }
+    #sidebar .sidebar-nav {
+      overflow: visible;
+    }
+    .admin-logout-btn {
+      margin-top: 12px;
+      width: 100%;
+      border: 1px solid rgba(93,203,165,.28);
+      background: rgba(93,203,165,.08);
+      color: var(--green-3, #5dcca5);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: .84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s ease, color .2s ease, border-color .2s ease;
+    }
+    .admin-logout-btn:hover {
+      background: rgba(93,203,165,.18);
+      border-color: rgba(93,203,165,.45);
+      color: #fff;
+    }
+  </style>
+</head>
+<body class="admin-auth-pending">
+<script>
+  (function () {
+    function setAuthView(state) {
+      document.body.classList.remove('admin-auth-pending', 'admin-auth-guest', 'admin-auth-ready');
+      document.body.classList.add(state);
+    }
+
+    function setLoginFeedback(message, tone) {
+      var feedback = document.getElementById('admin-login-feedback');
+      if (!feedback) return;
+      feedback.textContent = message || '';
+      feedback.classList.toggle('success', tone === 'success');
+    }
+
+    function adminApi(path) {
+      var cleanPath = String(path || '').replace(/^\/+/, '');
+      var pathname = window.location.pathname.replace(/\\/g, '/');
+      if (pathname.indexOf('/admin/') !== -1) {
+        return new URL('api/' + cleanPath, window.location.href).toString();
+      }
+      var pageDir = pathname.endsWith('/')
+        ? pathname
+        : pathname.slice(0, pathname.lastIndexOf('/') + 1);
+      return new URL('admin/api/' + cleanPath, window.location.origin + pageDir).toString();
+    }
+
+    function parseJsonResponse(response, fallbackMessage) {
+      return response.text().then(function (text) {
+        var result = null;
+        try {
+          result = text ? JSON.parse(text) : null;
+        } catch (error) {
+          throw new Error(fallbackMessage || 'The server returned an invalid response.');
+        }
+        if (!response.ok) {
+          throw new Error((result && result.message) || fallbackMessage || 'The request failed.');
+        }
+        return result;
+      });
+    }
+
+    function bindAdminLoginForm() {
+      var form = document.getElementById('admin-login-form');
+      if (!form || form.dataset.bound === '1') return;
+      form.dataset.bound = '1';
+
+      var passwordToggle = document.getElementById('admin-password-toggle');
+      var passwordInput = document.getElementById('admin-login-password');
+      if (passwordToggle && passwordInput && passwordToggle.dataset.bound !== '1') {
+        passwordToggle.dataset.bound = '1';
+        passwordToggle.addEventListener('click', function () {
+          var isVisible = passwordInput.type === 'text';
+          passwordInput.type = isVisible ? 'password' : 'text';
+          passwordToggle.setAttribute('aria-label', isVisible ? 'Show password' : 'Hide password');
+          passwordToggle.setAttribute('title', isVisible ? 'Show password' : 'Hide password');
+          var icon = passwordToggle.querySelector('i');
+          if (icon) {
+            icon.classList.toggle('fa-eye', isVisible);
+            icon.classList.toggle('fa-eye-slash', !isVisible);
+          }
+        });
+      }
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        var usernameEl = document.getElementById('admin-login-username');
+        var passwordEl = document.getElementById('admin-login-password');
+        var submitBtn = document.getElementById('admin-login-submit');
+        var username = usernameEl ? usernameEl.value.trim() : '';
+        var password = passwordEl ? passwordEl.value : '';
+
+        if (!username || !password) {
+          setLoginFeedback('Enter the admin username and password.', 'error');
+          return;
+        }
+
+        setLoginFeedback('Signing in...', 'success');
+        if (submitBtn) submitBtn.disabled = true;
+
+        var formData = new FormData();
+        formData.append('email', username);
+        formData.append('password', password);
+
+        fetch(adminApi('admin_login.php'), {
+          method: 'POST',
+          body: formData,
+          credentials: 'same-origin'
+        })
+          .then(function (response) {
+            return parseJsonResponse(response, 'Could not reach api/admin_login.php. Make sure Apache/PHP is running.');
+          })
+          .then(function (result) {
+            if (result && result.success && result.user && result.user.is_admin) {
+              setLoginFeedback('Admin login successful.', 'success');
+              setAuthView('admin-auth-ready');
+              if (typeof fetchProducts === 'function') fetchProducts();
+              if (typeof loadOrders === 'function') loadOrders();
+              if (typeof fetchUsers === 'function') fetchUsers();
+              if (typeof fetchAppointments === 'function') fetchAppointments();
+              if (typeof loadFeedback === 'function') loadFeedback();
+              if (typeof showSection === 'function') showSection('dashboard');
+              return;
+            }
+            setLoginFeedback((result && result.message) || 'Invalid admin credentials.', 'error');
+          })
+          .catch(function (error) {
+            setLoginFeedback((error && error.message) || 'Could not reach api/admin_login.php. Make sure Apache/PHP is running.', 'error');
+          })
+          .finally(function () {
+            if (submitBtn) submitBtn.disabled = false;
+          });
+      });
+    }
+
+    function bindAdminLogout() {
+      var button = document.getElementById('admin-logout-btn');
+      if (!button || button.dataset.bound === '1') return;
+      button.dataset.bound = '1';
+
+      button.addEventListener('click', function () {
+        if (!window.fetch) {
+          setAuthView('admin-auth-guest');
+          return;
+        }
+
+        button.disabled = true;
+        fetch(adminApi('admin_logout.php'), {
+          method: 'POST',
+          credentials: 'same-origin'
+        })
+          .then(function () {
+            var username = document.getElementById('admin-login-username');
+            var password = document.getElementById('admin-login-password');
+            if (username) username.value = '';
+            if (password) password.value = '';
+            setLoginFeedback('Admin session ended.', 'success');
+            setAuthView('admin-auth-guest');
+          })
+          .catch(function () {
+            setLoginFeedback('Could not log out the admin session.', 'error');
+          })
+          .finally(function () {
+            button.disabled = false;
+          });
+      });
+    }
+
+    function checkAdminSession() {
+      bindAdminLoginForm();
+      bindAdminLogout();
+
+      if (!window.fetch || window.location.protocol === 'file:') {
+        setAuthView('admin-auth-guest');
+        setLoginFeedback('Open this page through your local PHP server to use admin login.', 'error');
+        return;
+      }
+
+      fetch(adminApi('admin_session_check.php'), { credentials: 'same-origin' })
+        .then(function (response) {
+          return parseJsonResponse(response, 'Could not verify the admin session.');
+        })
+        .then(function (result) {
+          if (result && result.authenticated && result.user && result.user.is_admin) {
+            setAuthView('admin-auth-ready');
+            return;
+          }
+          setAuthView('admin-auth-guest');
+        })
+        .catch(function () {
+          setAuthView('admin-auth-guest');
+          setLoginFeedback('Could not verify the admin session.', 'error');
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', checkAdminSession);
+  })();
+</script>
+
+<section class="admin-login-screen" id="admin-login-screen">
+  <div class="admin-login-card">
+    <div class="admin-login-brand">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>Bulakena Garden Admin</span>
+    </div>
+    <h1 class="admin-login-title">Owner Login</h1>
+    <p class="admin-login-copy">This dashboard has its own admin sign-in. Enter the owner credentials here to open the admin panel.</p>
+    <form id="admin-login-form" class="admin-login-form" autocomplete="off">
+      <div>
+        <label class="form-label" for="admin-login-username">Admin Username</label>
+        <input class="form-control" id="admin-login-username" type="text" placeholder="admin" required>
+      </div>
+      <div>
+        <label class="form-label" for="admin-login-password">Password</label>
+        <div class="admin-password-wrap">
+          <input class="form-control" id="admin-login-password" type="password" placeholder="Enter password" required>
+          <button type="button" class="admin-password-toggle" id="admin-password-toggle" aria-label="Show password" title="Show password">
+            <i class="fa-solid fa-eye" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <p class="admin-login-feedback" id="admin-login-feedback"></p>
+      <button class="btn-primary-green" id="admin-login-submit" type="submit">Log In to Admin</button>
+    </form>
+    <div class="admin-login-meta">Admin access is separate from the customer login on the website.</div>
+  </div>
+</section>
+
+<div id="admin-app-shell">
+
+<!-- ========== SIDEBAR ========== -->
+<nav id="sidebar">
+  <div class="sidebar-brand">
+    <span>BulakenaGarden</span>
+    <small>Admin Panel</small>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="nav-section-title">Overview</div>
+    <a class="sidebar-link active" data-section="dashboard">
+      <i class="fa-solid fa-gauge-high"></i> Dashboard
+    </a>
+
+    <div class="nav-section-title">Catalogue</div>
+    <a class="sidebar-link" data-section="products">
+      <i class="fa-solid fa-seedling"></i> Products
+      <span class="badge-count" id="sb-products-count">12</span>
+    </a>
+    <a class="sidebar-link" data-section="add-product">
+      <i class="fa-solid fa-circle-plus"></i> Add Product
+    </a>
+
+    <div class="nav-section-title">Orders</div>
+    <a class="sidebar-link" data-section="orders">
+      <i class="fa-solid fa-box-open"></i> All Orders
+      <span class="badge-count" id="sb-orders-count">-</span>
+    </a>
+
+    <div class="nav-section-title">Users</div>
+    <a class="sidebar-link" data-section="users">
+      <i class="fa-solid fa-users"></i> Registered Users
+    </a>
+
+    <div class="nav-section-title">Engagement</div>
+    <a class="sidebar-link" data-section="appointments">
+      <i class="fa-solid fa-calendar-days"></i> Appointments
+      <span class="badge-count" id="sb-appointments-count">-</span>
+    </a>
+    <a class="sidebar-link" data-section="feedback">
+      <i class="fa-solid fa-comment-dots"></i> Feedback
+      <span class="badge-count" id="sb-feedback-count">-</span>
+    </a>
+    <a class="sidebar-link" data-section="reports">
+      <i class="fa-solid fa-file-lines"></i> Reports
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <button type="button" class="admin-logout-btn" id="admin-logout-btn">Log Out Admin</button>
+  </div>
+</nav>
+
+<!-- ========== MAIN ========== -->
+<div id="main">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="d-flex align-items-center gap-3">
+      <button class="topbar-btn d-lg-none" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+      <span class="topbar-title" id="topbar-title">Dashboard</span>
+    </div>
+    <div class="topbar-right">
+    </div>
+  </div>
+
+  <!-- ===========================
+       SECTION: DASHBOARD
+  =========================== -->
+  <div class="page-section active" id="section-dashboard">
+    <!-- Stat Cards -->
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fa-solid fa-box"></i></div>
+        <div class="stat-value" id="stat-orders">-</div>
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-delta up" id="stat-orders-delta">Loading-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="fa-solid fa-peso-sign"></i></div>
+        <div class="stat-value" id="stat-revenue">-</div>
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-delta up" id="stat-revenue-delta">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon orange"><i class="fa-solid fa-seedling"></i></div>
+        <div class="stat-value" id="stat-products">12</div>
+        <div class="stat-label">Products in Catalogue</div>
+        <div class="stat-delta up" id="stat-products-delta">0 added in last 24h</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="stat-value" id="stat-lowstock">3</div>
+        <div class="stat-label">Low-Stock Items</div>
+        <div class="stat-delta down">Action needed</div>
+      </div>
+    </div>
+
+    <div class="dashboard-insights">
+      <div class="dashboard-insight-card dashboard-insight-card-hero" style="grid-column: 1 / -1;">
+        <div class="dashboard-insight-head">
+          <div>
+            <div class="dashboard-eyebrow">Sales Pulse</div>
+            <h3>Monthly Sales Trends</h3>
+            <p>Track revenue, cancellations, and booking momentum in one glance.</p>
+          </div>
+          <div class="dashboard-kpi-grid">
+            <div class="dashboard-kpi">
+              <span class="label">Cancelled Rate</span>
+              <strong id="cancelled-rate-value">0%</strong>
+              <span class="meta" id="cancelled-rate-meta">0 cancelled orders</span>
+            </div>
+            <div class="dashboard-kpi">
+              <span class="label">Service Bookings</span>
+              <strong id="service-bookings-value">0</strong>
+              <span class="meta" id="service-bookings-meta">No bookings yet</span>
+            </div>
+            <div class="dashboard-kpi">
+              <span class="label">Top Plant</span>
+              <strong id="top-plant-value">-</strong>
+              <span class="meta" id="top-plant-meta">Waiting for sales data</span>
+            </div>
+          </div>
+        </div>
+        <div class="dashboard-chart-shell">
+          <canvas id="salesTrendChart" height="120"></canvas>
+        </div>
+      </div>
+
+      <div class="dashboard-insight-card">
+        <div class="dashboard-insight-head compact">
+          <div>
+            <div class="dashboard-eyebrow">Products</div>
+            <h3>Top-Selling Plants</h3>
+          </div>
+        </div>
+        <div id="top-products-list" class="dashboard-list-card"></div>
+      </div>
+
+      <div class="dashboard-insight-card">
+        <div class="dashboard-insight-head compact">
+          <div>
+            <div class="dashboard-eyebrow">Inventory</div>
+            <h3>Low Stock Summary</h3>
+          </div>
+        </div>
+        <div id="low-stock-list" class="dashboard-list-card"></div>
+      </div>
+    </div>
+
+    <div class="metrics-row">
+      <!-- Recent Orders -->
+      <div class="table-card">
+        <div class="table-card-head">
+          <h3><i class="fa-solid fa-clock-rotate-left me-2" style="color:var(--green-3)"></i>Recent Orders</h3>
+          <button class="btn-outline-green" style="padding:5px 14px;font-size:.78rem;" onclick="showSection('orders')">View All</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="admin-table" id="recent-orders-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="recent-orders-body">
+              <tr><td colspan="5" style="text-align:center;color:#aaa;padding:20px;">Loading orders-</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="table-card">
+        <div class="table-card-head"><h3><i class="fa-solid fa-bolt me-2" style="color:var(--green-3)"></i>Recent Activity</h3></div>
+        <div style="padding:12px 18px; max-height:260px; overflow:auto;">
+          <ul class="activity-list"></ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===========================
+       SECTION: PRODUCTS
+  =========================== -->
+  <div class="page-section" id="section-products">
+    <div class="section-head">
+      <div>
+        <h2><i class="fa-solid fa-seedling me-2"></i>Product Catalogue</h2>
+      </div>
+      <button class="btn-primary-green" onclick="showSection('add-product')">
+        <i class="fa-solid fa-plus me-1"></i> Add Product
+      </button>
+    </div>
+
+    
+
+    <div class="table-card">
+      <div class="table-card-head">
+        <h3>All Products</h3>
+      </div>
+      <div class="products-filter-bar">
+        <div class="products-filter-group products-filter-group-search">
+          <label class="products-filter-label" for="productFilter">Search Products</label>
+          <input type="search" class="topbar-search products-filter-input" placeholder="Search by plant name or type" id="productFilter">
+        </div>
+        <div class="products-filter-group">
+          <label class="products-filter-label" for="productCategoryFilter">Plant Category</label>
+          <select class="form-select products-filter-select" id="productCategoryFilter">
+            <option value="">All Categories</option>
+          </select>
+        </div>
+        <div class="products-filter-group products-filter-group-price">
+          <label class="products-filter-label" for="productPriceMin">Price Range</label>
+          <div class="products-price-range">
+            <input type="number" class="form-control products-price-input" id="productPriceMin" min="0" placeholder="Min">
+            <span class="products-price-separator">to</span>
+            <input type="number" class="form-control products-price-input" id="productPriceMax" min="0" placeholder="Max">
+          </div>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="admin-table" id="products-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Rating</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="products-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SECTION: ADD PRODUCT
+  =========================== -->
+  <div class="page-section" id="section-add-product">
+    <div class="section-head">
+      <div>
+        <h2><i class="fa-solid fa-circle-plus me-2"></i>Add / Edit Product</h2>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <h3>Product Details</h3>
+      <form id="product-form" class="row g-3">
+        <input type="hidden" id="pf-id" value="">
+        <div class="col-md-6">
+          <label class="form-label">Product Name *</label>
+          <input type="text" class="form-control" id="pf-name" placeholder="e.g. Snake Plant 'Laurentii'" required>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Type *</label>
+          <select class="form-select" id="pf-type" required>
+            <option value="">Select type-</option>
+            <option value="Indoor">Indoor</option>
+            <option value="Outdoor">Outdoor</option>
+            <option value="Hanging Plants">Hanging Plants</option>
+            <option value="Table Plants">Table Plants</option>
+            <option value="Planter">Planter</option>
+            <option value="Furniture">Furniture</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Price (?) *</label>
+          <input type="number" class="form-control" id="pf-price" min="0" placeholder="1800" required>
+        </div>
+        <div class="col-12">
+          <div class="size-builder-card">
+            <div class="size-builder-head">
+              <button type="button" class="btn-outline-green" id="pf-add-size">
+                <i class="fa-solid fa-plus me-1"></i> Add Size
+              </button>
+            </div>
+            <div id="pf-sizes-list" class="size-builder-list"></div>
+            <div class="size-builder-actions d-none" id="pf-size-actions">
+              <button type="button" class="btn-outline-green size-add-another" id="pf-add-size-inline" aria-label="Add another size">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="pf-img-file">Product Image</label>
+          <input type="hidden" id="pf-img-current" value="">
+          <input type="file" class="form-control" id="pf-img-file" accept="image/*">
+          <div class="form-text" id="pf-img-help">Choose an image from your files. Supported: JPG, PNG, GIF, WEBP.</div>
+        </div>
+        <div class="col-md-3" id="pf-stock-wrap">
+          <label class="form-label" id="pf-stock-label">Stock</label>
+          <input type="number" class="form-control" id="pf-stock-total" min="0" placeholder="0">
+        </div>
+        <div class="col-12">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" id="pf-desc" rows="4" placeholder="Describe the plant care, origin, and characteristics-"></textarea>
+        </div>
+
+        <div class="col-12 d-flex gap-2 mt-2">
+          <button type="submit" class="btn-primary-green">
+            <i class="fa-solid fa-floppy-disk me-1"></i> Save Product
+          </button>
+          <button type="reset" class="btn-outline-green">Reset</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SECTION: ORDERS
+  =========================== -->
+  <div class="page-section" id="section-orders">
+    <div class="section-head">
+      <div>
+        <h2><i class="fa-solid fa-box-open me-2"></i>All Orders</h2>
+      </div>
+      <div class="orders-filter-panel">
+        <div class="orders-filter-field orders-filter-field-status">
+          <span>Status</span>
+          <select class="form-select" id="order-status-filter">
+            <option value="">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="pickedup">Picked Up</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <label class="orders-filter-field" for="order-date-from">
+          <span>From</span>
+          <input class="form-control orders-date-filter" type="date" id="order-date-from" aria-label="Filter orders from date">
+        </label>
+        <label class="orders-filter-field" for="order-date-to">
+          <span>To</span>
+          <input class="form-control orders-date-filter" type="date" id="order-date-to" aria-label="Filter orders to date">
+        </label>
+        <button class="orders-filter-icon-btn" type="button" id="order-date-clear" title="Clear filters" aria-label="Clear order filters">
+          <i class="fa-solid fa-filter-circle-xmark"></i>
+        </button>
+        <button class="btn-outline-green" onclick="loadOrders()">
+          <i class="fa-solid fa-rotate-right me-1"></i> Refresh
+        </button>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-card-head">
+        <h3>Order List</h3>
+        <span class="orders-filter-summary" id="order-filter-summary">Showing all orders</span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer Name</th>
+              <th>Contact Number</th>
+              <th>Items</th>
+              <th>Delivery</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="orders-body">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SECTION: USERS
+  =========================== -->
+  <div class="page-section" id="section-users">
+    <div class="section-head">
+      <div>
+        <h2><i class="fa-solid fa-users me-2"></i>Registered Users</h2>
+      
+      </div>
+    </div>
+    <div class="table-card">
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Orders</th>
+              <th>Address</th>
+              <th>Created At</th>
+            </tr>
+          </thead>
+          <tbody id="users-body">
+            <tr><td colspan="6" style="text-align:center;color:#aaa;padding:20px;">
+              Add a <code>api/get_users.php</code> endpoint to populate this table.
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SECTION: APPOINTMENTS
+  =========================== -->
+  <div class="page-section" id="section-appointments">
+    <div class="section-head">
+      <div>
+        <h2><i class="fa-solid fa-calendar-days me-2"></i>Appointments</h2>
+        <p>Manage customer pickup/delivery appointments and booking slots.</p>
+      </div>
+
+    </div>
+    <div class="table-card">
+      <div class="table-card-head" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+        <h3>All Appointments</h3>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <select id="appointment-status-filter" class="form-select" style="width:160px;font-size:.82rem;">
+            <option value="">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="done">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <select id="appointment-service-filter" class="form-select" style="width:160px;font-size:.82rem;">
+            <option value="">All Services</option>
+            <option value="gardening">Gardening</option>
+            <option value="landscaping">Landscaping</option>
+            <option value="grotto">Grotto</option>
+            <option value="waterfalls">Waterfalls</option>
+            <option value="swimming-pool">Swimming Pool</option>
+          </select>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="admin-table" id="appointments-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>CUSTOMER</th>
+              <th>SERVICE</th>
+              <th>DATE &amp; TIME</th>
+              <th>CONTACT</th>
+              <th>STATUS</th>
+              <th>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody id="appointments-body">
+            <tr><td colspan="7" style="text-align:center;color:#aaa;padding:20px;">No appointments yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SECTION: FEEDBACK
+  =========================== -->
+  <div class="page-section" id="section-feedback">
+    <div class="section-head">
+      <div>
+        <h2><i class="fa-solid fa-comment-dots me-2"></i>Customer Feedback</h2>
+        <p>View customer reviews and suggestions.</p>
+      </div>
+    </div>
+    <div class="table-card" style="background:transparent;box-shadow:none;border:none;padding:0;">
+      <!-- Overview row: each piece is its own card -->
+      <div style="padding:14px 14px 8px 14px;">
+        <div id="feedback-overview-row" style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;margin:0 0 12px 0;">
+          <div style="flex:0 0 320px;">
+            <div style="background:linear-gradient(180deg,#f7fff9,#f1fcf7);border-radius:12px;padding:18px;border:1px solid rgba(64,145,108,0.08);height:100%">
+              <div id="feedback-avg" style="font-size:48px;font-weight:700;color:var(--green-deep);">0.0</div>
+              <div id="feedback-stars" style="margin-top:6px"><span style="color:#eee;font-size:18px">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+              <div id="feedback-count" style="font-size:.92rem;color:#666;margin-top:8px">Based on 0 reviews</div>
+              <div id="feedback-distribution" style="margin-top:12px"></div>
+            </div>
+          </div>
+          <div style="flex:1;min-width:280px;">
+            <div style="background:#fff;border-radius:12px;padding:14px;border:1px solid rgba(0,0,0,0.04);height:100%">
+              <div style="font-weight:700;color:#154;padding-bottom:6px">Monthly Feedback Volume</div>
+              <canvas id="feedbackOverviewChart" height="160" style="width:100%;max-height:220px;display:block;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:0 14px 14px 14px;display:flex;flex-direction:column;gap:12px;">
+        <div class="feedback-toolbar">
+          <div id="feedback-controls" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0">
+            <select id="filter-rating" class="form-select" style="width:150px;font-size:.9rem;">
+              <option value="">All Ratings</option>
+              <option value="5">5</option>
+              <option value="4">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+            </select>
+            <select id="filter-service" class="form-select" style="width:160px;font-size:.9rem;">
+              <option value="">All Services</option>
+              <option value="gardening">Gardening</option>
+              <option value="landscaping">Landscaping</option>
+              <option value="grotto">Grotto</option>
+              <option value="waterfalls">Waterfalls</option>
+              <option value="swimming-pool">Swimming Pool</option>
+              <option value="product">Product</option>
+            </select>
+            <input id="feedback-search" type="search" class="form-control" placeholder="Search feedback..." style="width:320px;min-width:180px;">
+            <div style="flex:1"></div>
+            <div class="feedback-stats">
+              <div class="feedback-stat-chip"><span class="label">Avg</span><span id="feedback-avg-chip">0.0</span></div>
+              <div class="feedback-stat-chip"><span class="label">Total</span><span id="feedback-total-chip">0</span></div>
+              <div id="feedback-showing" class="feedback-showing">Showing 0 of 0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="feedback-list-panel">
+          <div class="feedback-grid-wrap">
+            <ul id="feedback-list" class="feedback-grid">
+              <li class="feedback-empty">
+                <strong>-</strong>
+                <div style="font-size:.9rem;color:#666;margin-top:6px;">No feedback yet.</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SECTION: REPORTS
+  =========================== -->
+  <div class="page-section" id="section-reports">
+    <div class="section-head">
+      <div>
+        <h2><i class="fa-solid fa-file-lines me-2"></i>Reports</h2>
+        <p>Generate, view, and export business reports for monitoring and decision-making.</p>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn-primary-green" id="reports-export-xlsx"><i class="fa-solid fa-file-excel me-1"></i>Excel</button>
+        <button class="btn-outline-green" id="reports-export-pdf"><i class="fa-solid fa-file-pdf me-1"></i>PDF</button>
+      </div>
+    </div>
+
+    <div class="reports-shell">
+      <div class="reports-panel">
+        <div class="reports-controls">
+          <div class="reports-controls-grid">
+            <section class="reports-control-group reports-control-group-primary">
+              <div class="reports-control-group-head">
+                <div class="reports-control-eyebrow">Report Setup</div>
+                <div class="reports-control-title">Choose the report category</div>
+              </div>
+              <div class="reports-control-fields reports-control-fields-single">
+          <div class="reports-field">
+            <label class="reports-label" for="reports-type">Report Type</label>
+            <select id="reports-type" class="form-select">
+              <option value="sales" selected>Sales Report</option>
+              <option value="inventory">Product Inventory Report</option>
+              <option value="appointments">Appointment Report</option>
+              <option value="customers">Customer Activity Report</option>
+              <option value="payments">Payment & Transaction Report</option>
+            </select>
+          </div>
+
+              </div>
+            </section>
+
+            <section class="reports-control-group">
+              <div class="reports-control-group-head">
+                <div class="reports-control-eyebrow">Date Range</div>
+                <div class="reports-control-title">Set the reporting period</div>
+              </div>
+              <div class="reports-control-fields">
+          <div class="reports-field">
+            <label class="reports-label" for="reports-from">From</label>
+            <input id="reports-from" type="date" class="form-control">
+          </div>
+          <div class="reports-field">
+            <label class="reports-label" for="reports-to">To</label>
+            <input id="reports-to" type="date" class="form-control">
+          </div>
+
+              </div>
+            </section>
+
+          </div>
+        </div>
+
+        <section class="reports-block">
+          <div class="reports-block-head">
+            <div>
+              <div class="reports-block-eyebrow">Snapshot</div>
+              <h4>Summary Cards</h4>
+            </div>
+          </div>
+          <div class="reports-summary" id="reports-summary"></div>
+        </section>
+
+        <section class="reports-block">
+          <div class="reports-block-head">
+            <div>
+              <div class="reports-block-eyebrow">Insights</div>
+              <h4>Charts and Trends</h4>
+            </div>
+          </div>
+
+          <!-- High-end insights (Sales report only) -->
+          <div class="reports-insights" id="reports-insights" style="display:none;">
+            <div class="reports-insight-card reports-insight-full">
+              <div class="reports-insight-head">
+                <div>
+                  <div class="reports-insight-eyebrow">Revenue Overview</div>
+                  <div class="reports-insight-title">Performance in the selected range</div>
+                </div>
+                <div class="reports-chip-row" id="reports-revenue-chips"></div>
+              </div>
+              <div class="reports-chart-wrap">
+                <canvas id="reports-revenue-chart" height="110"></canvas>
+              </div>
+            </div>
+
+            <div class="reports-insight-card">
+              <div class="reports-insight-head">
+                <div>
+                  <div class="reports-insight-eyebrow">Plant Sales</div>
+                  <div class="reports-insight-title">Overall sales by category</div>
+                </div>
+              </div>
+              <div class="reports-chart-wrap reports-chart-wrap-pie">
+                <canvas id="reports-category-pie" height="220"></canvas>
+              </div>
+              <div class="reports-legend" id="reports-category-legend"></div>
+            </div>
+
+            <div class="reports-insight-card">
+              <div class="reports-insight-head">
+                <div>
+                  <div class="reports-insight-eyebrow">Popular Trends</div>
+                  <div class="reports-insight-title">Top plants customers are buying</div>
+                </div>
+              </div>
+              <div class="reports-trends" id="reports-trends"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="reports-block">
+          <div class="reports-block-head">
+            <div>
+              <div class="reports-block-eyebrow">Detailed Data</div>
+              <h4>Report Table</h4>
+            </div>
+          </div>
+          <div class="reports-table-wrap">
+            <table class="admin-table" id="reports-table">
+              <thead id="reports-thead"></thead>
+              <tbody id="reports-tbody">
+                <tr><td colspan="9" style="text-align:center;color:#888;padding:18px;">Generate a report to view results.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+    </div>
+  </div>
+</div><!-- /#main -->
+
+<!-- ORDER DETAIL MODAL -->
+<div id="order-modal">
+  <div class="om-container">
+    <div class="om-header">
+      <div class="om-order-label">Order Details</div>
+      <div class="om-order-id" id="om-order-id"></div>
+      <button class="om-close-btn" onclick="closeOrderModal()">×</button>
+    </div>
+    <div class="om-body" id="om-order-body"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+</div><!-- /#admin-app-shell -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Chart.js for Revenue Overview -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Reports export helpers -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="admin.js?v=orders-date-filter-20260902"></script>
+<script src="admin-view-order.js"></script>
+<script src="admin-appointment-viewer.js"></script>
+</body>
+</html>

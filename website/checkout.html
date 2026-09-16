@@ -1,0 +1,1580 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Bulakena Garden</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Lora:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style-luxury.css">
+  <style>
+    body { background: linear-gradient(160deg,#edf7f0 0%,#f4faf5 55%,#e8f4f0 100%); min-height:100vh; }
+
+    /* -- HERO -- */
+    .checkout-hero{
+      background:linear-gradient(155deg,var(--dark) 0%,var(--g1) 55%,var(--b1) 100%);
+      padding:3.5rem 0 3rem;
+      position:relative; overflow:hidden;
+    }
+    .checkout-hero::before{content:'';position:absolute;border-radius:50%;width:420px;height:420px;background:var(--g3);opacity:.12;filter:blur(80px);top:-130px;left:-90px;animation:orbFloat 14s ease-in-out infinite;}
+    .checkout-hero::after{content:'';position:absolute;border-radius:50%;width:320px;height:320px;background:var(--b3);opacity:.1;filter:blur(70px);bottom:-90px;right:-70px;animation:orbFloat 18s ease-in-out infinite reverse;}
+    @keyframes orbFloat{0%,100%{transform:translate(0,0)}33%{transform:translate(22px,-18px)}66%{transform:translate(-14px,14px)}}
+    .checkout-hero .container{position:relative;z-index:1;}
+    .checkout-hero-eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g4);font-weight:600;display:flex;align-items:center;gap:.5rem;margin-bottom:.65rem;}
+    .checkout-hero-eyebrow::before{content:'';width:28px;height:1.5px;background:var(--g4);}
+    .checkout-hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.6rem);font-weight:300;color:white;line-height:1.1;margin-bottom:.65rem;}
+    .checkout-hero h1 em{font-style:italic;color:var(--g4);}
+    .checkout-hero p{color:rgba(255,255,255,.66);font-size:.97rem;max-width:560px;line-height:1.75;}
+
+    /* Legacy markup support */
+    .checkout-container{padding:0 0 2.5rem;}
+    .checkout-body{padding:2rem 0 3.5rem;}
+    .map-banner{
+      width:min(100%, 1140px);
+      margin:0 auto;
+      height:390px;
+      border-radius:22px;
+      overflow:hidden;
+      position:relative;
+      box-shadow:0 12px 30px rgba(13,74,47,.08);
+    }
+    .checkout-crumb{
+      display:flex;align-items:center;gap:.4rem;
+      font-size:.78rem;color:var(--muted);margin-bottom:1.5rem;
+    }
+    .checkout-crumb a{color:var(--g2);text-decoration:none;}
+    .checkout-crumb .sep{color:#c4d9cb;}
+    .checkout-grid{
+      display:grid;
+      grid-template-columns: 1fr 380px;
+      gap:1.5rem;
+      align-items:start;
+    }
+    .co-card,.order-summary-card,.delivery-map-card{
+      background:white;
+      border-radius:14px;
+      border:1px solid rgba(45,158,104,.12);
+      box-shadow:0 1px 8px rgba(13,74,47,.05);
+      overflow:hidden;
+    }
+    .co-card,.order-summary-card{margin-bottom:1.25rem;}
+    .co-card-head,.os-head,.delivery-map-card-head{
+      padding:1rem 1.4rem;
+      border-bottom:1px solid rgba(45,158,104,.09);
+      background:linear-gradient(135deg, rgba(245,250,247,.9), rgba(255,255,255,.98));
+      display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    }
+    .co-card-head h3,.os-head h4,.delivery-map-card-head h3{
+      margin:0;
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.25rem;
+      font-weight:500;
+      color:#1a4a2e;
+    }
+    .co-card-head p,.delivery-map-card-head p{
+      margin:.15rem 0 0;
+      font-size:.82rem;
+      color:#6b8f74;
+    }
+    .co-card-body{padding:1.25rem 1.4rem;}
+    .c-summary{display:grid;gap:.65rem;}
+    .c-row{
+      display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;
+      padding:.75rem .9rem;
+      border:1px solid rgba(45,158,104,.1);
+      border-radius:8px;
+      background:linear-gradient(180deg, rgba(245,250,247,.7) 0%, rgba(255,255,255,.98) 100%);
+    }
+    .c-row.full{flex-direction:column;gap:.3rem;}
+    .c-label{
+      font-size:.67rem;letter-spacing:.13em;text-transform:uppercase;
+      color:#6b8f74;font-weight:700;flex-shrink:0;padding-top:.1rem;
+    }
+    .c-value{
+      color:#1a4a2e;font-weight:600;text-align:right;line-height:1.5;font-size:.92rem;
+    }
+    .c-row.full .c-value{text-align:left;}
+    .btn-edit{
+      font-size:.75rem;font-weight:600;padding:.35rem .85rem;
+      border:1px solid rgba(45,158,104,.3);border-radius:6px;
+      color:#2d9e68;background:transparent;transition:all .18s;cursor:pointer;
+    }
+    .btn-edit:hover{background:rgba(45,158,104,.08);}
+    .delivery-options{display:flex;gap:.75rem;flex-wrap:wrap;}
+    .d-option{
+      flex:1;min-width:120px;
+      border:1.5px solid rgba(45,158,104,.15);
+      border-radius:10px;padding:.85rem 1rem;
+      cursor:pointer;transition:all .18s;
+      background:white;
+      display:flex;flex-direction:column;gap:.3rem;
+    }
+    .d-option:hover{border-color:rgba(45,158,104,.35);}
+    .d-option.active{
+      border-color:#2d9e68;
+      background:linear-gradient(135deg, rgba(45,158,104,.07), rgba(26,122,138,.04));
+      box-shadow:0 0 0 3px rgba(45,158,104,.1);
+    }
+    .d-option input{accent-color:#2d9e68;}
+    .d-option-label{
+      font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;
+      font-weight:700;color:#1a4a2e;
+    }
+    .d-option-sub{font-size:.78rem;color:#6b8f74;}
+    .d-option.active .d-option-label{color:#2d9e68;}
+    .pickup-card{
+      margin-top:1rem;
+      border:1px solid rgba(45,158,104,.2);
+      border-radius:10px;padding:1rem 1.1rem;
+      background:linear-gradient(135deg, rgba(45,158,104,.05), rgba(255,255,255,.98));
+      cursor:pointer;transition:all .2s;
+    }
+    .pickup-card:hover{border-color:rgba(45,158,104,.4);}
+    .pickup-card.selected{border-color:#2d9e68;box-shadow:0 0 0 3px rgba(45,158,104,.1);}
+    .pickup-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.4rem;}
+    .pickup-name-row{
+      display:flex;
+      align-items:center;
+      gap:.45rem;
+      min-width:0;
+    }
+    .pickup-truck-icon{
+      width:16px;
+      height:16px;
+      flex-shrink:0;
+      color:#2d9e68;
+    }
+    .pickup-name{font-family:'Lora',serif;font-size:.95rem;color:#1a4a2e;font-weight:600;margin-bottom:.15rem;}
+    .pickup-tag{font-size:.72rem;font-weight:700;padding:.25rem .7rem;border-radius:99px;background:rgba(45,158,104,.1);color:#2d9e68;}
+    .pickup-ready{font-size:.8rem;color:#2d9e68;font-weight:500;margin-bottom:.2rem;}
+    .pickup-addr{font-size:.8rem;color:#6b8f74;line-height:1.45;}
+    #checkoutMap{
+      width:100%;
+      height:100%;
+    }
+    .map-banner-overlay{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:2;
+      background:linear-gradient(to bottom, transparent 60%, rgba(244,250,245,.55) 100%);
+    }
+    .map-banner-badge{
+      position:absolute;
+      top:16px;left:16px;
+      z-index:10;
+      background:white;
+      border-radius:10px;
+      padding:8px 14px 8px 10px;
+      display:flex;align-items:center;gap:8px;
+      box-shadow:0 2px 16px rgba(13,74,47,.14);
+      border:1px solid rgba(45,158,104,.15);
+      font-size:.82rem;
+      color:#1a4a2e;
+      font-weight:600;
+    }
+    .map-banner-badge .dot{
+      width:9px;height:9px;border-radius:50%;
+      background:#2d9e68;
+      box-shadow:0 0 0 3px rgba(45,158,104,.25);
+      flex-shrink:0;
+    }
+    .map-empty-state{
+      position:absolute;inset:0;z-index:5;
+      display:none;align-items:center;justify-content:center;
+      text-align:center;padding:2rem;
+      background:linear-gradient(135deg, #edf7f0, #f4faf5);
+    }
+    .map-empty-state.show{display:flex;}
+    .map-empty-state strong{
+      display:block;font-family:'Cormorant Garamond',serif;
+      font-size:1.2rem;color:#1a4a2e;margin-bottom:.3rem;
+    }
+    .map-empty-state span{
+      font-size:.88rem;color:#6b8f74;line-height:1.65;
+    }
+    .leaflet-container{
+      font-family:'DM Sans',sans-serif !important;
+      background:#edf7f0 !important;
+    }
+    .leaflet-popup-content-wrapper{
+      border-radius:12px !important;
+      box-shadow:0 8px 32px rgba(13,74,47,.16) !important;
+      border:1px solid rgba(45,158,104,.14) !important;
+    }
+    .map-popup-title{font-weight:700;color:#2d9e68;margin-bottom:.2rem;font-size:.92rem;}
+    .map-popup-sub{color:#6b8f74;font-size:.82rem;line-height:1.5;}
+    .order-summary-card{
+      background:white;
+      border-radius:14px;
+      border:1px solid rgba(45,158,104,.12);
+      box-shadow:0 1px 8px rgba(13,74,47,.05);
+      overflow:hidden;
+      position:sticky;
+      top: calc(64px + 1rem);
+    }
+    .order-summary-card #orderItemsContainer{padding:1rem 1.4rem 0;}
+    .order-item{
+      display:grid;
+      grid-template-columns:58px minmax(0,1fr) auto;
+      gap:.85rem;
+      align-items:center;
+      padding:.75rem 0;
+      border-bottom:1px solid rgba(45,158,104,.08);
+    }
+    .order-item:last-child{border-bottom:none;}
+    .order-item-media{
+      position:relative;
+      width:58px;
+      height:58px;
+      flex-shrink:0;
+    }
+    .order-item-media img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      border-radius:12px;
+      border:1px solid rgba(45,158,104,.12);
+      box-shadow:0 4px 10px rgba(13,74,47,.08);
+    }
+    .order-item-qty{
+      position:absolute;
+      right:-7px;
+      bottom:-7px;
+      min-width:22px;
+      height:22px;
+      padding:0 .35rem;
+      border-radius:999px;
+      background:#2d9e68;
+      color:white;
+      font-size:.72rem;
+      font-weight:700;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 4px 10px rgba(13,74,47,.16);
+    }
+    .order-item-info{min-width:0;}
+    .order-item-info h6{
+      margin:0;
+      font-size:.92rem;
+      font-weight:700;
+      color:#1a4a2e;
+      line-height:1.35;
+    }
+    .order-item-info p{
+      margin:.25rem 0 0;
+      font-size:.78rem;
+      line-height:1.45;
+      color:#6b8f74;
+    }
+    .order-item-price{
+      font-size:.92rem;
+      font-weight:700;
+      color:#2d9e68;
+      white-space:nowrap;
+      align-self:start;
+      padding-top:.1rem;
+    }
+    .os-totals{padding:1rem 1.4rem;}
+    .os-row{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:.45rem 0;font-size:.9rem;
+      border-bottom:1px solid rgba(45,158,104,.07);
+      color:#1a4a2e;
+    }
+    .os-row span:first-child{color:#6b8f74;}
+    .os-row:last-child{border-bottom:none;}
+    .os-row.os-total{
+      padding-top:.85rem;margin-top:.25rem;border-top:1px solid rgba(45,158,104,.12);
+      border-bottom:none;
+    }
+    .os-row.os-total span:last-child{
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.55rem;font-weight:700;color:#2d9e68;
+    }
+    .btn-place-order{
+      width:100%;
+      background:linear-gradient(135deg, #2d9e68, #1a7a44);
+      color:white;border:none;
+      border-radius:99px;padding:.85rem 1.2rem;
+      font-family:'DM Sans',sans-serif;
+      font-weight:700;font-size:.95rem;letter-spacing:.04em;
+      transition:all .2s;cursor:pointer;
+      box-shadow:0 8px 24px rgba(13,74,47,.2);
+    }
+    .btn-place-order:hover{transform:translateY(-1px);box-shadow:0 12px 30px rgba(13,74,47,.26);}
+    .checkout-back{
+      display:block;text-align:center;margin-top:.7rem;
+      color:#6b8f74;text-decoration:none;font-size:.85rem;font-weight:500;
+      transition:color .18s;
+    }
+    .checkout-back:hover{color:#2d9e68;}
+    @media (max-width: 991.98px){
+      .checkout-grid{grid-template-columns:1fr;}
+      .order-summary-card{position:static;}
+      .map-banner{width:100%;height:350px;border-radius:18px;}
+    }
+    @media (max-width: 575.98px){
+      .map-banner{height:300px;border-radius:16px;}
+      .co-card-body{padding:1rem 1.1rem;}
+      .co-card-head,.os-head,.delivery-map-card-head{padding:.85rem 1.1rem;}
+      .delivery-options{flex-direction:column;}
+      .order-summary-card #orderItemsContainer,
+      .os-totals{padding-left:1.1rem;padding-right:1.1rem;}
+      .order-item{grid-template-columns:50px minmax(0,1fr);gap:.7rem .8rem;}
+      .order-item-media{width:50px;height:50px;}
+      .order-item-price{grid-column:2;justify-self:start;padding-top:0;}
+    }
+  </style>
+</head>
+<body class="checkout-page">
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="../images/logo.JPG" alt="Logo" class="logo-img rounded-circle">
+        <span class="brand-text">Bulakena<span style="color:var(--g3)">Garden</span></span>
+      </a>
+      <button class="navbar-toggler nav-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="nav-toggle-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarMenu">
+        <ul class="navbar-nav mb-2 mb-lg-0 fw-semibold">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+          <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="aboutus.html">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="contactus.html">Contact</a></li>
+        </ul>
+        <div class="auth-controls auth-pending ms-lg-3">
+          <button type="button" class="btn btn-success px-4 js-auth-login">Login</button>
+          <div class="dropdown d-none js-auth-menu">
+            <button class="btn auth-profile-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="auth-avatar">U</span><span class="auth-label">Profile</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+              <li><h6 class="dropdown-header js-auth-email"></h6></li>
+              <li><button type="button" class="dropdown-item js-auth-account">Account</button></li>
+              <li><button type="button" class="dropdown-item js-auth-orders">My Orders</button></li>
+              <li><button type="button" class="dropdown-item js-auth-appointments">My Appointments</button></li>
+              <li><button type="button" class="dropdown-item js-auth-signout">Sign out</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="checkout-hero">
+    <div class="container">
+      <div class="checkout-hero-eyebrow">Checkout</div>
+      <h1>Secure <em>Checkout</em></h1>
+      <p>Confirm your details and delivery preference.</p>
+    </div>
+  </div>
+
+  <div class="map-banner" id="deliveryMapCard">
+    <div id="checkoutMap" aria-label="Customer location map"></div>
+    <div class="map-banner-overlay"></div>
+    <div class="map-banner-badge">
+      <span class="dot"></span>
+      Delivery route map
+    </div>
+    <div class="map-empty-state" id="checkoutMapEmpty">
+      <div>
+        <strong>Map loading</strong>
+        <span>Preparing your location from your saved account address.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="checkout-body">
+    <div class="container">
+      <div class="checkout-crumb">
+        <a href="index.html">Home</a>
+        <span class="sep">?</span>
+        <a href="cart.html">Cart</a>
+        <span class="sep">?</span>
+        <span>Checkout</span>
+      </div>
+
+      <div class="checkout-grid">
+        <div>
+          <div class="co-card">
+            <div class="co-card-head">
+              <div>
+                <h3>Customer Information</h3>
+                <p>From your saved account profile</p>
+              </div>
+              <button type="button" class="btn-edit" id="editCustomerInfoBtn">Edit profile</button>
+            </div>
+            <div class="co-card-body">
+              <div class="c-summary" id="customerSummary">
+                <div class="c-row">
+                  <span class="c-label">Full Name</span>
+                  <span class="c-value" id="summaryName">Loading...</span>
+                </div>
+                <div class="c-row">
+                  <span class="c-label">Contact</span>
+                  <span class="c-value" id="summaryPhone">Loading...</span>
+                </div>
+                <div class="c-row full">
+                  <span class="c-label">Address</span>
+                  <span class="c-value" id="summaryAddress">Loading...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="co-card">
+            <div class="co-card-head">
+              <div>
+                <h3>Delivery Method</h3>
+                <p>Choose how you want to receive your order</p>
+              </div>
+            </div>
+            <div class="co-card-body">
+              <div class="delivery-options">
+                <label class="d-option active">
+                  <input class="form-check-input" type="radio" name="deliveryType" id="ship" value="ship" checked>
+                  <span class="d-option-label">Ship</span>
+                  <span class="d-option-sub">Deliver to your address</span>
+                </label>
+                <label class="d-option">
+                  <input class="form-check-input" type="radio" name="deliveryType" id="pickup" value="pickup">
+                  <span class="d-option-label">Pick up</span>
+                  <span class="d-option-sub">Collect from the store</span>
+                </label>
+              </div>
+
+              <div id="pickupForm" style="display:none;">
+                <div class="pickup-card pickup-location selected">
+                  <div class="pickup-card-top">
+                    <div>
+                      <div class="pickup-name-row">
+                        <svg class="pickup-truck-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                          <path d="M3 6.75A1.75 1.75 0 0 1 4.75 5h9.5A1.75 1.75 0 0 1 16 6.75V8h2.5a2 2 0 0 1 1.79 1.11l1.46 2.92a2 2 0 0 1 .21.89V17a1.75 1.75 0 0 1-1.75 1.75h-.15a2.5 2.5 0 0 1-4.9 0H9.4a2.5 2.5 0 0 1-4.9 0H4.75A1.75 1.75 0 0 1 3 17.25v-10.5Zm13 1.25V8h1.5a.5.5 0 0 1 .45.28l1.22 2.44H16V8ZM7.5 19.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm11 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM5.5 7.5v7.75h1.3a2.5 2.5 0 0 1 4.4 0h3.6V7.5h-9.3Zm10 5.25v2.5h3.9v-2.5h-3.9Z"/>
+                        </svg>
+                        <div class="pickup-name">Vinzons Ave, Daet, Camarines Norte</div>
+                      </div>
+                      <div style="font-size:.82rem;color:#6b8f74;">Close to you</div>
+                    </div>
+                    <div class="pickup-tag">FREE</div>
+                  </div>
+                  <div class="pickup-ready">Usually ready in 2-4 days</div>
+                  <div class="pickup-addr">4WGQ+9P2, Vinzons Ave, Daet, Camarines Norte</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn-place-order" id="placeOrderBtn">Place Order</button>
+          <a href="cart.html" class="checkout-back">Back to cart</a>
+        </div>
+
+        <div>
+          <div class="order-summary-card">
+            <div class="os-head">
+              <h4>Order Summary</h4>
+            </div>
+            <div id="orderItemsContainer"></div>
+            <div class="os-totals">
+              <div class="os-row" id="subtotalRow">
+                <span id="subtotalLabel">Subtotal</span>
+                <span id="subtotal">PHP 0.00</span>
+              </div>
+              <div class="os-row">
+                <span>Shipping</span>
+                <span id="shipping" style="color:#6b8f74;">Enter shipping address</span>
+              </div>
+              <div class="os-row os-total">
+                <span>Total</span>
+                <span id="total">PHP 0.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-brand-logo">Bulakena <span>Garden</span></a>
+        <p>Where nature becomes art. Serving Bulacan and the Philippines with premium plants, landscapes, and garden design since 2009.</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/BulkenaGarden" class="social-link" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="products.html?type=Indoor">Indoor Plants</a></li>
+          <li><a href="products.html?type=Outdoor">Outdoor Plants</a></li>
+          <li><a href="products.html?type=Hanging%20Plants">Hanging Plants</a></li>
+          <li><a href="products.html?type=Table%20Plants">Table Plants</a></li>
+          <li><a href="products.html?type=Furniture">Garden Furniture</a></li>
+          <li><a href="products.html?type=Planter">Garden Planters</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html#gardening">Gardening</a></li>
+          <li><a href="services.html#landscaping">Landscaping</a></li>
+          <li><a href="services.html#consultations">Consultations</a></li>
+          <li><a href="services.html#booking">Book a Service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="aboutus.html">About Us</a></li>
+          <li><a href="contactus.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Bulakena Garden. All rights reserved. Made with &#127793; in Talisay</p>
+    </div>
+  </div>
+</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+  <script>
+    function normalizePhoneDigits(value) {
+      return String(value || '').replace(/\D/g, '').slice(0, 11);
+    }
+
+    /* -- NAV SCROLL -- */
+    const mainNav = document.getElementById('mainNav');
+    if (mainNav) window.addEventListener('scroll', () => mainNav.classList.toggle('scrolled', window.scrollY > 60));
+
+    function resolveWebsiteAsset(path) {
+      var value = String(path || '').trim().replace(/\\/g, '/');
+      if (!value) return '';
+      if (/^(https?:)?\/\//i.test(value) || value.charAt(0) === '/') return value;
+      if (value.indexOf('../') === 0) return value;
+      if (value.indexOf('uploads/') === 0 || value.indexOf('images/') === 0) return '../' + value;
+      if (value.indexOf('feedback/') === 0 || value.indexOf('reviews/') === 0 || value.indexOf('products/') === 0) return '../uploads/' + value;
+      return value;
+    }
+    function escapeHtml(s){
+      return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function formatPeso(n){
+      if (n == null) return 'PHP 0.00';
+      return 'PHP ' + Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function normalizeEmail(email){
+      return String(email || "").trim().toLowerCase();
+    }
+
+    var sessionEmailCache = '';
+    var sessionUserCache = null;
+    function getSessionEmail() {
+      return sessionEmailCache;
+    }
+
+    function getSessionUser() {
+      return sessionUserCache;
+    }
+
+    function splitFullName(fullName) {
+      var parts = String(fullName || '').trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return { first: '', last: '' };
+      if (parts.length === 1) return { first: parts[0], last: '' };
+      return {
+        first: parts.shift(),
+        last: parts.join(' ')
+      };
+    }
+
+    async function loadSessionUser() {
+      if (window.BulakenaAuth && typeof window.BulakenaAuth.refreshSession === 'function') {
+        try {
+          await window.BulakenaAuth.refreshSession({ silent: true });
+          sessionEmailCache = (window.BulakenaAuth.getSessionEmail && window.BulakenaAuth.getSessionEmail()) || '';
+          sessionUserCache = (window.BulakenaAuth.getCurrentUser && window.BulakenaAuth.getCurrentUser()) || null;
+          if (!sessionUserCache || !sessionUserCache.phone || !sessionUserCache.street_address) {
+            const response = await fetch('api/get_my_profile.php', { credentials: 'same-origin' });
+            const data = await response.json();
+            if (data && data.authenticated && data.user) {
+              sessionUserCache = Object.assign({}, sessionUserCache || {}, data.user);
+              sessionEmailCache = sessionUserCache.email ? String(sessionUserCache.email || '') : sessionEmailCache;
+            }
+          }
+          return sessionUserCache;
+        } catch (error) {
+          sessionUserCache = null;
+          return null;
+        }
+      }
+
+      try {
+        const response = await fetch('api/session_check.php', { credentials: 'same-origin' });
+        const data = await response.json();
+        sessionUserCache = data && data.authenticated && data.user ? data.user : null;
+        sessionEmailCache = sessionUserCache && sessionUserCache.email ? String(sessionUserCache.email || '') : '';
+        if (sessionUserCache && (!sessionUserCache.phone || !sessionUserCache.street_address)) {
+          try {
+            const profileResponse = await fetch('api/get_my_profile.php', { credentials: 'same-origin' });
+            const profileData = await profileResponse.json();
+            if (profileData && profileData.authenticated && profileData.user) {
+              sessionUserCache = Object.assign({}, sessionUserCache, profileData.user);
+              sessionEmailCache = sessionUserCache.email ? String(sessionUserCache.email || '') : sessionEmailCache;
+            }
+          } catch (profileError) {
+            console.error('Failed to load profile data:', profileError);
+          }
+        }
+        return sessionUserCache;
+      } catch (error) {
+        sessionUserCache = null;
+        sessionEmailCache = '';
+        return null;
+      }
+    }
+
+    function formatCustomerAddress(user) {
+      if (!user) return 'No saved address yet';
+      var parts = [];
+      var street = String(user.street_address || user.address || user.address_line || user.street || '').trim();
+      var barangay = String(user.barangay || '').trim();
+      var municipality = String(user.municipality || '').trim();
+      var province = String(user.province || '').trim();
+      var region = String(user.region || '').trim();
+
+      if (province === '__special__') province = '';
+
+      if (street) parts.push(street);
+      if (barangay) parts.push(barangay);
+      if (municipality) parts.push(municipality);
+      if (province) parts.push(province);
+      if (region) parts.push(region);
+
+      return parts.length ? parts.join(', ') : 'No saved address yet';
+    }
+
+    function renderCustomerSummary(user) {
+      var currentUser = user || getSessionUser();
+      var summaryName = document.getElementById('summaryName');
+      var summaryPhone = document.getElementById('summaryPhone');
+      var summaryAddress = document.getElementById('summaryAddress');
+
+      if (summaryName) {
+        summaryName.textContent = currentUser && currentUser.name ? currentUser.name : 'Not signed in';
+      }
+      if (summaryPhone) {
+        summaryPhone.textContent = currentUser && currentUser.phone ? normalizePhoneDigits(currentUser.phone) : 'No contact number saved';
+      }
+      if (summaryAddress) {
+        summaryAddress.textContent = currentUser ? formatCustomerAddress(currentUser) : 'No saved address yet';
+      }
+    }
+
+    async function prefillCheckoutFromSession(user) {
+      var currentUser = user || getSessionUser();
+      renderCustomerSummary(currentUser);
+      if (window.checkoutMapController && typeof window.checkoutMapController.render === 'function') {
+        window.checkoutMapController.render(currentUser);
+      }
+      updateShippingDisplay();
+    }
+
+    var checkoutMapController = (function() {
+      var map = null;
+      var customerMarker = null;
+      var shopMarker = null;
+      var routeLayers = [];
+      var tileLayer = null;
+      var renderToken = 0;
+      var mapReady = false;
+
+      var SHOP = {
+        lat: 14.1153,
+        lng: 122.9553,
+        name: 'Bulakena Garden',
+        address: 'Vinzons Ave, Daet, Camarines Norte'
+      };
+
+      function makeShopIcon() {
+        var svg = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+            <defs>
+              <filter id="tg2"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#2d9e68" flood-opacity="0.45"/></filter>
+            </defs>
+            <g filter="url(#tg2)">
+              <circle cx="30" cy="30" r="27" fill="#ffffff" stroke="#2d9e68" stroke-width="1.5" opacity="0.98"/>
+              <rect x="8" y="22" width="24" height="17" rx="2" fill="#2d9e68"/>
+              <path d="M32 26 L32 39 L52 39 L52 32 L46 26 Z" fill="#66b88f"/>
+              <rect x="34" y="27.5" width="7" height="7" rx="1.5" fill="#eaf6ef" opacity="0.95"/>
+              <rect x="43" y="29" width="4" height="5.5" rx="1" fill="#eaf6ef" opacity="0.95"/>
+              <circle cx="17" cy="41" r="4.5" fill="#0f3d28" stroke="#cde8d9" stroke-width="1.2"/>
+              <circle cx="17" cy="41" r="2" fill="#cde8d9"/>
+              <circle cx="41" cy="41" r="4.5" fill="#0f3d28" stroke="#cde8d9" stroke-width="1.2"/>
+              <circle cx="41" cy="41" r="2" fill="#cde8d9"/>
+              <rect x="49" y="33" width="4" height="2.5" rx="1" fill="#fef08a" opacity="0.95"/>
+              <text x="20" y="33.5" text-anchor="middle" font-size="7" font-weight="700" font-family="Outfit, sans-serif" fill="white" opacity="0.9">SHOP</text>
+            </g>
+          </svg>`;
+        return L.divIcon({
+          html: svg,
+          className: '',
+          iconSize: [60, 60],
+          iconAnchor: [30, 48],
+          popupAnchor: [0, -52]
+        });
+      }
+
+      function makeCustomerIcon() {
+        var svg = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="42" height="54" viewBox="0 0 42 54">
+            <defs>
+              <filter id="shadow"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.28"/></filter>
+            </defs>
+            <g filter="url(#shadow)">
+              <path d="M21 2C12.2 2 5 9.2 5 18c0 12.5 16 34 16 34s16-21.5 16-34C37 9.2 29.8 2 21 2z" fill="#17A382"/>
+              <circle cx="21" cy="18" r="8.5" fill="rgba(255,255,255,.16)"/>
+            </g>
+            <path d="M15.2 20.6c1.7-2.2 4.4-3.5 5.8-3.5s4.1 1.3 5.8 3.5m-6.8-5.8a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4zm-2.7 10.2h5.4a2.2 2.2 0 0 0 2.2-2.2v-.8a2.8 2.8 0 0 0-2.8-2.8h-4.2a2.8 2.8 0 0 0-2.8 2.8v.8a2.2 2.2 0 0 0 2.2 2.2z" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>`;
+        return L.divIcon({
+          html: svg,
+          className: '',
+          iconSize: [42, 54],
+          iconAnchor: [21, 54],
+          popupAnchor: [0, -50]
+        });
+      }
+
+      function buildCustomerAddressCandidates(user) {
+        if (!user) return [];
+
+        var street = String(user.street_address || user.address || user.address_line || user.street || '').trim();
+        var barangay = String(user.barangay || '').trim();
+        var municipality = String(user.municipality || '').trim();
+        var province = String(user.province || '').trim();
+        var region = String(user.region || '').trim();
+
+        if (province === '__special__') province = '';
+
+        var candidates = [];
+        var seen = {};
+
+        function addCandidate(parts) {
+          var value = parts.filter(Boolean).join(', ').replace(/\s+/g, ' ').trim();
+          if (!value) return;
+          var normalized = value.toLowerCase();
+          if (seen[normalized]) return;
+          seen[normalized] = true;
+          candidates.push(value);
+        }
+
+        addCandidate([street, barangay, municipality, province, region, 'Philippines']);
+        addCandidate([street, municipality, province, region, 'Philippines']);
+        addCandidate([barangay, municipality, province, region, 'Philippines']);
+        addCandidate([municipality, province, region, 'Philippines']);
+        addCandidate([municipality, province, 'Philippines']);
+        addCandidate([province, region, 'Philippines']);
+        addCandidate([municipality, 'Philippines']);
+        addCandidate([province, 'Philippines']);
+
+        return candidates;
+      }
+
+      function setEmptyState(show, title, message) {
+        var emptyState = document.getElementById('checkoutMapEmpty');
+        if (!emptyState) return;
+        emptyState.classList.toggle('show', !!show);
+        if (show) {
+          emptyState.innerHTML = '<div><strong>' + escapeHtml(title || 'Map loading') + '</strong><span>' + escapeHtml(message || '') + '</span></div>';
+        }
+      }
+
+      function ensureMap() {
+        if (mapReady) return map;
+        var mapEl = document.getElementById('checkoutMap');
+        if (!mapEl || typeof L === 'undefined') return null;
+
+        map = L.map('checkoutMap', {
+          zoomControl: false,
+          scrollWheelZoom: false,
+          preferCanvas: true
+        }).setView([SHOP.lat, SHOP.lng], 14);
+
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+        tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+          attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+          maxZoom: 19
+        }).addTo(map);
+
+        shopMarker = L.marker([SHOP.lat, SHOP.lng], {
+          icon: makeShopIcon(),
+          zIndexOffset: 1000
+        }).addTo(map).bindPopup(
+          '<div class="map-popup"><div class="map-popup-title">Bulakena Garden</div><div class="map-popup-sub">' +
+          escapeHtml(SHOP.address) + '</div></div>'
+        );
+
+        mapReady = true;
+        return map;
+      }
+
+      function geocodeAddress(address) {
+        var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=ph&q=' + encodeURIComponent(address);
+        return fetch(url, { credentials: 'omit' })
+          .then(function(response) {
+            if (!response.ok) {
+              throw new Error('Could not look up the customer location.');
+            }
+            return response.json();
+          })
+          .then(function(data) {
+            if (!data || !data.length) {
+              throw new Error('No map result was found for the saved address.');
+            }
+            return {
+              lat: parseFloat(data[0].lat),
+              lng: parseFloat(data[0].lon),
+              displayName: data[0].display_name || address
+            };
+          });
+      }
+
+      function getRoute(from, to) {
+        var url = 'https://router.project-osrm.org/route/v1/driving/' +
+          from.lng + ',' + from.lat + ';' + to.lng + ',' + to.lat +
+          '?overview=full&geometries=geojson';
+        return fetch(url, { credentials: 'omit' })
+          .then(function(response) {
+            if (!response.ok) {
+              throw new Error('Could not calculate the delivery route.');
+            }
+            return response.json();
+          })
+          .then(function(data) {
+            if (!data || data.code !== 'Ok' || !data.routes || !data.routes.length) {
+              throw new Error('No road route was found for this address.');
+            }
+            var route = data.routes[0];
+            return {
+              coordinates: route.geometry.coordinates.map(function(point) {
+                return [point[1], point[0]];
+              }),
+              distance: route.distance,
+              duration: route.duration
+            };
+          });
+      }
+
+      function clearMapLayers() {
+        if (!map) return;
+        if (customerMarker) {
+          map.removeLayer(customerMarker);
+          customerMarker = null;
+        }
+        while (routeLayers.length) {
+          map.removeLayer(routeLayers.pop());
+        }
+      }
+
+      function render(user) {
+        var currentToken = ++renderToken;
+        var currentMap = ensureMap();
+        var addressCandidates = buildCustomerAddressCandidates(user);
+
+        if (!currentMap) {
+          setEmptyState(true, 'Map unavailable', 'The map is not available right now.');
+          return;
+        }
+
+        window.setTimeout(function() {
+          currentMap.invalidateSize(true);
+        }, 120);
+
+        clearMapLayers();
+
+        if (!addressCandidates.length) {
+          setEmptyState(true, 'No customer location yet', 'Complete your customer information to show the location map.');
+          currentMap.setView([SHOP.lat, SHOP.lng], 14);
+          return;
+        }
+
+        setEmptyState(true, 'Loading map', 'We\'re locating your saved customer address...');
+
+        function geocodeWithFallback(index) {
+          var candidate = addressCandidates[index];
+          if (!candidate) {
+            return Promise.reject(new Error('No address candidates available.'));
+          }
+          return geocodeAddress(candidate).catch(function (error) {
+            if (index + 1 >= addressCandidates.length) {
+              throw error;
+            }
+            return geocodeWithFallback(index + 1);
+          });
+        }
+
+        geocodeWithFallback(0)
+          .then(function(customer) {
+            return getRoute(SHOP, customer).then(function(route) {
+              return {
+                customer: customer,
+                route: route,
+                fallbackRoute: false
+              };
+            }).catch(function () {
+              return {
+                customer: customer,
+                route: {
+                  coordinates: [
+                    [SHOP.lat, SHOP.lng],
+                    [customer.lat, customer.lng]
+                  ],
+                  distance: null,
+                  duration: null
+                },
+                fallbackRoute: true
+              };
+            });
+          })
+          .then(function(result) {
+            if (currentToken !== renderToken) return;
+
+            setEmptyState(false);
+
+            customerMarker = L.marker([result.customer.lat, result.customer.lng], {
+              icon: makeCustomerIcon()
+            }).addTo(currentMap).bindPopup(
+              '<div class="map-popup"><div class="map-popup-title">Customer Location</div><div class="map-popup-sub">' +
+              escapeHtml(result.customer.displayName) + '</div></div>'
+            );
+
+            var mainRouteOptions = {
+              color: '#2d9e68',
+              weight: 4,
+              opacity: 0.92
+            };
+            if (result.fallbackRoute) {
+              mainRouteOptions.dashArray = '10 10';
+            }
+
+            routeLayers.push(
+              L.polyline(result.route.coordinates, {
+                color: '#2d9e68',
+                weight: 10,
+                opacity: 0.16
+              }).addTo(currentMap)
+            );
+            routeLayers.push(
+              L.polyline(result.route.coordinates, mainRouteOptions).addTo(currentMap)
+            );
+            routeLayers.push(
+              L.polyline(result.route.coordinates, {
+                color: '#b7e4d0',
+                weight: 2,
+                opacity: 0.6,
+                dashArray: '7 10'
+              }).addTo(currentMap)
+            );
+
+            currentMap.fitBounds(
+              L.latLngBounds(result.route.coordinates),
+              { padding: [40, 40] }
+            );
+
+            window.setTimeout(function() {
+              if (customerMarker && customerMarker.openPopup) customerMarker.openPopup();
+            }, 200);
+          })
+          .catch(function(error) {
+            if (currentToken !== renderToken) return;
+            console.error('Checkout map error:', error);
+            setEmptyState(true, 'Location not found', 'We could not locate the saved customer address. Please make sure the profile address is complete.');
+            currentMap.setView([SHOP.lat, SHOP.lng], 14);
+          });
+      }
+
+      return {
+        render: render
+      };
+    })();
+
+    window.checkoutMapController = checkoutMapController;
+
+    function getCheckoutItems() {
+      try {
+        // First try to get from localStorage (passed from cart)
+        var checkoutItems = localStorage.getItem('bulakena_checkout_items');
+        if (checkoutItems) {
+          var items = JSON.parse(checkoutItems);
+          if (items && Array.isArray(items) && items.length > 0) {
+            return items;
+          }
+        }
+        
+        // Fallback to window object if available
+        var items = window.pendingCheckoutItems || [];
+        if (items && Array.isArray(items)) {
+          return items;
+        }
+        return [];
+      } catch (e) {
+        console.error('Error getting checkout items:', e);
+        return [];
+      }
+    }
+
+    const STORE_ADDRESS = {
+      region: 'Bicol Region',
+      province: 'Camarines Norte',
+      municipality: 'Daet'
+    };
+
+    function normalizePlaceLabel(value) {
+      return String(value || '')
+        .replace(/^Province of\s+/i, '')
+        .replace(/^City of\s+/i, '')
+        .replace(/^Municipality of\s+/i, '')
+        .replace(/\s*\(Capital\)\s*/i, '')
+        .trim();
+    }
+
+    function placeKey(value) {
+      return normalizePlaceLabel(value)
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+    }
+
+    const REGION_GROUPS = {
+      luzon: new Set([
+        'Ilocos Region',
+        'Cagayan Valley',
+        'Central Luzon',
+        'CALABARZON',
+        'Mimaropa',
+        'Bicol Region',
+        'Metro Manila',
+        'Cordillera Administrative Region'
+      ].map(placeKey)),
+      visayas: new Set([
+        'Western Visayas',
+        'Central Visayas',
+        'Eastern Visayas'
+      ].map(placeKey)),
+      mindanao: new Set([
+        'Zamboanga Peninsula',
+        'Northern Mindanao',
+        'Davao Region',
+        'Soccsksargen',
+        'Caraga',
+        'Bangsamoro Autonomous Region in Muslim Mindanao'
+      ].map(placeKey))
+    };
+
+    function getIslandGroupByRegion(region) {
+      const key = placeKey(region);
+      if (REGION_GROUPS.luzon.has(key)) return 'luzon';
+      if (REGION_GROUPS.visayas.has(key)) return 'visayas';
+      if (REGION_GROUPS.mindanao.has(key)) return 'mindanao';
+      return '';
+    }
+
+    function getShippingAddressSelection() {
+      var currentUser = getSessionUser();
+      return {
+        region: normalizePlaceLabel(currentUser && currentUser.region || ''),
+        province: normalizePlaceLabel(currentUser && currentUser.province || ''),
+        municipality: normalizePlaceLabel(currentUser && currentUser.municipality || ''),
+        barangay: normalizePlaceLabel(currentUser && currentUser.barangay || '')
+      };
+    }
+
+    function getShippingFee(address, deliveryType) {
+      if (deliveryType === 'pickup') {
+        return 0;
+      }
+
+      const region = normalizePlaceLabel(address?.region || '');
+      const province = normalizePlaceLabel(address?.province || '');
+      const municipality = normalizePlaceLabel(address?.municipality || '');
+      const regionKey = placeKey(region);
+      const provinceKey = placeKey(province);
+      const municipalityKey = placeKey(municipality);
+      const storeRegionKey = placeKey(STORE_ADDRESS.region);
+      const storeProvinceKey = placeKey(STORE_ADDRESS.province);
+      const storeMunicipalityKey = placeKey(STORE_ADDRESS.municipality);
+
+      if (!region) {
+        return 0;
+      }
+
+      if (
+        regionKey === storeRegionKey &&
+        provinceKey === storeProvinceKey &&
+        municipalityKey === storeMunicipalityKey
+      ) {
+        return 0;
+      }
+
+      if (regionKey === storeRegionKey && provinceKey === storeProvinceKey) {
+        return 80;
+      }
+
+      if (regionKey === storeRegionKey) {
+        return 150;
+      }
+
+      const storeIslandGroup = getIslandGroupByRegion(STORE_ADDRESS.region);
+      const customerIslandGroup = getIslandGroupByRegion(region);
+
+      if (customerIslandGroup && customerIslandGroup === storeIslandGroup) {
+        return 220;
+      }
+
+      if (customerIslandGroup === 'visayas') {
+        return 320;
+      }
+
+      if (customerIslandGroup === 'mindanao') {
+        return 420;
+      }
+
+      return 260;
+    }
+
+    const PSGC_API_BASE = 'https://psgc.cloud/api';
+    const addressApiCache = {};
+    // Postal codes for current supported municipalities, based on the PHLPost ZIP Code Locator.
+    const POSTAL_CODE_LOOKUP = {
+      'camarines norte|basud': '4608',
+      'camarines norte|capalonga': '4607',
+      'camarines norte|daet': '4600',
+      'camarines norte|jose panganiban': '4606',
+      'camarines norte|labo': '4604',
+      'camarines norte|mercedes': '4601',
+      'camarines norte|paracale': '4605',
+      'camarines norte|san lorenzo ruiz': '4610',
+      'camarines norte|san lorenzo ruiz formerly imelda': '4610',
+      'camarines norte|san vicente': '4609',
+      'camarines norte|sta elena': '4611',
+      'camarines norte|santa elena': '4611',
+      'camarines norte|talisay': '4602',
+      'camarines norte|vinzons': '4603',
+      'camarines norte|tulay na lupa': '4612'
+    };
+
+    function sortByName(items) {
+      return items.slice().sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
+    }
+
+    function normalizeRegionName(name) {
+      const regionName = String(name || '').trim();
+      if (!regionName) return '';
+      if (/^National Capital Region\b/i.test(regionName)) return 'Metro Manila';
+      if (/^Cordillera Administrative Region\b/i.test(regionName)) return 'Cordillera Administrative Region';
+      if (/^Bangsamoro Autonomous Region/i.test(regionName)) return 'Bangsamoro Autonomous Region in Muslim Mindanao';
+      if (/^MIMAROPA Region\b/i.test(regionName)) return 'Mimaropa';
+      const parenMatch = regionName.match(/\(([^)]+)\)/);
+      if (parenMatch && parenMatch[1]) {
+        return parenMatch[1].trim();
+      }
+      return regionName;
+    }
+
+    function getSelectedOption(selectId) {
+      const select = document.getElementById(selectId);
+      return select && select.selectedIndex >= 0 ? select.options[select.selectedIndex] : null;
+    }
+
+    function fillAddressSelect(selectId, items, placeholder, getValue, getLabel, getCode) {
+      const select = document.getElementById(selectId);
+      const sortedItems = sortByName(items);
+      select.innerHTML = '';
+
+      const placeholderOption = document.createElement('option');
+      placeholderOption.value = '';
+      placeholderOption.textContent = placeholder;
+      select.appendChild(placeholderOption);
+
+      sortedItems.forEach((item) => {
+        const option = document.createElement('option');
+        option.value = getValue(item);
+        option.textContent = getLabel(item);
+        option.dataset.code = getCode(item);
+        select.appendChild(option);
+      });
+
+      select.disabled = false;
+    }
+
+    function resetAddressSelect(selectId, placeholder) {
+      const select = document.getElementById(selectId);
+      select.innerHTML = '';
+      const option = document.createElement('option');
+      option.value = '';
+      option.textContent = placeholder;
+      select.appendChild(option);
+      select.disabled = true;
+    }
+
+    async function apiFetchJson(url) {
+      if (addressApiCache[url]) return addressApiCache[url];
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Request failed: ' + response.status);
+      }
+      const data = await response.json();
+      addressApiCache[url] = data;
+      return data;
+    }
+
+    function updateShippingDisplay() {
+      const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+      const shippingAddress = getShippingAddressSelection();
+      const shippingElement = document.getElementById('shipping');
+
+      if (deliveryType === 'pickup') {
+        shippingElement.textContent = 'Pick up in store \u00B7 FREE';
+        shippingElement.style.color = 'var(--g2)';
+        shippingElement.style.fontWeight = '500';
+      } else {
+        const shippingFee = getShippingFee(shippingAddress, deliveryType);
+        if (shippingAddress.region && shippingAddress.province && shippingAddress.municipality && shippingAddress.barangay) {
+          if (shippingFee > 0) {
+          shippingElement.textContent = formatPeso(shippingFee);
+          shippingElement.style.color = 'var(--text)';
+          shippingElement.style.fontWeight = '400';
+          } else if (
+            placeKey(shippingAddress.region) === placeKey(STORE_ADDRESS.region) &&
+            placeKey(shippingAddress.province) === placeKey(STORE_ADDRESS.province) &&
+            placeKey(shippingAddress.municipality) === placeKey(STORE_ADDRESS.municipality)
+          ) {
+            shippingElement.textContent = 'Free shipping in Daet, Camarines Norte';
+            shippingElement.style.color = 'var(--g2)';
+            shippingElement.style.fontWeight = '500';
+          } else {
+            shippingElement.textContent = 'Shipping address ready';
+            shippingElement.style.color = 'var(--muted)';
+            shippingElement.style.fontWeight = '400';
+          }
+        } else {
+          shippingElement.textContent = 'Enter shipping address';
+          shippingElement.style.color = 'var(--muted)';
+          shippingElement.style.fontWeight = '400';
+        }
+      }
+
+      updateTotal();
+    }
+
+    function updateTotal() {
+      const subtotalText = document.getElementById('subtotal').textContent;
+      const subtotal = parseFloat(subtotalText.replace('PHP ', '').replace(/,/g, '')) || 0;
+      
+      const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+      const shippingFee = getShippingFee(getShippingAddressSelection(), deliveryType);
+      
+      const total = subtotal + shippingFee;
+      document.getElementById('total').textContent = formatPeso(total);
+    }
+
+    function renderOrderSummary() {
+      const items = getCheckoutItems();
+      const container = document.getElementById('orderItemsContainer');
+      let subtotal = 0;
+      let totalQty = 0;
+
+      if (!items.length) {
+        container.innerHTML = '<div class="p-3 text-muted">No checkout items found. Please return to your cart and select a product.</div>';
+        const subtotalLabel = document.getElementById('subtotalLabel');
+        if (subtotalLabel) {
+          subtotalLabel.textContent = 'Subtotal';
+        }
+        document.getElementById('subtotal').textContent = formatPeso(0);
+        updateShippingDisplay();
+        return;
+      }
+
+      container.innerHTML = items.map((item, idx) => {
+        const itemTotal = item.price * item.qty;
+        subtotal += itemTotal;
+        totalQty += item.qty;
+        return `
+          <div class="order-item" style="animation-delay:${idx * 0.05}s">
+            <div class="order-item-media">
+              <img src="${escapeHtml(resolveWebsiteAsset(item.img))}" alt="${escapeHtml(item.title)}">
+              <div class="order-item-qty">${item.qty}</div>
+            </div>
+            <div class="order-item-info">
+              <h6>${escapeHtml(item.title || 'Item')}</h6>
+              <p>${escapeHtml(item.desc ? item.desc.substring(0, 60) : '')}${item.sizeLabel ? '<br><strong>Size:</strong> ' + escapeHtml(item.sizeLabel) : ''}</p>
+            </div>
+            <div class="order-item-price">${formatPeso(itemTotal)}</div>
+          </div>
+        `;
+      }).join('');
+
+      // Update subtotal label with item count
+      const subtotalLabel = document.getElementById('subtotalLabel');
+      if (subtotalLabel) {
+        subtotalLabel.textContent = `Subtotal \u00B7 ${totalQty} item${totalQty !== 1 ? 's' : ''}`;
+      }
+
+      document.getElementById('subtotal').textContent = formatPeso(subtotal);
+      updateShippingDisplay();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.checkoutMapController && typeof window.checkoutMapController.render === 'function') {
+        window.checkoutMapController.render(getSessionUser());
+      }
+
+      renderOrderSummary();
+
+      // Toggle between shipping and pickup modes
+      const deliveryRadios = document.querySelectorAll('input[name="deliveryType"]');
+      const pickupForm = document.getElementById('pickupForm');
+
+      deliveryRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+          if (pickupForm) pickupForm.style.display = this.value === 'pickup' ? 'block' : 'none';
+          document.querySelectorAll('.d-option').forEach(function(option) {
+            const input = option.querySelector('input[name="deliveryType"]');
+            option.classList.toggle('active', !!input && input.checked);
+          });
+          updateShippingDisplay();
+        });
+      });
+      document.querySelectorAll('.d-option').forEach(function(option) {
+        const input = option.querySelector('input[name="deliveryType"]');
+        option.classList.toggle('active', !!input && input.checked);
+      });
+
+      var sessionReady = loadSessionUser().then(function(user) {
+        renderCustomerSummary(user);
+        if (window.checkoutMapController && typeof window.checkoutMapController.render === 'function') {
+          window.checkoutMapController.render(user);
+        }
+        return user;
+      });
+      sessionReady.then(function(user) {
+        return prefillCheckoutFromSession(user);
+      });
+
+      window.addEventListener('bulakena:auth-sync', function() {
+        loadSessionUser().then(function(user) {
+          renderCustomerSummary(user);
+          if (window.checkoutMapController && typeof window.checkoutMapController.render === 'function') {
+            window.checkoutMapController.render(user);
+          }
+          updateShippingDisplay();
+        });
+      });
+
+      var editCustomerInfoBtn = document.getElementById('editCustomerInfoBtn');
+      if (editCustomerInfoBtn) {
+        editCustomerInfoBtn.addEventListener('click', function() {
+          if (window.BulakenaAuth && typeof window.BulakenaAuth.openAccountModal === 'function') {
+            window.BulakenaAuth.openAccountModal();
+            return;
+          }
+          alert('Account settings are not available right now.');
+        });
+      }
+
+      // Handle pickup location selection
+      const pickupLocations = document.querySelectorAll('.pickup-location');
+      pickupLocations.forEach(location => {
+        location.addEventListener('click', function() {
+          pickupLocations.forEach(loc => {
+            loc.classList.remove('selected');
+          });
+          this.classList.add('selected');
+        });
+      });
+      // Auto-select first pickup location
+      if (pickupLocations.length > 0) {
+        pickupLocations[0].classList.add('selected');
+      }
+
+        document.getElementById('placeOrderBtn').addEventListener('click', function() {
+        loadSessionUser().then(function() {
+        const customerUser = getSessionUser();
+        if (!customerUser || !customerUser.email) {
+          alert('Please sign in before placing your order.');
+          return;
+        }
+        const safeName = String(customerUser.name || customerUser.full_name || '').trim();
+        const nameParts = splitFullName(safeName);
+        const firstName = nameParts.first || safeName;
+        const lastName = nameParts.last || '';
+        const phone = normalizePhoneDigits(customerUser.phone);
+        if (!phone || phone.length !== 11) {
+          alert('Please enter a valid contact number (exactly 11 digits)');
+          return;
+        }
+        if (!firstName) {
+          alert('Your account name is incomplete. Please update your profile first.');
+          return;
+        }
+        const email = customerUser.email;
+        const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+        let address, city, region, province, municipality, barangay, apartment, postalCode;
+
+        if (deliveryType === 'ship') {
+          region = String(customerUser.region || '').trim();
+          province = String(customerUser.province || '').trim();
+          municipality = String(customerUser.municipality || '').trim();
+          barangay = String(customerUser.barangay || '').trim();
+          address = String(customerUser.street_address || '').trim();
+          city = municipality;
+          apartment = '';
+          postalCode = '';
+
+          if (!region || !municipality || !barangay || !address || !province) {
+            alert('Please complete your account address first.');
+            return;
+          }
+        } else if (deliveryType === 'pickup') {
+          address = '4WGQ+9P2, Vinzons Ave, Daet, Camarines Norte';
+          barangay = '';
+          municipality = 'Daet';
+          city = municipality;
+          province = 'Camarines Norte';
+          region = 'Bicol Region';
+          postalCode = '';
+          apartment = '';
+        }
+
+        const country = 'Philippines';
+        const shippingFee = getShippingFee({
+          region: region,
+          province: province,
+          municipality: municipality,
+          barangay: barangay
+        }, deliveryType);
+
+        const orderRef = '';
+
+        const orderData = {
+          order_ref: orderRef,
+          email: email,
+          phone: phone,
+          firstName: firstName,
+          lastName: lastName,
+          address: address,
+          apartment: apartment,
+          city: city,
+          barangay: barangay,
+          municipality: municipality,
+          province: province,
+          postalCode: postalCode,
+          country: country,
+          region: region,
+          deliveryType: deliveryType,
+          items: getCheckoutItems(),
+          shippingFee: shippingFee,
+          total: document.getElementById('total').textContent,
+          timestamp: new Date().toISOString()
+        };
+
+        if (!orderData.items.length) {
+          alert('No checkout items found. Please return to your cart and select a product.');
+          return;
+        }
+
+        const totalAmount = Number(String(document.getElementById('total').textContent || '').replace(/[^\d.]/g, '')) || 0;
+
+        fetch('api/create-checkout.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            total: totalAmount,
+            items: orderData.items,
+            shipping_fee: shippingFee,
+            order_ref: orderRef,
+            email: email,
+            phone: phone,
+            firstName: firstName,
+            lastName: lastName,
+            address: address,
+            apartment: apartment,
+            city: city,
+            barangay: barangay,
+            municipality: municipality,
+            province: province,
+            postalCode: postalCode,
+            country: country,
+            region: region,
+            deliveryType: deliveryType,
+            shippingFee: shippingFee,
+            customer_name: firstName + ' ' + lastName,
+            customer_phone: phone,
+            customer_email: email,
+            customer_address: address + (apartment ? ', ' + apartment : ''),
+            delivery_type: deliveryType
+          })
+        })
+        .then(async response => {
+          const text = await response.text();
+          let data = {};
+          try {
+            data = text ? JSON.parse(text) : {};
+          } catch (error) {
+            console.error('Invalid JSON from PayMongo source endpoint:', error);
+          }
+
+          if (!response.ok || !data.success || !data.checkout_url) {
+            throw new Error(data.message || 'Unable to start QRPH checkout.');
+          }
+          return data;
+        })
+        .then(data => {
+          try { localStorage.removeItem('bulakena_checkout_items'); } catch (e) {}
+          
+          // Store payment session data for the confirmation page
+          sessionStorage.setItem('checkout_url', data.checkout_url);
+          sessionStorage.setItem('order_ref', data.order_ref);
+          sessionStorage.setItem('session_id', data.session_id || data.source_id || '');
+          sessionStorage.setItem('order_total', totalAmount);
+          sessionStorage.setItem('checkout_items', JSON.stringify(orderData.items));
+          sessionStorage.setItem('qr_code_url', data.qr_code_url || '');
+          sessionStorage.setItem('qr_code_value', data.qr_code_value || '');
+          sessionStorage.setItem('customer_name', firstName + ' ' + lastName);
+          
+          // PayMongo Checkout renders the official QRPH code that GCash recognizes.
+          window.location.href = data.checkout_url;
+        })
+        .catch(error => {
+          console.error('QRPH checkout error:', error);
+          alert(error.message || 'Error starting payment. Please try again.');
+        });
+      });
+      });
+
+
+    });
+  </script>
+</body>
+</html>

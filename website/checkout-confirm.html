@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Order | Bulakena Garden</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #242a32;
+      --muted: #526b7c;
+      --line: #d8e1e8;
+      --panel: #f2f5f7;
+      --green: #26a957;
+      --shadow: 0 2px 8px rgba(24, 37, 48, .08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: #fff;
+      font-family: 'DM Sans', Arial, sans-serif;
+    }
+
+    .topbar {
+      height: 82px;
+      border-top: 2px solid #9ccbd0;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 16px;
+    }
+
+    .back-link {
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 22px;
+      flex: 0 0 auto;
+    }
+
+    .payer-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      background: #1e2631;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      letter-spacing: .02em;
+      flex: 0 0 auto;
+    }
+
+    .payer-name {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .payment-shell {
+      display: grid;
+      grid-template-columns: minmax(360px, 1fr) minmax(420px, .98fr);
+      min-height: calc(100vh - 82px);
+    }
+
+    .order-pane {
+      padding: 40px 42px 56px 22px;
+      max-width: 980px;
+    }
+
+    .order-pane h1 {
+      font-size: 30px;
+      line-height: 1.2;
+      font-weight: 700;
+      margin: 0 0 22px;
+    }
+
+    .item-list {
+      display: grid;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .pay-item {
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr);
+      gap: 20px;
+      align-items: center;
+    }
+
+    .item-thumb {
+      width: 160px;
+      height: 160px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #f1f4f6;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .item-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .item-title {
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 700;
+      margin: 0 0 4px;
+    }
+
+    .item-qty {
+      color: var(--muted);
+      font-size: 18px;
+      margin-bottom: 2px;
+    }
+
+    .item-price {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .divider {
+      border: 0;
+      border-top: 1px dashed var(--line);
+      margin: 20px 0;
+    }
+
+    .shipping-note {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    .description {
+      font-size: 20px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .totals {
+      display: grid;
+      gap: 6px;
+      margin-top: 20px;
+      font-size: 20px;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      color: var(--muted);
+    }
+
+    .total-row strong {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .total-due {
+      margin-top: 18px;
+      padding-top: 22px;
+      border-top: 1px dashed var(--line);
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .pay-pane {
+      border-left: 1px solid var(--line);
+      padding: 39px 26px 32px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .qr-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      background: #fff;
+    }
+
+    .qr-stage {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      min-height: 538px;
+      padding: 18px 18px 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .scan-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 22px;
+    }
+
+    .qrph-word {
+      color: #114b9a;
+      font-weight: 800;
+    }
+
+    .qrph-word .red { color: #c9172d; }
+
+    .wallet-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      min-height: 18px;
+      margin-bottom: 4px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .wallet-gcash { color: #0a65d8; }
+    .wallet-maya { color: #13a74b; }
+    .wallet-bpi { color: #b80d21; }
+    .wallet-gotyme { color: #222; }
+    .wallet-home { color: #d9212e; }
+
+    .support-copy {
+      color: #111;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+    .timer-pill {
+      min-width: 72px;
+      height: 38px;
+      border-radius: 999px;
+      background: #30b861;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: -19px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .qr-code {
+      width: 320px;
+      height: 320px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .qr-code img,
+    .qr-code canvas {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .download-btn,
+    .method-btn {
+      height: 44px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .download-btn {
+      width: 320px;
+      margin-top: 10px;
+    }
+
+    .method-btn {
+      width: 100%;
+      margin-top: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .privacy-copy {
+      text-align: center;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.4;
+      max-width: 520px;
+      margin: 30px auto 0;
+    }
+
+    .privacy-copy a {
+      color: var(--green);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .error-message {
+      margin: 40px auto;
+      max-width: 720px;
+      background: #fff2f2;
+      border: 1px solid #f0c5c5;
+      color: #a72828;
+      padding: 18px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .loading {
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(38, 169, 87, .25);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 980px) {
+      .payment-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .pay-pane {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        height: 70px;
+        padding: 0 16px;
+      }
+
+      .payer-name {
+        font-size: 16px;
+      }
+
+      .order-pane,
+      .pay-pane {
+        padding: 24px 16px;
+      }
+
+      .order-pane h1 {
+        font-size: 26px;
+      }
+
+      .pay-item {
+        grid-template-columns: 96px minmax(0, 1fr);
+        gap: 14px;
+      }
+
+      .item-thumb {
+        width: 96px;
+        height: 96px;
+      }
+
+      .item-title {
+        font-size: 18px;
+      }
+
+      .item-qty,
+      .totals,
+      .description {
+        font-size: 15px;
+      }
+
+      .item-price {
+        font-size: 17px;
+      }
+
+      .qr-card {
+        padding: 14px;
+      }
+
+      .qr-stage {
+        min-height: auto;
+      }
+
+      .qr-code,
+      .download-btn {
+        width: min(100%, 280px);
+      }
+
+      .qr-code {
+        height: min(72vw, 280px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="back-link" href="checkout.html" aria-label="Back to checkout"><i class="fa-solid fa-arrow-left"></i></a>
+    <div class="payer-avatar" id="payerAvatar">BG</div>
+    <div class="payer-name" id="payerName">Bulakena Garden Customer</div>
+  </header>
+
+  <main>
+    <div id="loading-message" style="display:flex;align-items:center;justify-content:center;gap:12px;padding:42px;color:#526b7c;">
+      <span class="loading"></span>
+      <span>Loading payment details...</span>
+    </div>
+    <div id="payment-card-container"></div>
+    <div id="error-container"></div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const loading = document.getElementById('loading-message');
+      const container = document.getElementById('payment-card-container');
+      const errorContainer = document.getElementById('error-container');
+      const payerNameEl = document.getElementById('payerName');
+      const payerAvatarEl = document.getElementById('payerAvatar');
+
+      function escapeHtml(value) {
+        return String(value ?? '').replace(/[&<>"']/g, function(char) {
+          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char];
+        });
+      }
+
+      function formatPeso(value) {
+        return 'PHP ' + (Number(value) || 0).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      }
+
+      function resolveAsset(path) {
+        const value = String(path || '').trim().replace(/\\/g, '/');
+        if (!value) return '';
+        if (/^(https?:)?\/\//i.test(value) || value.charAt(0) === '/') return value;
+        if (value.indexOf('../') === 0) return value;
+        if (value.indexOf('uploads/') === 0 || value.indexOf('images/') === 0) return '../' + value;
+        if (value.indexOf('products/') === 0 || value.indexOf('reviews/') === 0 || value.indexOf('feedback/') === 0) return '../uploads/' + value;
+        return value;
+      }
+
+      function getInitials(name) {
+        const parts = String(name || 'Bulakena Garden Customer').trim().split(/\s+/).filter(Boolean);
+        return (parts[0]?.charAt(0) || 'B') + (parts[1]?.charAt(0) || parts[0]?.charAt(1) || 'G');
+      }
+
+      function showError(message) {
+        errorContainer.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-circle me-2"></i>${escapeHtml(message)}</div>`;
+        loading.style.display = 'none';
+        container.innerHTML = '';
+      }
+
+      function buildThumb(item) {
+        const img = resolveAsset(item.img);
+        if (img) {
+          const fallback = escapeHtml(String(item.title || 'Item').charAt(0).toUpperCase() || 'I');
+          return `<img src="${escapeHtml(img)}" alt="${escapeHtml(item.title || 'Item')}" onerror="this.remove();this.parentElement.textContent='${fallback}';">`;
+        }
+        return escapeHtml(String(item.title || 'Item').charAt(0).toUpperCase() || 'I');
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const checkoutUrl = urlParams.get('checkout_url') || sessionStorage.getItem('checkout_url');
+      const orderRef = urlParams.get('order_ref') || sessionStorage.getItem('order_ref');
+      const sessionId = urlParams.get('session_id') || sessionStorage.getItem('session_id');
+      const total = Number(urlParams.get('total') || sessionStorage.getItem('order_total')) || 0;
+      const qrCodeUrl = urlParams.get('qr_code_url') || sessionStorage.getItem('qr_code_url');
+      const qrCodeValue = urlParams.get('qr_code_value') || sessionStorage.getItem('qr_code_value');
+      const customerName = urlParams.get('customer_name') || sessionStorage.getItem('customer_name') || 'Bulakena Garden Customer';
+      let items = [];
+
+      try {
+        const itemsText = sessionStorage.getItem('checkout_items') || '[]';
+        items = JSON.parse(itemsText);
+        if (!Array.isArray(items)) items = [];
+      } catch (error) {
+        items = [];
+      }
+
+      if (!checkoutUrl) {
+        showError('Payment session not created. Please go back to checkout and place the order again.');
+        return;
+      }
+
+      if (!orderRef) {
+        showError('Order reference not found. Please go back to checkout and place the order again.');
+        return;
+      }
+
+      if (total <= 0) {
+        showError('Order total is missing. Please go back to checkout and place the order again.');
+        return;
+      }
+
+      payerNameEl.textContent = customerName;
+      payerAvatarEl.textContent = getInitials(customerName).toUpperCase();
+
+      const itemsTotal = items.reduce(function(sum, item) {
+        return sum + ((Number(item.price) || 0) * (Number(item.qty) || 1));
+      }, 0);
+      const shippingFee = Math.max(0, total - itemsTotal);
+
+      const qrImageUrl = qrCodeUrl || (qrCodeValue ? 'https://api.qrserver.com/v1/create-qr-code/?size=288x288&margin=8&data=' + encodeURIComponent(qrCodeValue) : '');
+      const qrCodeHtml = qrImageUrl
+        ? `<div id="qr-code-container" class="qr-code"><img src="${escapeHtml(qrImageUrl)}" alt="QRPH QR Code" loading="eager" decoding="async"></div>`
+        : `<div id="qr-code-container" class="qr-code" style="padding:24px;text-align:center;color:#526b7c;font-weight:700;">QRPH code is being prepared. Continue to PayMongo to complete your payment.</div>`;
+      const continueHtml = qrImageUrl ? '' : `<button type="button" class="method-btn" id="openPaymongoBtn">Continue to PayMongo</button>`;
+
+      container.innerHTML = `
+        <section class="payment-shell">
+          <div class="order-pane">
+            <h1>Bulake&ntilde;a Garden</h1>
+            <p class="description">Payment Summary:</p>
+            <div class="totals">
+              <div class="total-row"><span>Product Total</span><span>${formatPeso(total)}</span></div>
+              <div class="total-row total-due"><strong>Total Due</strong><strong>${formatPeso(total)}</strong></div>
+            </div>
+            <hr class="divider">
+            <p class="description">Bulakena Garden order ${escapeHtml(orderRef)}</p>
+          </div>
+
+          <div class="pay-pane">
+            <div class="qr-card">
+              <div class="qr-stage">
+                <div class="scan-title">Scan <span class="qrph-word"><span class="red">Q</span>RPh</span> code to pay</div>
+                <div class="wallet-row" aria-label="Supported wallets">
+                  <span class="wallet-gcash">GCash</span>
+                  <span class="wallet-maya">maya</span>
+                  <span class="wallet-bpi">BPI</span>
+                  <span class="wallet-gotyme">GOtyme</span>
+                  <span class="wallet-home">HOME CREDIT</span>
+                </div>
+                <div class="support-copy">See all supported banks and e-wallets <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></div>
+                <div class="timer-pill">30:00</div>
+                ${qrCodeHtml}
+                <button type="button" class="download-btn" id="downloadQrBtn"><i class="fa-solid fa-download"></i> Download QR Code</button>
+              </div>
+            </div>
+            ${continueHtml}
+            <p class="privacy-copy">By completing your purchase, you agree to PayMongo's <a href="https://www.paymongo.com/privacy" target="_blank" rel="noopener">Privacy Policy</a>.</p>
+          </div>
+        </section>
+      `;
+
+      sessionStorage.setItem('checkout_url', checkoutUrl);
+      sessionStorage.setItem('order_ref', orderRef);
+      sessionStorage.setItem('session_id', sessionId || '');
+      sessionStorage.setItem('order_total', String(total));
+      sessionStorage.setItem('customer_name', customerName);
+      sessionStorage.setItem('qr_code_value', qrCodeValue || '');
+
+      const openPaymongoBtn = document.getElementById('openPaymongoBtn');
+      if (openPaymongoBtn) {
+        openPaymongoBtn.addEventListener('click', function() {
+          window.location.href = checkoutUrl;
+        });
+      }
+
+      document.getElementById('downloadQrBtn').addEventListener('click', function() {
+        const canvas = document.querySelector('#qr-code-container canvas');
+        const image = document.querySelector('#qr-code-container img');
+        if (canvas) {
+          const link = document.createElement('a');
+          link.href = canvas.toDataURL('image/png');
+          link.download = `bulakena-order-${orderRef || 'payment'}.png`;
+          link.click();
+          return;
+        }
+        if (image && image.src) {
+          window.open(image.src, '_blank');
+          return;
+        }
+        alert('QR Code not ready yet. Please wait a moment.');
+      });
+
+      loading.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

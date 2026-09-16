@@ -1,0 +1,932 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulakena Garden | Home</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts: Luxury pair -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Lora:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+  <!-- Luxury Design System -->
+  <link rel="stylesheet" href="style-luxury.css">
+  <!-- Original styles (kept for app.js compatibility) -->
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* -- Page-specific overrides -- */
+    .home-hero-copy > p.text-uppercase { color: var(--g4) !important; }
+    .home-hero-title {
+      font-size: clamp(3.25rem, 6.2vw, 5.4rem) !important;
+      line-height: 0.95;
+    }
+    .home-hero-image-wrap {
+      min-height: 520px !important;
+    }
+    .home-hero-image {
+      width: min(96%, 680px) !important;
+      max-width: none !important;
+    }
+    .home-hero-image img {
+      width: 100% !important;
+      max-width: none !important;
+      transform: translateY(18px);
+    }
+    .home-plants .price-small {
+      color: var(--g2, #1a6b45) !important;
+      font-size: 1.28rem !important;
+      font-weight: 800 !important;
+      letter-spacing: .02em !important;
+      text-transform: none !important;
+      display: block;
+      margin-top: 6px;
+    }
+    .best-sellers-slider {
+      overflow: hidden;
+      position: relative;
+      padding: 10px 0;
+    }
+    .best-sellers-slider::before,
+    .best-sellers-slider::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: clamp(28px, 5vw, 72px);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .best-sellers-slider::before {
+      left: 0;
+      background: linear-gradient(90deg, var(--off-white, #f7f5ef), rgba(247, 245, 239, 0));
+    }
+    .best-sellers-slider::after {
+      right: 0;
+      background: linear-gradient(270deg, var(--off-white, #f7f5ef), rgba(247, 245, 239, 0));
+    }
+    .best-sellers-track {
+      display: flex;
+      width: max-content;
+      gap: 24px;
+      animation: bestSellerMarquee 36s linear infinite;
+    }
+    .best-seller-item {
+      flex: 0 0 clamp(260px, 30vw, 360px);
+    }
+    .best-seller-item .home-card {
+      height: 100%;
+    }
+    .best-seller-item .card-body {
+      min-height: 116px;
+    }
+    @keyframes bestSellerMarquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(calc(-50% - 12px)); }
+    }
+    @media (max-width: 992px) {
+      .home-hero-title {
+        font-size: clamp(2.8rem, 8vw, 4.2rem) !important;
+      }
+      .home-hero-image-wrap {
+        min-height: 420px !important;
+      }
+      .home-hero-image {
+        width: min(92%, 560px) !important;
+      }
+      .best-sellers-track {
+        animation-duration: 32s;
+      }
+      .best-seller-item {
+        flex-basis: clamp(240px, 42vw, 320px);
+      }
+    }
+    @media (max-width: 768px) {
+      .best-sellers-track {
+        gap: 18px;
+        animation-duration: 30s;
+      }
+      .best-seller-item {
+        flex-basis: clamp(220px, 72vw, 280px);
+      }
+      .best-seller-item .card-body {
+        min-height: 104px;
+      }
+    }
+
+    /* Preloader */
+    #bg-preloader {
+      position: fixed; inset: 0;
+      background: var(--dark);
+      z-index: 9999;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 1.5rem;
+      transition: opacity .8s ease, visibility .8s ease;
+    }
+    #bg-preloader.done { opacity: 0; visibility: hidden; pointer-events: none; }
+    .pre-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem; color: var(--cream);
+      letter-spacing: .15em;
+      animation: fadeUp .8s ease both;
+    }
+    .pre-bar { width: 180px; height: 2px; background: rgba(255,255,255,.12); border-radius: 2px; overflow: hidden; }
+    .pre-fill {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--g3), var(--b3));
+      transform: scaleX(0);
+      transform-origin: left center;
+      will-change: transform;
+      animation: fillBar 1.8s cubic-bezier(.22, .61, .36, 1) forwards;
+    }
+    @keyframes fillBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:none } }
+
+    /* Floating particle layer */
+    #particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+    .pt {
+      position: absolute; border-radius: 50%;
+      background: rgba(77,201,138,.55);
+      animation: ptFloat linear infinite;
+    }
+    @keyframes ptFloat {
+      0%   { transform: translate(0,0) scale(1); opacity: .3; }
+      25%  { transform: translate(20px,-28px) scale(1.1); opacity: .6; }
+      50%  { transform: translate(-15px,-12px) scale(.9); opacity: .4; }
+      75%  { transform: translate(10px,-36px) scale(1.05); opacity: .5; }
+      100% { transform: translate(0,0) scale(1); opacity: .3; }
+    }
+
+    .see-all-reviews-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      margin-top: 1.6rem;
+      padding: .62rem 1.6rem;
+      background: transparent;
+      border: 1.5px solid rgba(77,201,138,.45);
+      border-radius: 50px;
+      color: var(--g4, #4dc98a);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .84rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .see-all-reviews-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(77,201,138,.15), rgba(26,107,69,.2));
+      opacity: 0;
+      transition: opacity .3s ease;
+      border-radius: inherit;
+    }
+    .see-all-reviews-btn:hover {
+      border-color: var(--g4, #4dc98a);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(77,201,138,.25);
+    }
+    .see-all-reviews-btn:hover::before { opacity: 1; }
+    .see-all-reviews-btn span,
+    .see-all-reviews-btn svg {
+      position: relative;
+      z-index: 1;
+    }
+    .see-all-reviews-btn svg { transition: transform .3s ease; }
+    .see-all-reviews-btn:hover svg { transform: translateX(4px); }
+
+    .reviews-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: stretch;
+      justify-content: flex-end;
+      pointer-events: none;
+      visibility: hidden;
+    }
+    .reviews-overlay.open {
+      pointer-events: all;
+      visibility: visible;
+    }
+    .reviews-overlay-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(5,18,10,.72);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      opacity: 0;
+      transition: opacity .5s cubic-bezier(.4,0,.2,1);
+    }
+    .reviews-overlay.open .reviews-overlay-backdrop { opacity: 1; }
+    .reviews-panel {
+      position: relative;
+      width: min(96vw, 780px);
+      height: 100dvh;
+      background: linear-gradient(160deg, #0d2416 0%, #0a1a10 60%, #071210 100%);
+      border-left: 1px solid rgba(77,201,138,.12);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: translateX(100%);
+      transition: transform .55s cubic-bezier(.4,0,.2,1);
+      box-shadow: -24px 0 80px rgba(0,0,0,.6);
+    }
+    .reviews-panel::before {
+      content: "";
+      position: absolute;
+      top: -120px;
+      right: -80px;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(77,201,138,.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .reviews-overlay.open .reviews-panel { transform: translateX(0); }
+    .reviews-panel-header {
+      padding: 2.2rem 2.4rem 1.8rem;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-shrink: 0;
+      background: linear-gradient(180deg, rgba(77,201,138,.05) 0%, transparent 100%);
+    }
+    .reviews-panel-eyebrow {
+      font-size: .7rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--g4, #4dc98a);
+      margin: 0 0 .4rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+    }
+    .reviews-panel-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.1rem;
+      font-weight: 400;
+      color: var(--cream, #f5f0e8);
+      margin: 0 0 .4rem;
+      line-height: 1.1;
+    }
+    .reviews-panel-title em { font-style: italic; color: var(--g4, #4dc98a); }
+    .reviews-panel-subtitle {
+      font-size: .84rem;
+      color: rgba(245,240,232,.45);
+      margin: 0;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .reviews-close-btn {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: rgba(245,240,232,.6);
+      transition: all .25s ease;
+      flex-shrink: 0;
+    }
+    .reviews-close-btn:hover {
+      background: rgba(77,201,138,.15);
+      border-color: rgba(77,201,138,.4);
+      color: #fff;
+      transform: rotate(90deg);
+    }
+    .reviews-panel-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.8rem 2.4rem 3rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(77,201,138,.3) transparent;
+    }
+    .reviews-panel-body::-webkit-scrollbar { width: 4px; }
+    .reviews-panel-body::-webkit-scrollbar-track { background: transparent; }
+    .reviews-panel-body::-webkit-scrollbar-thumb {
+      background: rgba(77,201,138,.3);
+      border-radius: 4px;
+    }
+    .reviews-rating-summary {
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+      padding: 1.4rem 1.8rem;
+      background: rgba(77,201,138,.06);
+      border: 1px solid rgba(77,201,138,.15);
+      border-radius: 16px;
+      margin-bottom: 2rem;
+    }
+    .reviews-big-score {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.8rem;
+      font-weight: 300;
+      color: var(--cream, #f5f0e8);
+      line-height: 1;
+      letter-spacing: -.02em;
+    }
+    .reviews-big-stars {
+      font-size: 1.25rem;
+      color: #f5c842;
+      letter-spacing: .1em;
+      margin-bottom: .3rem;
+    }
+    .reviews-total {
+      font-size: .8rem;
+      color: rgba(245,240,232,.45);
+      margin: 0;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.2rem;
+    }
+    .review-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 18px;
+      padding: 1.5rem 1.6rem;
+      transition: transform .3s ease, border-color .3s ease, background .3s ease;
+      opacity: 0;
+      transform: translateY(22px);
+      animation: reviewCardIn .5s ease forwards;
+    }
+    .review-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(77,201,138,.25);
+      background: rgba(77,201,138,.05);
+    }
+    @keyframes reviewCardIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .review-card-head {
+      display: flex;
+      align-items: center;
+      gap: .9rem;
+      margin-bottom: 1rem;
+    }
+    .review-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--g2, #1a6b45), var(--g4, #4dc98a));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #fff;
+      flex-shrink: 0;
+      letter-spacing: .03em;
+    }
+    .review-name {
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--cream, #f5f0e8);
+      margin: 0 0 .15rem;
+    }
+    .review-date {
+      font-size: .72rem;
+      color: rgba(245,240,232,.35);
+      font-family: 'DM Sans', sans-serif;
+    }
+    .review-stars {
+      font-size: .85rem;
+      color: #f5c842;
+      margin-bottom: .85rem;
+      letter-spacing: .06em;
+    }
+    .review-text {
+      font-family: 'Lora', serif;
+      font-size: .88rem;
+      line-height: 1.65;
+      color: rgba(245,240,232,.7);
+      margin: 0;
+      font-style: italic;
+      margin-bottom: .85rem;
+    }
+    .review-image-container {
+      margin: 1rem 0;
+      text-align: center;
+      overflow: hidden;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 190px;
+      background: rgba(255,255,255,.035);
+    }
+    .review-image {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(77, 201, 138, 0.15);
+      transition: transform .3s ease, box-shadow .3s ease;
+      display: block;
+      cursor: zoom-in;
+    }
+    .review-card:hover .review-image {
+      transform: scale(1.03);
+      box-shadow: 0 8px 20px rgba(77, 201, 138, 0.25);
+    }
+    .review-tag {
+      display: inline-block;
+      margin-top: .85rem;
+      padding: .22rem .75rem;
+      background: rgba(77,201,138,.1);
+      border: 1px solid rgba(77,201,138,.2);
+      border-radius: 50px;
+      font-size: .68rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--g4, #4dc98a);
+      font-family: 'DM Sans', sans-serif;
+    }
+    .reviews-empty {
+      padding: 2rem 1.5rem;
+      text-align: center;
+      color: rgba(245,240,232,.6);
+      font-family: 'DM Sans', sans-serif;
+      border: 1px dashed rgba(77,201,138,.18);
+      border-radius: 18px;
+      background: rgba(255,255,255,.03);
+    }
+    @media (max-width: 600px) {
+      .reviews-grid { grid-template-columns: 1fr; }
+      .reviews-panel-header,
+      .reviews-panel-body {
+        padding-left: 1.4rem;
+        padding-right: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body class="home-page">
+
+  <!-- PRELOADER -->
+  <div id="bg-preloader">
+    <div class="pre-logo">Bulakena Garden</div>
+    <div class="pre-bar"><div class="pre-fill"></div></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="../images/logo.JPG" alt="Logo" class="logo-img rounded-circle me-3">
+        <span class="brand-text">Bulakena<span style="color:var(--g3)">Garden</span></span>
+      </a>
+      <button class="navbar-toggler nav-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="nav-toggle-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarMenu">
+        <ul class="navbar-nav mb-2 mb-lg-0 fw-semibold">
+          <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+          <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="aboutus.html">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="contactus.html">Contact</a></li>
+        </ul>
+        <div class="auth-controls auth-pending ms-lg-3">
+          <button type="button" class="btn btn-success px-4 js-auth-login">Login</button>
+          <div class="dropdown d-none js-auth-menu">
+            <button class="btn auth-profile-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="auth-avatar">U</span>
+              <span class="auth-label">Profile</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+              <li><h6 class="dropdown-header js-auth-email"></h6></li>
+              <li><button type="button" class="dropdown-item js-auth-account">Account</button></li>
+              <li><button type="button" class="dropdown-item js-auth-orders">My Orders</button></li>
+              <li><button type="button" class="dropdown-item js-auth-appointments">My Appointments</button></li>
+              <li><button type="button" class="dropdown-item js-auth-signout">Sign out</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- -- HERO -- -->
+  <section class="home-hero-modern">
+    <div class="home-orb left" aria-hidden="true"></div>
+    <div class="home-orb right" aria-hidden="true"></div>
+    <div id="particles"></div>
+    <div class="container" style="position:relative;z-index:1;">
+      <div class="row align-items-center g-4 g-lg-5">
+        <div class="col-lg-6 home-hero-copy">
+          <p class="text-uppercase small fw-bold mb-2" style="letter-spacing:.08em;color:var(--g4);">Bulakena Garden</p>
+          <h1 class="home-hero-title">Cultivate Your<br><em style="color:var(--g4);font-style:italic;">Dream Garden</em><br>at Home</h1>
+          <p>Discover premium plants, sustainable landscaping solutions, and curated garden essentials designed to make every outdoor space thrive.</p>
+          <div class="home-actions">
+            <a href="products.html" class="btnx primary">Shop Products</a>
+            <a href="services.html#consultations" class="btnx secondary">Book an Appointment</a>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="home-hero-image-wrap">
+            <figure class="home-hero-image m-0">
+              <img src="../images/modelplant.png" alt="Bulakena Garden landscape">
+            </figure>
+            <div class="home-hero-badge">Locally trusted garden partner</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Scroll hint -->
+    <div style="position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,.4);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;">
+      <div style="width:1px;height:40px;background:linear-gradient(180deg,rgba(255,255,255,.5),transparent);animation:pulse 2s infinite;"></div>
+      Scroll
+    </div>
+  </section>
+
+
+  <!-- -- STATS RIBBON -- -->
+  <div class="home-stats-ribbon">
+    <div class="container">
+      <div class="stat-block reveal-on-scroll">
+        <span class="num" data-count="2400">0</span>
+        <span class="lbl">Plants Sold</span>
+      </div>
+      <div class="stat-block reveal-on-scroll">
+        <span class="num" data-count="380">0</span>
+        <span class="lbl">Projects Done</span>
+      </div>
+      <div class="stat-block reveal-on-scroll">
+        <span class="num" data-count="12">0</span>
+        <span class="lbl">Years of Service</span>
+      </div>
+      <div class="stat-block reveal-on-scroll">
+        <span class="num" data-count="98">0</span>
+        <span class="lbl">% Satisfaction</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- -- BEST SELLING PLANTS -- -->
+  <section class="plants-section home-plants py-5">
+    <div class="container">
+      <div class="text-center mb-5 home-section-card reveal-on-scroll">
+        <span class="eyebrow" style="justify-content:center;">Bestsellers</span>
+        <h2 class="fw-bold">Best Selling <em style="color:var(--g2);">Plants</em></h2>
+        <p class="text-muted">Our most loved plants, chosen for their beauty, quality, and ability to thrive in your space.</p>
+      </div>
+      <div class="best-sellers-slider reveal-on-scroll" aria-label="Best selling plants slider">
+        <div class="best-sellers-track">
+          <article class="best-seller-item">
+            <div class="card shadow-sm home-card">
+              <div style="overflow:hidden;border-radius:var(--radius-md) var(--radius-md) 0 0;">
+                <a href="product.html?id=5"><img src="../images/snake.jpg" class="card-img-top featured-plant-img" alt="Snake Plant"></a>
+              </div>
+              <div class="card-body d-flex flex-column text-center p-4">
+                <h5 class="card-title">Snake Plant</h5>
+                <span class="price-small">FROM &#8369;400.00</span>
+              </div>
+            </div>
+          </article>
+          <article class="best-seller-item">
+            <div class="card shadow-sm home-card">
+              <div style="overflow:hidden;border-radius:var(--radius-md) var(--radius-md) 0 0;">
+                <a href="product.html?id=2"><img src="../images/superwhite.jpg" class="card-img-top featured-plant-img" alt="Super White"></a>
+              </div>
+              <div class="card-body d-flex flex-column text-center p-4">
+                <h5 class="card-title">Super White</h5>
+                <span class="price-small">FROM &#8369;650.00</span>
+              </div>
+            </div>
+          </article>
+          <article class="best-seller-item">
+            <div class="card shadow-sm home-card">
+              <div style="overflow:hidden;border-radius:var(--radius-md) var(--radius-md) 0 0;">
+                <a href="product.html?id=3"><img src="../images/chinese.jpg" class="card-img-top featured-plant-img" alt="Chinese Evergreen"></a>
+              </div>
+              <div class="card-body d-flex flex-column text-center p-4">
+                <h5 class="card-title">Chinese Evergreen</h5>
+                <span class="price-small">FROM &#8369;600.00</span>
+              </div>
+            </div>
+          </article>
+          <article class="best-seller-item">
+            <div class="card shadow-sm home-card">
+              <div style="overflow:hidden;border-radius:var(--radius-md) var(--radius-md) 0 0;">
+                <a href="product.html?id=6"><img src="../images/marigold.jpg" class="card-img-top featured-plant-img" alt="Marigold"></a>
+              </div>
+              <div class="card-body d-flex flex-column text-center p-4">
+                <h5 class="card-title">Marigold</h5>
+                <span class="price-small">FROM &#8369;160.00</span>
+              </div>
+            </div>
+          </article>
+          <article class="best-seller-item">
+            <div class="card shadow-sm home-card">
+              <div style="overflow:hidden;border-radius:var(--radius-md) var(--radius-md) 0 0;">
+                <a href="product.html?id=1"><img src="../images/rubber.jpg" class="card-img-top featured-plant-img" alt="Rubber Plant"></a>
+              </div>
+              <div class="card-body d-flex flex-column text-center p-4">
+                <h5 class="card-title">Rubber Plant</h5>
+                <span class="price-small">FROM &#8369;250.00</span>
+              </div>
+            </div>
+          </article>
+          <article class="best-seller-item">
+            <div class="card shadow-sm home-card">
+              <div style="overflow:hidden;border-radius:var(--radius-md) var(--radius-md) 0 0;">
+                <a href="product.html?id=4"><img src="../images/crassula.jpg" class="card-img-top featured-plant-img" alt="Crassula Ovata"></a>
+              </div>
+              <div class="card-body d-flex flex-column text-center p-4">
+                <h5 class="card-title">Crassula Ovata</h5>
+                <span class="price-small">FROM &#8369;150.00</span>
+              </div>
+            </div>
+          </article>
+          <article class="best-seller-item" aria-hidden="true">
+            <div class="card shadow-sm home-card">
+              <div style="overflow:hidden;border-radius:var(--radius-md) var(--radius-md) 0 0;">
+                <a href="product.html?id=5" tabindex="-1"><img src="../images/snake.jpg" class="card-img-top featured-plant-img" alt="Snake Plant"></a>
+              </div>
+              <div class="card-body d-flex flex-column text-center p-4">
+                <h5 class="card-title">Snake Plant</h5>
+                <span class="price-small">FROM &#8369;400.00</span>
+              </div>
+            </div>
+          </article>
+          <article class="best-seller-item" aria-hidden="true">
+            <div class="card shadow-sm home-card">
+              <div style="overflow:hidden;border-radius:var(--radius-md) var(--radius-md) 0 0;">
+                <a href="product.html?id=2" tabindex="-1"><img src="../images/superwhite.jpg" class="card-img-top featured-plant-img" alt="Super White"></a>
+              </div>
+              <div class="card-body d-flex flex-column text-center p-4">
+                <h5 class="card-title">Super Whtie</h5>
+                <span class="price-small">FROM &#8369;650.00</span>
+              </div>
+            </div>
+          </article>
+          <article class="best-seller-item" aria-hidden="true">
+            <div class="card shadow-sm home-card">
+              <div style="overflow:hidden;border-radius:var(--radius-md) var(--radius-md) 0 0;">
+                <a href="product.html?id=3" tabindex="-1"><img src="../images/chinese.jpg" class="card-img-top featured-plant-img" alt="Chinese Evergreen"></a>
+              </div>
+              <div class="card-body d-flex flex-column text-center p-4">
+                <h5 class="card-title">Chinese Evergreen</h5>
+                <span class="price-small">FROM &#8369;600.00</span>
+              </div>
+            </div>
+          </article>
+          <article class="best-seller-item" aria-hidden="true">
+            <div class="card shadow-sm home-card">
+              <div style="overflow:hidden;border-radius:var(--radius-md) var(--radius-md) 0 0;">
+                <a href="product.html?id=6" tabindex="-1"><img src="../images/marigold.jpg" class="card-img-top featured-plant-img" alt="Marigold"></a>
+              </div>
+              <div class="card-body d-flex flex-column text-center p-4">
+                <h5 class="card-title">Marigold</h5>
+                <span class="price-small">FROM &#8369;160.00</span>
+              </div>
+            </div>
+          </article>
+          <article class="best-seller-item" aria-hidden="true">
+            <div class="card shadow-sm home-card">
+              <div style="overflow:hidden;border-radius:var(--radius-md) var(--radius-md) 0 0;">
+                <a href="product.html?id=1" tabindex="-1"><img src="../images/rubber.jpg" class="card-img-top featured-plant-img" alt="Rubber Plant"></a>
+              </div>
+              <div class="card-body d-flex flex-column text-center p-4">
+                <h5 class="card-title">Rubber Plant</h5>
+                <span class="price-small">FROM &#8369;250.00</span>
+              </div>
+            </div>
+          </article>
+          <article class="best-seller-item" aria-hidden="true">
+            <div class="card shadow-sm home-card">
+              <div style="overflow:hidden;border-radius:var(--radius-md) var(--radius-md) 0 0;">
+                <a href="product.html?id=4" tabindex="-1"><img src="../images/crassula.jpg" class="card-img-top featured-plant-img" alt="Crassula Ovata"></a>
+              </div>
+              <div class="card-body d-flex flex-column text-center p-4">
+                <h5 class="card-title">Crassula Ovata</h5>
+                <span class="price-small">FROM &#8369;150.00</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="text-center mt-5 reveal-on-scroll">
+        <div class="home-cta-wrap">
+          <a href="products.html#products-section" class="btn btn-success btn-lg px-5">Discover More Products</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- -- LANDSCAPING SHOWCASE -- -->
+  <section class="landscape-section home-landscape py-5">
+    <div class="container">
+      <div class="text-center mb-5 home-section-card reveal-on-scroll">
+        <span class="eyebrow" style="justify-content:center;">Our Work</span>
+        <h2 class="fw-bold">Professional <em style="color:var(--g2);">Landscaping</em> & Garden Design</h2>
+        <p class="text-muted">Let our skilled landscape architects transform your outdoor space into a personalized haven of natural beauty and tranquility.</p>
+      </div>
+      <div class="row align-items-center gy-4 gy-lg-0">
+        <div class="col-lg-6 reveal-on-scroll">
+          <img src="../images/landscape.jpg" alt="Landscape Design" class="landscape-img">
+        </div>
+        <div class="col-lg-6 ps-lg-5 reveal-on-scroll">
+          <span class="eyebrow">Expert Team</span>
+          <h3 class="landscape-heading mb-3">Expert Landscaping Services</h3>
+          <p class="landscape-text mb-3">Transform your outdoor space into a lush paradise. Our expert team designs, installs, and maintains gardens that reflect your personal style and enhance your property's natural beauty.</p>
+          <p class="landscape-text mb-4">From serene zen gardens to vibrant floral displays, we bring your vision to life with meticulous craftsmanship.</p>
+          <a href="services.html#gardening" class="btnx primary">Book Now!</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- -- TESTIMONIALS -- -->
+  <section class="home-testimonials py-5 reveal-on-scroll">
+    <div class="container">
+      <div class="text-center mb-5 home-section-card">
+        <span class="eyebrow" style="justify-content:center;color:var(--g4);">
+          <span style="background:var(--g4);display:inline-block;width:28px;height:1.5px;"></span>
+          Client Stories
+        </span>
+        <h2 class="fw-bold" style="color:var(--cream);">What Our <em style="color:var(--g4);">Customers</em> Say</h2>
+      </div>
+      <div class="testimonials-carousel mt-2" id="testimonials-carousel" data-max="3" data-limit="1000">
+        <div class="testimonial-slide" id="testimonial-slide">
+        </div>
+      </div>
+      <div class="text-center mt-4">
+        <button class="see-all-reviews-btn" id="seeAllReviewsBtn" type="button">
+          <span>See All Reviews</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- -- FOOTER -- -->
+  <div id="allReviewsOverlay" class="reviews-overlay" aria-modal="true" role="dialog" aria-label="All customer reviews">
+    <div class="reviews-overlay-backdrop" data-close-reviews="true"></div>
+    <div class="reviews-panel">
+      <div class="reviews-panel-header">
+        <div>
+          <p class="reviews-panel-eyebrow">Client Stories</p>
+          <h3 class="reviews-panel-title">What Our <em>Customers</em> Say</h3>
+          <p class="reviews-panel-subtitle">Live reviews from product orders and service feedback.</p>
+        </div>
+        <button class="reviews-close-btn" id="closeAllReviewsBtn" type="button" aria-label="Close reviews">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="reviews-panel-body">
+        <div class="reviews-rating-summary">
+          <div class="reviews-big-score" id="allReviewsAverage">0.0</div>
+          <div>
+            <div class="reviews-big-stars" id="allReviewsStars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="reviews-total" id="allReviewsTotal">Loading reviews...</p>
+          </div>
+        </div>
+        <div class="reviews-grid" id="allReviewsGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="footer-brand-logo">Bulakena <span>Garden</span></a>
+          <p>Where nature becomes art. Serving Bulacan and the Philippines with premium plants, landscapes, and garden design since 2009.</p>
+          <div class="footer-socials">
+            <a href="https://www.facebook.com/BulkenaGarden" class="social-link" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="products.html?type=Indoor">Indoor Plants</a></li>
+            <li><a href="products.html?type=Outdoor">Outdoor Plants</a></li>
+            <li><a href="products.html?type=Hanging%20Plants">Hanging Plants</a></li>
+            <li><a href="products.html?type=Table%20Plants">Table Plants</a></li>
+            <li><a href="products.html?type=Furniture">Garden Furniture</a></li>
+            <li><a href="products.html?type=Planter">Garden Planters</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="services.html#gardening">Gardening</a></li>
+            <li><a href="services.html#landscaping">Landscaping</a></li>
+            <li><a href="services.html#consultations">Consultations</a></li>
+            <li><a href="services.html#booking">Book a Service</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="aboutus.html">About Us</a></li>
+            <li><a href="contactus.html">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Bulakena Garden. All rights reserved. Made with &#127793; in Talisay</p>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+  /* -- PRELOADER -- */
+  window.addEventListener('load', () => {
+    setTimeout(() => document.getElementById('bg-preloader').classList.add('done'), 1900);
+  });
+
+  /* -- NAV SCROLL -- */
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  /* -- PARTICLES -- */
+  const pc = document.getElementById('particles');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'pt';
+    const s = 2 + Math.random() * 4;
+    p.style.cssText = `
+      width:${s}px;height:${s}px;
+      left:${Math.random()*100}%;top:${Math.random()*100}%;
+      animation-duration:${9+Math.random()*14}s;
+      animation-delay:${Math.random()*10}s;
+      opacity:${.2+Math.random()*.5};
+    `;
+    pc.appendChild(p);
+  }
+
+  /* -- STAT COUNTER -- */
+  function animCount(el, target) {
+    let s = 0;
+    const step = ts => {
+      if (!s) s = ts;
+      const prog = Math.min((ts - s) / 1800, 1);
+      const suffix = el.closest('.stat-block').querySelector('.lbl').textContent.includes('%') ? '%' : '+';
+      el.textContent = Math.floor(prog * target) + (prog >= 1 ? suffix : '');
+      if (prog < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  const cObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animCount(e.target, +e.target.dataset.count);
+        cObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: .5 });
+  document.querySelectorAll('[data-count]').forEach(el => cObs.observe(el));
+
+  /* -- SCROLL REVEAL -- */
+  const revObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); } });
+  }, { threshold: .1 });
+  document.querySelectorAll('.reveal-on-scroll').forEach(el => revObs.observe(el));
+
+  /* -- SCROLL PULSE ANIM -- */
+  const style = document.createElement('style');
+  style.textContent = `@keyframes pulse{0%,100%{opacity:.3}50%{opacity:.9}}`;
+  document.head.appendChild(style);
+  </script>
+</body>
+</html>
+  
+
+

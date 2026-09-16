@@ -1,0 +1,725 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Bulakena Garden | Services</title>
+
+  <!-- Bootstrap 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts (Luxury pair) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Lora:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="style-luxury.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="service-page">
+
+  <!-- Navigation Bar (matches index/products) -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3" id="mainNav">
+    <div class="container">
+
+      <!-- Logo + Brand Text -->
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="../images/logo.JPG" alt="Logo" class="logo-img rounded-circle">
+        <span class="brand-text">Bulakena<span style="color:var(--g3)">Garden</span></span>
+      </a>
+
+      <!-- Toggle Button (Mobile View) -->
+      <button class="navbar-toggler nav-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation"><span class="nav-toggle-lines" aria-hidden="true"><span></span><span></span><span></span></span></button>
+
+      <!-- Navigation Links -->
+      <div class="collapse navbar-collapse justify-content-end" id="navbarMenu">
+        <ul class="navbar-nav mb-2 mb-lg-0 fw-semibold">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="products.html">Products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="services.html">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="aboutus.html">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contactus.html">Contact</a>
+          </li>
+        </ul>
+
+        <div class="auth-controls auth-pending ms-lg-3">
+          <button type="button" class="btn btn-success px-4 js-auth-login">Login</button>
+          <div class="dropdown d-none js-auth-menu">
+            <button class="btn auth-profile-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="auth-avatar">U</span>
+              <span class="auth-label">Profile</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+              <li><h6 class="dropdown-header js-auth-email"></h6></li>
+              <li><button type="button" class="dropdown-item js-auth-account">Account</button></li>
+              <li><button type="button" class="dropdown-item js-auth-orders">My Orders</button></li>
+              <li><button type="button" class="dropdown-item js-auth-appointments">My Appointments</button></li>
+              <li><button type="button" class="dropdown-item js-auth-signout">Sign out</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <section class="services-hero">
+    <div class="services-orb left" aria-hidden="true"></div>
+    <div class="services-orb right" aria-hidden="true"></div>
+    <div class="container">
+      <p class="text-uppercase small fw-bold mb-2" style="letter-spacing:.08em;color:var(--g4);">Bulakena Services</p>
+      <h1 class="services-hero-title">Build Your <em style="color:var(--g4);font-style:italic;">Ideal Garden</em><br>Experience</h1>
+      <p style="color:rgba(255,255,255,.72);font-size:1rem;line-height:1.78;max-width:500px;margin-bottom:2rem;">From routine gardening care to full landscaping and consultations, our team helps you design, improve, and maintain spaces that feel natural and welcoming.</p>
+      <div class="services-hero-actions">
+        <a class="btnx primary" href="#booking">Book a Service</a>
+        <a class="btnx secondary" href="#serviceTabs">Explore Services</a>
+      </div>
+    </div>
+  </section>
+
+  <main class="container py-5 service-main">
+ 
+
+    <!-- Service Filters / Tabs -->
+    <div class="text-center mb-5">
+      <ul class="nav nav-pills justify-content-center gap-2" id="serviceTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="tab-gardening" data-target="#gardening" type="button">Gardening</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-landscaping" data-target="#landscaping" type="button">Landscape</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-consultations" data-target="#consultations" type="button">Consultations</button>
+        </li>
+      </ul>
+    </div>
+    <section id="gardening" class="service-section mb-5">
+      <div class="gdn-header reveal-on-scroll">
+        <div class="gdn-header-left">
+          <span class="eyebrow">Gardening Services</span>
+          <h2>We Tend Every Corner<br><em>of Your Garden</em></h2>
+        </div>
+        <div class="gdn-header-right">
+          <p>From the first seed to the final bloom, our gardening team handles every stage of care with precision, patience, and a genuine love for plants.</p>
+          <a class="btnx outline-green mt-3" href="#booking">Book a Gardening Visit</a>
+        </div>
+      </div>
+
+      <div class="gdn-grid">
+        <article class="gdn-card gdn-card--hero reveal-on-scroll">
+          <div class="gdn-card-img">
+            <img src="../images/bed.png" alt="Planting and bed preparation service" loading="lazy">
+            <div class="gdn-card-overlay"></div>
+          </div>
+          <div class="gdn-card-content">
+            <span class="gdn-card-num">01</span>
+            <h3 class="gdn-card-title">Planting &amp;<br>Bed Preparation</h3>
+            <p class="gdn-card-desc">We enrich the soil, lay out planting beds with care, and establish each plant so it roots deeply and grows strong from day one.</p>
+            <span class="gdn-card-tag">Foundation Care</span>
+          </div>
+        </article>
+
+        <article class="gdn-card gdn-card--tall reveal-on-scroll">
+          <div class="gdn-card-img">
+            <img src="../images/trim.png" alt="Pruning and trimming service" loading="lazy">
+            <div class="gdn-card-overlay"></div>
+          </div>
+          <div class="gdn-card-content">
+            <span class="gdn-card-num">02</span>
+            <h3 class="gdn-card-title">Pruning &amp;<br>Trimming</h3>
+            <p class="gdn-card-desc">We shape and thin foliage with expert precision, keeping your plants structurally sound, visually polished, and seasonally prepared.</p>
+            <span class="gdn-card-tag">Shape &amp; Form</span>
+          </div>
+        </article>
+
+        <article class="gdn-card gdn-card--wide reveal-on-scroll">
+          <div class="gdn-card-img">
+            <img src="../images/water.png" alt="Irrigation and watering service" loading="lazy">
+            <div class="gdn-card-overlay"></div>
+          </div>
+          <div class="gdn-card-content">
+            <span class="gdn-card-num">03</span>
+            <h3 class="gdn-card-title">Irrigation &amp; Watering</h3>
+            <p class="gdn-card-desc">Consistent moisture is everything. We set up smart watering schedules and efficient systems tailored to each plant's unique needs.</p>
+            <span class="gdn-card-tag">Water Management</span>
+          </div>
+        </article>
+
+        <article class="gdn-card gdn-card--accent reveal-on-scroll">
+          <div class="gdn-card-img">
+            <img src="../images/fertilizer.png" alt="Soil and fertilization service" loading="lazy">
+            <div class="gdn-card-overlay"></div>
+          </div>
+          <div class="gdn-card-content">
+            <span class="gdn-card-num">04</span>
+            <h3 class="gdn-card-title">Soil &amp;<br>Fertilization</h3>
+            <p class="gdn-card-desc">Rich, living soil is the secret to vibrant blooms. We replenish nutrients with organic matter and balanced fertilizers for lasting results.</p>
+            <span class="gdn-card-tag">Root Nourishment</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="landscaping" class="service-section mb-5 d-none">
+      <div class="mb-4">
+        <span class="eyebrow">Landscape Projects</span>
+        <h2>Some of Our Landscaping Projects</h2>
+        <p>Transform your outdoor space into a lush, vibrant paradise with Bulakena Garden's professional landscaping solutions.</p>
+      </div>
+
+      <div id="landscapeFilters" class="landscape-filters mb-4">
+        <button type="button" class="btn landscape-filter-btn active" data-filter="landscaping">Landscaping</button>
+        <button type="button" class="btn landscape-filter-btn" data-filter="grotto">Grotto</button>
+        <button type="button" class="btn landscape-filter-btn" data-filter="fencing">Water Falls</button>
+        <button type="button" class="btn landscape-filter-btn" data-filter="bricks-installation">Swimming Pool</button>
+      </div>
+
+      <div class="landscaping-gallery mt-4">
+        <figure class="landscaping-gallery-item m-0" data-category="landscaping">
+          <img src="../images/landscape1.jpg" alt="Lush landscaped garden" loading="lazy">
+        </figure>
+        <figure class="landscaping-gallery-item m-0" data-category="landscaping">
+          <img src="../images/landscape2.jpg" alt="Modern garden layout" loading="lazy">
+        </figure>
+         <figure class="landscaping-gallery-item m-0" data-category="landscaping">
+          <img src="../images/landscape3.jpg" alt="Modern garden layout" loading="lazy">
+        </figure>
+         <figure class="landscaping-gallery-item m-0" data-category="landscaping">
+          <img src="../images/landscape4.jpg" alt="Modern garden layout" loading="lazy">
+        </figure>
+         <figure class="landscaping-gallery-item m-0" data-category="landscaping">
+          <img src="../images/landscape5.jpg" alt="Modern garden layout" loading="lazy">
+        </figure>
+         <figure class="landscaping-gallery-item m-0" data-category="landscaping">
+          <img src="../images/landscape6.jpg" alt="Modern garden layout" loading="lazy">
+        </figure>
+         <figure class="landscaping-gallery-item m-0" data-category="landscaping">
+          <img src="../images/landscape7.jpg" alt="Modern garden layout" loading="lazy">
+        </figure>
+        <figure class="landscaping-gallery-item m-0" data-category="grotto">
+          <img src="../images/grotto1.jpg" alt="Garden grotto" loading="lazy">
+        </figure>
+        <figure class="landscaping-gallery-item m-0" data-category="grotto">
+          <img src="../images/grotto2.jpg" alt="Decorative grotto" loading="lazy">
+        </figure>
+        <figure class="landscaping-gallery-item m-0" data-category="grotto">
+          <img src="../images/grotto3.jpg" alt="Decorative grotto" loading="lazy">
+        </figure>
+        <figure class="landscaping-gallery-item m-0" data-category="grotto">
+          <img src="../images/grotto4.jpg" alt="Decorative grotto" loading="lazy">
+        </figure>
+        <figure class="landscaping-gallery-item m-0" data-category="fencing">
+          <img src="../images/falls1.png" alt="Water falls feature" loading="lazy">
+        </figure>
+        <figure class="landscaping-gallery-item m-0" data-category="fencing">
+          <img src="../images/falls2.png" alt="Garden water feature" loading="lazy">
+        </figure>
+        <figure class="landscaping-gallery-item m-0" data-category="bricks-installation">
+          <img src="../images/pool1.jpg" alt="Swimming pool design" loading="lazy">
+        </figure>
+        <figure class="landscaping-gallery-item m-0" data-category="bricks-installation">
+          <img src="../images/pool2.png" alt="Pool landscape" loading="lazy">
+        </figure>
+         <figure class="landscaping-gallery-item m-0" data-category="bricks-installation">
+          <img src="../images/pool3.png" alt="Pool landscape" loading="lazy">
+        </figure>
+      </div>
+      <div id="landscapePagination" class="landscape-pagination d-none mt-4" aria-label="Landscape gallery pagination"></div>
+    </section>
+
+
+    <!-- ── CONSULTATIONS SECTION ── -->
+    <section id="consultations" class="service-section mb-5 d-none">
+      <div class="mb-5">
+        <span class="eyebrow">Expert Guidance</span>
+        <h2>Garden &amp; Landscape Consultations</h2>
+        <p>Work with our expert consultants to design, improve, and maintain your garden with personalized advice tailored to your space and goals.</p>
+      </div>
+
+      <!-- Consultation types -->
+      <div class="row g-4 mb-5">
+        <div class="col-md-4">
+          <div class="card h-100 p-4 reveal-on-scroll" style="background:linear-gradient(135deg,var(--g1),var(--g2));border:none!important;">
+            <div style="font-size:2rem;margin-bottom:1rem;">GD</div>
+            <h5 style="font-family:'Cormorant Garamond',serif;color:white;font-size:1.3rem;">Garden Design Review</h5>
+            <p style="color:rgba(255,255,255,.72);font-size:.88rem;line-height:1.7;">A thorough review of your current garden setup with suggestions for improvement and growth.</p>
+            <div style="color:var(--g4);font-size:.85rem;font-weight:600;margin-top:auto;padding-top:1rem;">From PHP 1,500</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 p-4 reveal-on-scroll" style="border:1px solid var(--border)!important;">
+            <div style="font-size:2rem;margin-bottom:1rem;">LP</div>
+            <h5 style="font-family:'Cormorant Garamond',serif;color:var(--dark);font-size:1.3rem;">Landscape Planning</h5>
+            <p style="color:var(--muted);font-size:.88rem;line-height:1.7;">Full on-site landscape planning service from initial concept to final layout with material recommendations.</p>
+            <div style="color:var(--g2);font-size:.85rem;font-weight:600;margin-top:auto;padding-top:1rem;">From PHP 3,500</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 p-4 reveal-on-scroll" style="background:linear-gradient(135deg,var(--b1),var(--b2));border:none!important;">
+            <div style="font-size:2rem;margin-bottom:1rem;">PC</div>
+            <h5 style="font-family:'Cormorant Garamond',serif;color:white;font-size:1.3rem;">Plant Health &amp; Care</h5>
+            <p style="color:rgba(255,255,255,.72);font-size:.88rem;line-height:1.7;">Diagnose plant health issues and receive a personalized care plan to restore vitality.</p>
+            <div style="color:var(--b4);font-size:.85rem;font-weight:600;margin-top:auto;padding-top:1rem;">From PHP 800</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Process -->
+      <div class="reveal-on-scroll">
+        <h3 style="font-family:'Cormorant Garamond',serif;color:var(--dark);margin-bottom:1.5rem;">How It Works</h3>
+        <div class="process-flow">
+          <div class="process-step">
+            <div class="step-number">1</div>
+            <h4 class="step-title">Submit Request</h4>
+            <p class="step-description">Fill out our booking form with your project details and preferred date.</p>
+          </div>
+          <div class="process-arrow">&gt;</div>
+          <div class="process-step">
+            <div class="step-number">2</div>
+            <h4 class="step-title">Review &amp; Match</h4>
+            <p class="step-description">Our team reviews your request and matches you with the right consultant.</p>
+          </div>
+          <div class="process-arrow">&gt;</div>
+          <div class="process-step">
+            <div class="step-number">3</div>
+            <h4 class="step-title">Schedule Visit</h4>
+            <p class="step-description">We schedule an on-site or virtual consultation at your preferred time.</p>
+          </div>
+          <div class="process-arrow">&gt;</div>
+          <div class="process-step">
+            <div class="step-number">4</div>
+            <h4 class="step-title">Get Expert Advice</h4>
+            <p class="step-description">Receive personalized recommendations and a tailored action plan.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-none" aria-hidden="true">
+      <!-- Introduction -->
+      <div class="consultation-intro text-center mb-5">
+        <h2 class="consultation-title">Garden Consultation Services</h2>
+        <p class="consultation-description">
+          Not sure where to start with your garden? Our Consultation Service provides expert advice and personalized recommendations to help you make informed decisions before starting any gardening or landscaping project.
+        </p>
+      </div>
+
+      <!-- What We Offer -->
+      <div class="consultation-offers mb-5">
+        <h3 class="offers-title text-center mb-4">What We Offer</h3>
+        <div class="offers-grid">
+          <!-- Offer 1: Plant & Garden Advice -->
+          <div class="offer-card">
+            <div class="offer-icon">PA</div>
+            <h4 class="offer-card-title">Plant &amp; Garden Advice</h4>
+            <ul class="offer-list">
+              <li>Suitable plants for your space</li>
+              <li>Indoor vs outdoor recommendations</li>
+              <li>Seasonal plant suggestions</li>
+            </ul>
+          </div>
+
+          <!-- Offer 2: Soil & Plant Health Assessment -->
+          <div class="offer-card">
+            <div class="offer-icon">SH</div>
+            <h4 class="offer-card-title">Soil &amp; Plant Health Assessment</h4>
+            <ul class="offer-list">
+              <li>Soil condition evaluation</li>
+              <li>Pest and disease identification</li>
+              <li>Fertilizer recommendations</li>
+            </ul>
+          </div>
+
+          <!-- Offer 3: Garden Planning Guidance -->
+          <div class="offer-card">
+            <div class="offer-icon">GP</div>
+            <h4 class="offer-card-title">Garden Planning Guidance</h4>
+            <ul class="offer-list">
+              <li>Layout suggestions</li>
+              <li>Space optimization ideas</li>
+              <li>Budget-friendly improvement options</li>
+            </ul>
+          </div>
+
+          <!-- Offer 4: Project Pre-Planning Discussion -->
+          <div class="offer-card">
+            <div class="offer-icon">PP</div>
+            <h4 class="offer-card-title">Project Pre-Planning Discussion</h4>
+            <ul class="offer-list">
+              <li>Budget estimation</li>
+              <li>Timeline planning</li>
+              <li>Service recommendations</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- How It Works -->
+      <div class="consultation-process mb-5">
+        <h3 class="process-title text-center mb-4">How It Works</h3>
+        <div class="process-steps">
+          <div class="process-step">
+            <div class="step-number">1</div>
+            <h4 class="step-title">Submit Consultation Request Form</h4>
+            <p class="step-description">Fill out our consultation request form with your contact information and concerns.</p>
+          </div>
+
+          <div class="process-arrow">?</div>
+
+          <div class="process-step">
+            <div class="step-number">2</div>
+            <h4 class="step-title">Our Team Reviews Your Concern</h4>
+            <p class="step-description">Our experts analyze your request and understand your garden needs.</p>
+          </div>
+
+          <div class="process-arrow">?</div>
+
+          <div class="process-step">
+            <div class="step-number">3</div>
+            <h4 class="step-title">Schedule Consultation</h4>
+            <p class="step-description">We schedule an on-site or virtual consultation at your preferred time.</p>
+          </div>
+
+          <div class="process-arrow">?</div>
+
+          <div class="process-step">
+            <div class="step-number">4</div>
+            <h4 class="step-title">Receive Professional Advice</h4>
+            <p class="step-description">Get personalized recommendations and a tailored action plan for your garden.</p>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section id="booking" class="booking-section mt-5 reveal-on-scroll">
+      <div class="booking-card">
+        <div class="booking-header text-center">
+          <span style="display:inline-block;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g4);font-weight:600;margin-bottom:.75rem;">Get Started</span>
+          <h2>Schedule Your Garden Project</h2>
+          <p>Choose your preferred date and send your requirements to our team.</p>
+        </div>
+
+        <form id="booking-form" class="booking-form row g-3" action="#" method="post" enctype="multipart/form-data">
+          <div class="col-12 col-md-6">
+            <label for="bookFullName" class="form-label">Full Name</label>
+            <input id="bookFullName" name="full_name" type="text" class="form-control" placeholder="Enter your full name" required>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="bookEmail" class="form-label">Email</label>
+            <input id="bookEmail" name="email" type="email" class="form-control" placeholder="Enter your email" required>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="bookPhone" class="form-label">Phone Number</label>
+            <input id="bookPhone" name="phone_number" type="tel" class="form-control" placeholder="Enter your phone number" inputmode="numeric" autocomplete="tel" maxlength="11" pattern="[0-9]{11}" title="Enter exactly 11 digits" required>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="bookAddress" class="form-label">Address</label>
+            <input id="bookAddress" name="address" type="text" class="form-control" placeholder="Street, barangay, municipality, province, region" required>
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label for="bookDate" class="form-label">Preferred Date</label>
+            <input id="bookDate" name="preferred_date" type="date" class="form-control" required>
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label for="bookTime" class="form-label">Preferred Time</label>
+            <input id="bookTime" name="preferred_time" type="time" class="form-control" value="09:00" required>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="bookService" class="form-label">Desired Service</label>
+            <select id="bookService" name="desired_service" class="form-select" required>
+              <option value="" selected disabled>Select a service</option>
+              <option value="gardening">Gardening</option>
+              <option value="landscaping">Landscaping</option>
+              <option value="grotto">Grotto</option>
+              <option value="waterfalls">Waterfalls</option>
+              <option value="swimming-pool">Swimming Pool</option>
+              <option value="consultation">Consultation</option>
+            </select>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="bookReference" class="form-label">Reference Image (Optional)</label>
+            <input id="bookReference" name="reference_image" type="file" class="form-control" accept="image/*">
+          </div>
+
+          <div class="col-12">
+            <label for="bookMessage" class="form-label">Message</label>
+            <textarea id="bookMessage" name="message" class="form-control" rows="5" placeholder="Tell us about your project goals, space size, and preferred style." required></textarea>
+          </div>
+
+          <div class="col-12 text-center pt-2">
+            <button type="submit" class="btn btn-success booking-submit-btn px-5">Submit Request</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-brand-logo">Bulakena <span>Garden</span></a>
+        <p>Where nature becomes art. Serving Bulacan and the Philippines with premium plants, landscapes, and garden design since 2009.</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/BulkenaGarden" class="social-link" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="products.html?type=Indoor">Indoor Plants</a></li>
+          <li><a href="products.html?type=Outdoor">Outdoor Plants</a></li>
+          <li><a href="products.html?type=Hanging%20Plants">Hanging Plants</a></li>
+          <li><a href="products.html?type=Table%20Plants">Table Plants</a></li>
+          <li><a href="products.html?type=Furniture">Garden Furniture</a></li>
+          <li><a href="products.html?type=Planter">Garden Planters</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html#gardening">Gardening</a></li>
+          <li><a href="services.html#landscaping">Landscaping</a></li>
+          <li><a href="services.html#consultations">Consultations</a></li>
+          <li><a href="services.html#booking">Book a Service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="aboutus.html">About Us</a></li>
+          <li><a href="contactus.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Bulakena Garden. All rights reserved. Made with &#127793; in Talisay</p>
+    </div>
+  </div>
+</footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    (function () {
+      const ADDRESS_GUIDE = 'Street, barangay, municipality, province, region';
+
+      function clean(value) {
+        return String(value || '').trim();
+      }
+
+      function buildServiceAddress(user) {
+        if (!user) return '';
+        const parts = [
+          clean(user.street_address || user.address || ''),
+          clean(user.barangay || ''),
+          clean(user.municipality || ''),
+          clean(user.province || ''),
+          clean(user.region || ''),
+        ].filter(Boolean);
+        return parts.join(', ');
+      }
+
+      function fillBookingForm() {
+        const form = document.getElementById('booking-form');
+        if (!form) return;
+
+        const nameInput = document.getElementById('bookFullName');
+        const emailInput = document.getElementById('bookEmail');
+        const phoneInput = document.getElementById('bookPhone');
+        const addressInput = document.getElementById('bookAddress');
+
+        if (addressInput && !addressInput.value.trim()) {
+          addressInput.placeholder = ADDRESS_GUIDE;
+        }
+
+        const auth = window.BulakenaAuth;
+        if (!auth || typeof auth.getCurrentUser !== 'function') return;
+
+        const user = auth.getCurrentUser();
+        if (!user) return;
+
+        if (nameInput && !nameInput.value.trim()) {
+          nameInput.value = clean(user.name);
+        }
+        if (emailInput && !emailInput.value.trim()) {
+          emailInput.value = clean(user.email);
+        }
+        if (phoneInput && !phoneInput.value.trim()) {
+          phoneInput.value = clean(user.phone).replace(/\D/g, '').slice(0, 11);
+        }
+        if (addressInput && !addressInput.value.trim()) {
+          addressInput.value = buildServiceAddress(user) || ADDRESS_GUIDE;
+        }
+      }
+
+      function refreshFromSession() {
+        const auth = window.BulakenaAuth;
+        if (!auth || typeof auth.refreshSession !== 'function') {
+          fillBookingForm();
+          return;
+        }
+
+        auth.refreshSession({ silent: true })
+          .catch(function () { return null; })
+          .finally(fillBookingForm);
+      }
+
+      document.addEventListener('DOMContentLoaded', refreshFromSession);
+      window.addEventListener('bulakena:auth-sync', refreshFromSession);
+    })();
+  </script>
+  <script>
+    (function () {
+      const revealEls = document.querySelectorAll('.reveal-on-scroll');
+      if (!revealEls.length) return;
+
+      if (!('IntersectionObserver' in window)) {
+        revealEls.forEach(el => el.classList.add('visible'));
+        return;
+      }
+
+      const revObs = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            revObs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      revealEls.forEach(el => revObs.observe(el));
+    })();
+  </script>
+  <script>
+    (function(){
+      const form = document.getElementById('booking-form');
+      if (!form) return;
+
+      function showServiceToast(message, kind) {
+        var el = document.getElementById('serviceToast');
+        if (!el) {
+          el = document.createElement('div');
+          el.id = 'serviceToast';
+          el.className = 'service-toast';
+          el.setAttribute('role', 'status');
+          el.setAttribute('aria-live', 'polite');
+          el.setAttribute('aria-atomic', 'true');
+          document.body.appendChild(el);
+        }
+        var type = kind === 'success' ? 'success' : (kind === 'warning' ? 'warning' : 'error');
+        var prefix = type === 'success' ? 'Success:' : 'Warning:';
+        el.className = 'service-toast ' + type;
+        el.textContent = prefix + ' ' + String(message || '');
+        requestAnimationFrame(function () { el.classList.add('show'); });
+        clearTimeout(el._timer);
+        el._timer = setTimeout(function () {
+          el.classList.remove('show');
+        }, 2800);
+      }
+
+      const phoneInput = form.querySelector('#bookPhone');
+      if (phoneInput) {
+        phoneInput.addEventListener('input', function () {
+          this.value = this.value.replace(/\D/g, '').slice(0, 11);
+        });
+      }
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const btn = form.querySelector('button[type="submit"]');
+        if (btn) btn.disabled = true;
+        if (phoneInput) {
+          phoneInput.value = phoneInput.value.replace(/\D/g, '').slice(0, 11);
+          if (phoneInput.value.length !== 11) {
+            showServiceToast('Phone number must contain exactly 11 digits.', 'warning');
+            if (btn) btn.disabled = false;
+            return;
+          }
+        }
+        var sessionPromise = (window.BulakenaAuth && typeof window.BulakenaAuth.refreshSession === 'function')
+          ? window.BulakenaAuth.refreshSession({ silent: true }).then(function() {
+              return (window.BulakenaAuth.getSessionEmail && window.BulakenaAuth.getSessionEmail()) || '';
+            })
+          : fetch('api/session_check.php', { credentials: 'same-origin' })
+              .then(r => r.json())
+              .then(data => data && data.authenticated && data.user ? String(data.user.email || '') : '')
+              .catch(() => '');
+        sessionPromise
+          .then(sessionEmail => {
+            if (!sessionEmail || !sessionEmail.trim()) {
+              var loginBtn = document.querySelector('.js-auth-login');
+              if (loginBtn) loginBtn.click();
+              showServiceToast('Please sign in to submit an appointment.', 'warning');
+              throw new Error('AUTH_REQUIRED');
+            }
+            var emailInput = form.querySelector('#bookEmail');
+            if (emailInput) emailInput.value = sessionEmail;
+            const fd = new FormData(form);
+            return fetch('api/save_appointment.php', { method: 'POST', body: fd });
+          })
+          .then(r => r.text())
+          .then(txt => {
+            try {
+              const res = JSON.parse(txt);
+              if (res && res.success) {
+                showServiceToast('Appointment submitted.', 'success');
+                form.reset();
+                setTimeout(function () {
+                  window.location.href = 'appointments.html';
+                }, 900);
+                return;
+              } else {
+                showServiceToast((res && res.message) ? res.message : 'Submission failed.', 'error');
+              }
+            } catch (err) {
+              console.error('Invalid JSON response:', txt);
+              showServiceToast('Server error submitting appointment.', 'error');
+            }
+          })
+          .catch(err => {
+            if (err && err.message === 'AUTH_REQUIRED') return;
+            console.error(err);
+            showServiceToast('Network error. Please try again.', 'error');
+          })
+          .finally(() => { if (btn) btn.disabled = false; });
+      });
+    })();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

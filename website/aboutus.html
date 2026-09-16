@@ -1,0 +1,937 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulakena Garden | About Us</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Lora:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style-luxury.css">
+
+  <style>
+    /* ═══════════════════════════════════════════════
+       ABOUT PAGE — LUXURY REDESIGN
+    ═══════════════════════════════════════════════ */
+
+    /* ── HERO ── */
+    .about-hero {
+      min-height: calc(100vh - var(--nav-h));
+      background: linear-gradient(155deg, var(--dark) 0%, var(--g1) 52%, var(--b1) 100%);
+      display: flex; align-items: center;
+      position: relative; overflow: hidden;
+      padding: 5rem 0 4rem;
+    }
+    .hero-orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); pointer-events: none;
+    }
+    .hero-orb-1 { width: 520px; height: 520px; background: var(--g3); opacity: .18; top:-120px; left:-100px; animation: orbFloat 12s ease-in-out infinite; }
+    .hero-orb-2 { width: 380px; height: 380px; background: var(--b3); opacity: .15; bottom:-80px; right:-60px; animation: orbFloat 16s ease-in-out infinite reverse; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      position: relative; z-index: 1;
+    }
+    @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } .collage { display: none; } }
+    .hero-copy { color: white; animation: heroReveal .9s .2s ease both; }
+    @keyframes heroReveal { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:none; } }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 300; line-height: 1.08; margin-bottom: 1.2rem; color: white;
+    }
+    .hero-sub { font-size: 1rem; color: rgba(255,255,255,.72); line-height: 1.8; max-width: 460px; margin-bottom: 2.2rem; }
+    .hero-actions { display: flex; gap: .9rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+    .metrics { display: flex; gap: 2.2rem; flex-wrap: wrap; }
+    .metric b { display: block; font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 300; color: var(--g4); line-height: 1; }
+    .metric p { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.5); margin: .3rem 0 0; }
+    .collage { position: relative; height: 480px; animation: heroReveal .9s .4s ease both; }
+    .ph { position: absolute; overflow: hidden; border-radius: var(--radius-lg); margin: 0; }
+    .ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .ph.l { width: 62%; height: 72%; top: 0; left: 0; box-shadow: var(--shadow-lg); z-index: 2; }
+    .ph.r { width: 52%; height: 58%; bottom: 0; right: 0; box-shadow: var(--shadow-lg); z-index: 3; border: 3px solid rgba(255,255,255,.12); }
+
+    /* ── STATS RIBBON ── */
+    .about-stats {
+      background: linear-gradient(135deg, var(--g1), var(--b1));
+      padding: 2.8rem 0;
+    }
+    .about-stats .container { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; }
+    @media (max-width: 700px) { .about-stats .container { grid-template-columns: repeat(2,1fr); } }
+    .stat-item { text-align: center; padding: 1rem; border-right: 1px solid rgba(255,255,255,.1); color: white; }
+    .stat-item:last-child { border-right: none; }
+    .stat-item .num { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: var(--g4); display: block; line-height: 1; }
+    .stat-item .lbl { font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-top: .45rem; }
+
+    /* ── MAIN WRAPPER ── */
+    .about-main { padding: 2rem 0 4rem; }
+
+    /* ── ABOUT INTRO ── */
+    .about-intro-wrap {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    @media (max-width: 860px) {
+      .about-intro-wrap {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+      }
+    }
+    .about-intro-image {
+      position: relative; border-radius: var(--radius-xl); overflow: hidden;
+      aspect-ratio: 4/3; box-shadow: var(--shadow-lg);
+    }
+    .about-intro-image img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .7s ease; }
+    .about-intro-image:hover img { transform: scale(1.04); }
+    .about-intro-image-badge {
+      position: absolute; bottom: 1.4rem; left: 1.4rem;
+      background: rgba(10,26,15,.82); backdrop-filter: blur(14px);
+      border: 1px solid rgba(77,201,138,.35); border-radius: 2rem;
+      padding: .55rem 1.1rem;
+      font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--g4);
+    }
+    .about-intro-text h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      color: var(--dark); line-height: 1.18; margin-bottom: 1.2rem;
+    }
+    .about-intro-text h2 em { color: var(--g3); font-style: italic; }
+    .about-intro-text p { color: var(--muted); font-size: .97rem; line-height: 1.85; margin-bottom: 1.2rem; }
+    .about-intro-checks {
+      list-style: none; padding: 0; margin: 1.5rem 0 2rem;
+      display: flex; flex-direction: column; gap: .7rem;
+    }
+    .about-intro-checks li {
+      display: flex; align-items: center; gap: .75rem;
+      font-size: .9rem; color: var(--text);
+    }
+    .about-intro-checks li::before {
+      content: '';
+      width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%;
+      background: rgba(45,158,104,.12); border: 1.5px solid rgba(45,158,104,.35);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='%232d9e68' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: center; background-size: 10px;
+    }
+
+    /* ══════════════════════════════════════
+       BACKGROUND STORY SECTION — NEW
+    ══════════════════════════════════════ */
+    .story-section {
+      position: relative;
+      background: linear-gradient(160deg, var(--dark) 0%, var(--g1) 60%, var(--b1) 100%);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      padding: .25rem 4rem 4rem;
+      margin-bottom: 5rem;
+    }
+    @media (max-width: 768px) { .story-section { padding: .25rem 2rem 3rem; } }
+    .story-bg-orb {
+      position: absolute; border-radius: 50%; pointer-events: none; filter: blur(80px);
+    }
+    .story-bg-orb.a { width: 480px; height: 480px; background: var(--g3); opacity: .14; top: -100px; right: -100px; }
+    .story-bg-orb.b { width: 320px; height: 320px; background: var(--b3); opacity: .12; bottom: -80px; left: 10%; }
+    .story-section > :not(.story-bg-orb) { position: relative; z-index: 1; }
+
+    .story-header { text-align: center; margin: 0 0 2rem; }
+    .story-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 300; color: white; line-height: 1.1; margin-bottom: .8rem;
+    }
+    .story-header h2 em { color: var(--g4); font-style: italic; }
+    .story-header p { color: rgba(255,255,255,.55); font-size: .97rem; max-width: 540px; margin: 0 auto; line-height: 1.8; }
+
+    /* Timeline */
+    .story-timeline {
+      position: relative;
+      display: flex; flex-direction: column; gap: 0;
+      max-width: 860px; margin: 0 auto;
+    }
+    .story-timeline::before {
+      content: '';
+      position: absolute; left: 50%; top: 0; bottom: 0; width: 1px;
+      background: linear-gradient(180deg, transparent, rgba(77,201,138,.4) 15%, rgba(77,201,138,.4) 85%, transparent);
+      transform: translateX(-50%);
+    }
+
+    .story-event {
+      display: grid; grid-template-columns: 1fr 56px 1fr;
+      gap: 0; align-items: start; margin-bottom: 3rem;
+    }
+    .story-event:last-child { margin-bottom: 0; }
+    .story-event:nth-child(even) .story-event-content { order: 3; text-align: left; }
+    .story-event:nth-child(even) .story-event-empty { order: 1; }
+    .story-event:nth-child(odd) .story-event-content { order: 1; text-align: right; }
+    .story-event:nth-child(odd) .story-event-empty { order: 3; }
+    .story-event-node { order: 2; display: flex; flex-direction: column; align-items: center; gap: .5rem; padding-top: .25rem; }
+    .story-event-dot {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--g2), var(--g3));
+      border: 3px solid rgba(255,255,255,.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 0 0 6px rgba(45,158,104,.15), var(--shadow-md);
+      flex-shrink: 0; transition: transform .3s ease;
+    }
+    .story-event:hover .story-event-dot { transform: scale(1.12); }
+    .story-event-year {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: .78rem; font-weight: 700; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--g4);
+    }
+    .story-event-content { padding: 0 2rem; }
+    .story-event-content h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem; font-weight: 500; color: white; margin-bottom: .4rem;
+    }
+    .story-event-content p { font-size: .88rem; color: rgba(255,255,255,.6); line-height: 1.75; margin: 0; }
+
+    @media (max-width: 700px) {
+      .story-timeline::before { left: 21px; }
+      .story-event { grid-template-columns: 44px 1fr; gap: 1.25rem; }
+      .story-event-content { order: 2 !important; text-align: left !important; padding: 0; }
+      .story-event-node { order: 1 !important; align-items: flex-start; }
+      .story-event-empty { display: none !important; }
+    }
+
+    /* Story narrative / values block */
+    .story-narrative {
+      margin-top: 3.5rem;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(77,201,138,.18);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center;
+    }
+    @media (max-width: 700px) { .story-narrative { grid-template-columns: 1fr; } }
+    .story-narrative-text h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+      color: white; font-weight: 400; margin-bottom: 1rem; line-height: 1.2;
+    }
+    .story-narrative-text p { color: rgba(255,255,255,.62); font-size: .95rem; line-height: 1.85; margin-bottom: .8rem; }
+    .story-narrative-text p:last-of-type { margin-bottom: 1.5rem; }
+    .story-values { display: flex; flex-direction: column; gap: .85rem; }
+    .story-value-item {
+      display: flex; align-items: center; gap: 1rem;
+      background: rgba(255,255,255,.04); border: 1px solid rgba(77,201,138,.15);
+      border-radius: var(--radius-md); padding: .9rem 1.1rem;
+      transition: var(--transition);
+    }
+    .story-value-item:hover { background: rgba(45,158,104,.1); border-color: rgba(77,201,138,.3); transform: translateX(4px); }
+    .story-value-icon {
+      width: 42px; height: 42px; flex-shrink: 0; border-radius: 10px;
+      background: rgba(77,201,138,.15); border: 1px solid rgba(77,201,138,.25);
+      display: flex; align-items: center; justify-content: center; font-size: 1.15rem;
+    }
+    .story-value-text strong { display: block; font-size: .88rem; font-weight: 600; color: white; margin-bottom: .15rem; }
+    .story-value-text span { font-size: .8rem; color: rgba(255,255,255,.5); }
+
+    /* ── MISSION / VISION ── */
+    .mv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 5rem; }
+    @media (max-width: 700px) { .mv-grid { grid-template-columns: 1fr; } }
+    .mv-card {
+      position: relative; overflow: hidden;
+      background: linear-gradient(145deg, var(--g1) 0%, #0f3d28 60%, var(--b1) 100%) !important;
+      border: none !important; border-radius: var(--radius-lg) !important;
+      padding: 2.5rem !important;
+    }
+    .mv-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at top right, rgba(77,201,138,.18) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .mv-card > * { position: relative; z-index: 1; }
+    .mv-tag { display: inline-flex; align-items: center; gap: .4rem; font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--g4); font-weight: 700; margin-bottom: 1rem; }
+    .mv-tag::before { content: ''; width: 20px; height: 1.5px; background: var(--g4); display: block; }
+    .mv-icon { width: 52px; height: 52px; border-radius: 14px; background: rgba(77,201,138,.15); border: 1px solid rgba(77,201,138,.28); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem; }
+    .mv-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem !important; font-weight: 500 !important; margin-bottom: .6rem !important; color: white !important; }
+    .mv-body { color: rgba(255,255,255,.62) !important; font-size: .93rem !important; line-height: 1.8; }
+
+    /* ── TEAM ── */
+    .team-section { margin-bottom: 5rem; }
+    .team-header { margin-bottom: 3rem; }
+    .team-header h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.9rem, 3.5vw, 2.8rem); color: var(--dark); margin-bottom: .5rem; }
+    .team-header p { color: var(--muted); font-size: .97rem; line-height: 1.75; max-width: 520px; }
+    .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    @media (max-width: 860px) { .team-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) { .team-grid { grid-template-columns: 1fr; } }
+    .team-card {
+      border-radius: var(--radius-lg); overflow: hidden;
+      background: var(--card-bg); border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm); transition: var(--transition);
+    }
+    .team-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: rgba(45,158,104,.22); }
+    .team-card-img {
+      position: relative; aspect-ratio: 3/2; overflow: hidden;
+      background: linear-gradient(135deg, var(--g1), var(--b1));
+      display: flex; align-items: center; justify-content: center;
+    }
+    .team-card-avatar { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; color: rgba(255,255,255,.35); font-weight: 300; letter-spacing: .05em; }
+    .team-card-body { padding: 1.4rem; }
+    .team-card-name { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; color: var(--dark); font-weight: 500; margin-bottom: .2rem; }
+    .team-card-role { font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; color: var(--g3); font-weight: 600; margin-bottom: .7rem; }
+    .team-card-bio { font-size: .85rem; color: var(--muted); line-height: 1.72; }
+
+    /* ── SPLIT LAYOUT ── */
+    .split { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+    .slide { background: linear-gradient(135deg, var(--section-alt), #f0f7f4) !important; border: 1px solid var(--border) !important; border-left: 4px solid var(--g3) !important; }
+    .slide blockquote { font-size: 1.15rem !important; color: var(--dark) !important; }
+    .quiz-box {
+      background: var(--section-alt);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+    .quiz-box .q {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      color: var(--dark);
+      line-height: 1.35;
+      min-height: 2.2em;
+      margin-bottom: 1rem;
+    }
+    .quiz-box .opts {
+      display: flex;
+      flex-direction: column;
+      gap: .65rem;
+      margin-bottom: 1rem;
+    }
+    .quiz-box .opt {
+      width: 100%;
+      padding: .85rem 1rem;
+      border-radius: var(--radius-sm);
+      background: white;
+      border: 1.5px solid var(--border);
+      text-align: left;
+      font-size: .92rem;
+      color: var(--text);
+      transition: var(--transition);
+    }
+    .quiz-box .opt:hover {
+      border-color: var(--g3);
+      background: rgba(45,158,104,.06);
+      color: var(--g2);
+    }
+    .quiz-box .small {
+      font-size: .78rem;
+      color: var(--muted);
+      letter-spacing: .04em;
+    }
+    .quiz-box .result {
+      display: none;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .quiz-box .result .btnx {
+      margin-top: .5rem;
+      margin-right: .5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .quiz-box .result.show { display: block; }
+    .split > .cardx {
+      padding: 2rem 2.2rem;
+    }
+    .split > .cardx .title {
+      margin-bottom: .45rem;
+    }
+    .split > .cardx .copy {
+      margin-bottom: 1rem;
+    }
+    .faq-section {
+      padding: 2rem 2.2rem;
+    }
+    .faq-section .title {
+      margin-bottom: .45rem;
+    }
+    .faq-section .copy {
+      margin-bottom: 1.15rem;
+    }
+    .faq-section .accordion {
+      margin-top: .25rem;
+    }
+    .faq-section .accordion-item {
+      margin-bottom: .75rem;
+    }
+    .faq-section .accordion-button {
+      padding: .95rem 1.05rem;
+    }
+    .faq-section .accordion-body {
+      padding: 1rem 1.05rem 1.1rem;
+    }
+    .sticky {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10,26,15,.92);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 3rem;
+      padding: .5rem .8rem;
+      display: flex;
+      gap: .5rem;
+      z-index: 800;
+      box-shadow: 0 8px 30px rgba(0,0,0,.35);
+    }
+  .sbtn {
+    padding: .5rem 1.2rem;
+    border-radius: 2rem;
+    color: rgba(255,255,255,.75);
+    font-size: .8rem;
+      font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+    letter-spacing: .06em;
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .sbtn i { font-size: .95rem; }
+  .sbtn:hover {
+    color: white;
+    background: rgba(255,255,255,.1);
+  }
+    .sbtn.primary {
+      background: linear-gradient(135deg, var(--g2), var(--g3));
+      color: white;
+      box-shadow: 0 4px 14px rgba(45,158,104,.35);
+    }
+    .sbtn.primary:hover {
+      box-shadow: 0 8px 22px rgba(45,158,104,.5);
+      transform: translateY(-1px);
+    }
+
+    /* ── WHY CHOOSE ── */
+    .why-section {
+      background: linear-gradient(145deg, var(--dark), #0f3d28 60%, var(--b1));
+      border-radius: var(--radius-xl); padding: 3.5rem;
+      position: relative; overflow: hidden; margin-bottom: 2rem;
+    }
+    @media (max-width: 600px) { .why-section { padding: 2.5rem 1.5rem; } }
+    .why-section::after { content: ''; position: absolute; right: -80px; top: -80px; width: 300px; height: 300px; border-radius: 50%; border: 40px solid rgba(255,255,255,.04); pointer-events: none; }
+    .why-section > * { position: relative; z-index: 1; }
+    .why-section h3 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 3vw, 2.4rem); color: white; margin-bottom: .4rem; }
+    .why-divider { height: 1px; background: linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent); margin: .5rem 0 2rem; }
+    .why-pills { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 1.5rem; list-style: none; padding: 0; }
+    .why-pill {
+      padding: .6rem 1.05rem;
+      border-radius: 2rem;
+      background: rgba(255,255,255,.07);
+      border: 1.5px solid rgba(255,255,255,.12);
+      color: rgba(255,255,255,.8);
+      font-size: .85rem;
+      font-weight: 500;
+      transition: var(--transition);
+      cursor: default;
+      display: inline-flex;
+      align-items: center;
+      gap: .7rem;
+    }
+    .why-pill:hover { background: rgba(77,201,138,.22) !important; border-color: var(--g4) !important; transform: translateY(-2px); box-shadow: 0 4px 14px rgba(77,201,138,.25); }
+    .why-pill-icon {
+      width: 1.55rem;
+      height: 1.55rem;
+      flex-shrink: 0;
+      border-radius: 999px;
+      padding: .22rem;
+      color: var(--g4);
+      background: rgba(77,201,138,.12);
+      border: 1px solid rgba(77,201,138,.22);
+    }
+    .why-tagline { color: rgba(255,255,255,.45); font-size: .9rem; font-style: italic; margin-bottom: 0; }
+    .faq-section { margin-bottom: 5rem; }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="../images/logo.JPG" alt="Logo" class="logo-img rounded-circle">
+        <span class="brand-text">Bulakena<span style="color:var(--g3)">Garden</span></span>
+      </a>
+      <button class="navbar-toggler nav-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="nav-toggle-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarMenu">
+        <ul class="navbar-nav mb-2 mb-lg-0 fw-semibold">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+          <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+          <li class="nav-item"><a class="nav-link active" href="aboutus.html">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="contactus.html">Contact</a></li>
+        </ul>
+        <div class="auth-controls auth-pending ms-lg-3">
+          <button type="button" class="btn btn-success px-4 js-auth-login ripple">Login</button>
+          <div class="dropdown d-none js-auth-menu">
+            <button class="btn auth-profile-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="auth-avatar">U</span>
+              <span class="auth-label">Profile</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+              <li><h6 class="dropdown-header js-auth-email"></h6></li>
+              <li><button type="button" class="dropdown-item js-auth-account">Account</button></li>
+              <li><button type="button" class="dropdown-item js-auth-orders">My Orders</button></li>
+              <li><button type="button" class="dropdown-item js-auth-appointments">My Appointments</button></li>
+              <li><button type="button" class="dropdown-item js-auth-signout">Sign out</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════ HERO ══════════ -->
+  <section class="about-hero">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow" style="color:var(--g4);">Bulakena Garden Story</p>
+        <h1 class="hero-title">Growing <em style="color:var(--g4);">Beauty,</em><br>Nurturing Nature</h1>
+        <p class="hero-sub">A locally owned garden shop with deep roots in Talisay dedicated to high-quality plants, professional landscaping, and the communities we serve.</p>
+        <div class="hero-actions">
+          <a class="btnx primary ripple" href="services.html#consultations">Book Consultation</a>
+          <a class="btnx secondary ripple" href="products.html">Explore Products</a>
+        </div>
+        <div class="metrics">
+          <div class="metric js-tilt"><b><span data-count="120">0</span>+</b><p>Projects completed</p></div>
+          <div class="metric js-tilt"><b><span data-count="950">0</span>+</b><p>Plants in catalogue</p></div>
+          <div class="metric js-tilt"><b><span data-count="12">0</span> yrs</b><p>Local service experience</p></div>
+        </div>
+      </div>
+      <div class="collage">
+        <figure class="ph l m-0"><img src="../images/about.jpg" alt="Bulakena Garden plant display"></figure>
+        <figure class="ph r m-0"><img src="../images/landscape.jpg" alt="Bulakena Garden landscape area"></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ STATS RIBBON ══════════ -->
+  <div class="about-stats">
+    <div class="container">
+      <div class="stat-item"><span class="num">120+</span><span class="lbl">Projects Done</span></div>
+      <div class="stat-item"><span class="num">950+</span><span class="lbl">Plants in Stock</span></div>
+      <div class="stat-item"><span class="num">12 yrs</span><span class="lbl">In Service</span></div>
+      <div class="stat-item"><span class="num">100%</span><span class="lbl">Client Satisfaction</span></div>
+    </div>
+  </div>
+
+  <!-- ══════════ MAIN ══════════ -->
+  <main class="about-main">
+    <div class="container">
+
+      <!-- WHO WE ARE -->
+      <div class="about-intro-wrap reveal-on-scroll">
+        <div class="about-intro-image">
+          <img src="../images/about.jpg" alt="Bulakena Garden nursery">
+          <span class="about-intro-image-badge">Est. 2012 @- Talisay, PH</span>
+        </div>
+        <div class="about-intro-text">
+          <span class="eyebrow">Who We Are</span>
+          <h2>Beautiful, relaxing, and<br><em>sustainable outdoor spaces</em></h2>
+          <p>Bulakena Garden is a trusted garden shop and landscape services provider rooted in Talisay. Founded with a genuine love for plants and people, we've grown from a small family nursery into a full-service garden destination.</p>
+          <p>Through our web-based platform, customers can browse our curated plant collections, request professional services, and stay connected with our team all from the comfort of home.</p>
+          <ul class="about-intro-checks">
+            <li>Curated indoor and outdoor plant collections</li>
+            <li>Professional landscaping &amp; garden care</li>
+            <li>Expert consultations tailored to your space</li>
+          </ul>
+          <a class="btnx outline-green" href="services.html">View Our Services</a>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════
+           OUR BACKGROUND STORY — NEW
+      ════════════════════════════════════ -->
+      <section class="story-section reveal-on-scroll">
+        <div class="story-bg-orb a"></div>
+        <div class="story-bg-orb b"></div>
+
+        <div class="story-header">
+          <span class="eyebrow" style="color:var(--g4);justify-content:center;">Our Background</span>
+          <p>Every great garden starts with a seed of passion. Here's how ours grew into something the whole community calls its own.</p>
+          <h2>From a Family Backyard<br>to <em>Bulakena Garden</em></h2>
+        </div>
+
+        <div class="story-timeline">
+
+          <div class="story-event">
+            <div class="story-event-content">
+              <h4>A Backyard Dream</h4>
+              <p>It started in a modest Talisay home - potted plants lining every corner, cuttings shared with neighbors, and a growing obsession with making green spaces beautiful.</p>
+            </div>
+            <div class="story-event-node">
+              <div class="story-event-dot">01</div>
+              <span class="story-event-year">2012</span>
+            </div>
+            <div class="story-event-empty"></div>
+          </div>
+
+          <div class="story-event">
+            <div class="story-event-empty"></div>
+            <div class="story-event-node">
+              <div class="story-event-dot">02</div>
+              <span class="story-event-year">2015</span>
+            </div>
+            <div class="story-event-content">
+              <h4>The First Nursery Opens</h4>
+              <p>Word spread fast. Neighbors became customers, and Bulakena Garden opened its first proper nursery selling carefully propagated plants and offering practical gardening guidance.</p>
+            </div>
+          </div>
+
+          <div class="story-event">
+            <div class="story-event-content">
+              <h4>Landscaping Services Launch</h4>
+              <p>Clients kept asking "Can you also do our whole garden?" We said yes. Our landscaping team formed, taking on residential and commercial projects across Talisay and beyond.</p>
+            </div>
+            <div class="story-event-node">
+              <div class="story-event-dot">03</div>
+              <span class="story-event-year">2018</span>
+            </div>
+            <div class="story-event-empty"></div>
+          </div>
+
+          <div class="story-event">
+            <div class="story-event-empty"></div>
+            <div class="story-event-node">
+              <div class="story-event-dot">04</div>
+              <span class="story-event-year">2022</span>
+            </div>
+            <div class="story-event-content">
+              <h4>Going Digital</h4>
+              <p>We launched our facebook platform letting customers browse our selling plants and reach us online, making Bulakena Garden accessible to everyone.</p>
+            </div>
+          </div>
+
+          <div class="story-event">
+            <div class="story-event-content">
+              <h4>Growing Into the Future</h4>
+              <p>Today, Bulakena Garden continues to flourish expanding our collections, refining our services, and staying true to our roots: a family business that genuinely loves what it does.</p>
+            </div>
+            <div class="story-event-node">
+              <div class="story-event-dot">05</div>
+              <span class="story-event-year">Now</span>
+            </div>
+            <div class="story-event-empty"></div>
+          </div>
+
+        </div><!-- /story-timeline -->
+
+        <div class="story-narrative">
+          <div class="story-narrative-text">
+            <h3>What Drives Every Decision We Make</h3>
+            <p>From the plants we stock to the services we offer, every choice at Bulakena Garden comes back to a few deeply held beliefs about what a good garden and a good business should be.</p>
+            <p>We believe beauty should be accessible, nature should be respected, and every customer deserves a space that truly feels like theirs.</p>
+            <a class="btnx outline-green" href="contactus.html">Get in Touch</a>
+          </div>
+          <div class="story-values">
+            <div class="story-value-item">
+              <div class="story-value-icon">CM</div>
+              <div class="story-value-text">
+                <strong>Rooted in the Community</strong>
+                <span>Local knowledge, local care we grow alongside Talisay.</span>
+              </div>
+            </div>
+            <div class="story-value-item">
+              <div class="story-value-icon">SP</div>
+              <div class="story-value-text">
+                <strong>Sustainable Practices</strong>
+                <span>We use organic, eco-conscious methods in everything we do.</span>
+              </div>
+            </div>
+            <div class="story-value-item">
+              <div class="story-value-icon">HR</div>
+              <div class="story-value-text">
+                <strong>Honest &amp; Reliable</strong>
+                <span>No surprises - just straightforward advice and quality work.</span>
+              </div>
+            </div>
+            <div class="story-value-item">
+              <div class="story-value-icon">BD</div>
+              <div class="story-value-text">
+                <strong>Beauty in Every Detail</strong>
+                <span>We take pride in the little things that make a garden unforgettable.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section><!-- /story-section -->
+
+      <!-- MISSION / VISION -->
+      <div class="mv-grid reveal-on-scroll">
+        <article class="mv-card">
+          <div class="mv-tag">Our Purpose</div>
+          <div class="mv-icon">M</div>
+          <h3 class="mv-title">Our Mission</h3>
+          <p class="mv-body">Provide affordable, high-quality plants and gardening services while promoting environmental awareness and sustainable practices in the community.</p>
+        </article>
+        <article class="mv-card">
+          <div class="mv-tag">Our Direction</div>
+          <div class="mv-icon">V</div>
+          <h3 class="mv-title">Our Vision</h3>
+          <p class="mv-body">Become the leading and most trusted garden shop in the Philippines - known for excellence in plant care, landscaping services, and genuine customer relationships.</p>
+        </article>
+      </div>
+
+      <!-- TEAM -->
+      <section class="team-section reveal-on-scroll">
+        <div class="team-header">
+          <span class="eyebrow">The People Behind the Plants</span>
+          <h2>Meet Our Team</h2>
+          <p>A dedicated crew of garden enthusiasts, landscape designers, and plant specialists - all working together to bring your vision to life.</p>
+        </div>
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-card-img"><span class="team-card-avatar">MT</span></div>
+            <div class="team-card-body">
+              <div class="team-card-name">Mariefe Clacio Torbio</div>
+              <div class="team-card-role">Founder &amp; Head Horticulturist</div>
+              <p class="team-card-bio">With over 15 years of hands-on experience, Mariefe's passion for plants and people is what started Bulakena Garden and keeps it thriving today.</p>
+            </div>
+          </div>
+          <div class="team-card">
+            <div class="team-card-img"><span class="team-card-avatar">MR</span></div>
+            <div class="team-card-body">
+              <div class="team-card-name">Marco Reyes</div>
+              <div class="team-card-role">Lead Landscape Designer</div>
+              <p class="team-card-bio">Marco transforms empty outdoor spaces into living, breathing environments - blending structure with nature in every project he leads.</p>
+            </div>
+          </div>
+          <div class="team-card">
+            <div class="team-card-img"><span class="team-card-avatar">LC</span></div>
+            <div class="team-card-body">
+              <div class="team-card-name">Liza Cruz</div>
+              <div class="team-card-role">Plant Consultant &amp; Care Specialist</div>
+              <p class="team-card-bio">Liza's expertise in plant health and soil science makes her the go-to person for clients who want their gardens to truly flourish long term.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PLANT STYLE FINDER -->
+      <section class="split">
+        <article class="cardx js-reveal">
+          <h3 class="title">Plant Style Finder</h3><p class="copy">Answer 4 quick questions to get your recommendation.</p>
+          <div class="quiz-box"><p class="q" id="qq"></p><div class="opts" id="qo"></div><p class="copy small mb-0" id="qp"></p><div class="result" id="qr"><h4 id="qrt" class="title mb-1"></h4><p id="qrd" class="copy mb-2"></p><a class="btnx outline-green ripple" href="services.html#consultations">Book This Service</a> <button class="btnx outline-green ripple ms-2" id="qreset" type="button">Try Again</button></div></div>
+        </article>
+      </section>
+
+      <!-- FAQ -->
+      <section class="cardx js-reveal faq-section">
+        <h3 class="title">FAQ</h3><p class="copy">Quick answers for common customer questions.</p>
+        <div class="accordion" id="faq">
+          <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#f1">Do you provide on-site consultations?</button></h2><div id="f1" class="accordion-collapse collapse show" data-bs-parent="#faq"><div class="accordion-body">Yes. We offer consultations for residential and commercial spaces with practical care/design plans.</div></div></div>
+          <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#f2">What areas do you currently serve?</button></h2><div id="f2" class="accordion-collapse collapse" data-bs-parent="#faq"><div class="accordion-body">We mainly serve nearby communities. Contact us with your location and we will confirm availability.</div></div></div>
+          <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#f3">Can I request custom landscaping packages?</button></h2><div id="f3" class="accordion-collapse collapse" data-bs-parent="#faq"><div class="accordion-body">Yes. Packages are customized by budget, timeline, and design goals.</div></div></div>
+          <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#f4">How do I track my order?</button></h2><div id="f4" class="accordion-collapse collapse" data-bs-parent="#faq"><div class="accordion-body">Once signed in, visit My Orders from your profile dropdown to see all order updates in real time.</div></div></div>
+        </div>
+      </section>
+
+      <!-- WHY CHOOSE -->
+      <section class="why-section reveal-on-scroll">
+        <h3>Why Choose Bulakena Garden?</h3>
+        <div class="why-divider"></div>
+        <ul class="why-pills">
+          <li class="why-pill">
+            <svg class="why-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M8 12l3 3 5-6"></path>
+            </svg>
+            <span>Quality and healthy plants</span>
+          </li>
+          <li class="why-pill">
+            <svg class="why-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M9 10h.01"></path>
+              <path d="M15 10h.01"></path>
+              <path d="M8.7 14.5c1.1 1.3 2.6 2 3.3 2s2.2-.7 3.3-2"></path>
+            </svg>
+            <span>Friendly and knowledgeable service</span>
+          </li>
+          <li class="why-pill">
+            <svg class="why-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 10V6h4l9 9-4 4-9-9z"></path>
+              <circle cx="9" cy="9" r="1"></circle>
+            </svg>
+            <span>Affordable pricing</span>
+          </li>
+          <li class="why-pill">
+            <svg class="why-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 5c-5 0-10 2-12 7-1 3 0 7 4 7 5 0 10-5 10-14z"></path>
+              <path d="M7 17c2-3 5-5 9-7"></path>
+            </svg>
+            <span>Reliable landscaping solutions</span>
+          </li>
+          <li class="why-pill">
+            <svg class="why-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 5h16v11H9l-5 4z"></path>
+              <circle cx="9" cy="10" r="1"></circle>
+              <circle cx="12" cy="10" r="1"></circle>
+              <circle cx="15" cy="10" r="1"></circle>
+            </svg>
+            <span>Convenient online support</span>
+          </li>
+        </ul>
+        <p class="why-tagline">We believe every garden tells a story, and we are here to help you grow yours.</p>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- STICKY BOTTOM BAR -->
+  <div class="sticky">
+    <a class="sbtn ripple" href="tel:+630000000000"><span>Call</span></a>
+    <a class="sbtn ripple" href="https://www.messenger.com/t/479408719093092" target="_blank" rel="noopener"><span>Message</span></a>
+    <a class="sbtn primary ripple" href="services.html#consultations"><span>Book Now</span></a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-brand-logo">Bulakena <span>Garden</span></a>
+        <p>Where nature becomes art. Serving Talisay and the Philippines with premium plants, landscapes, and garden design since 2009.</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/BulkenaGarden" class="social-link" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="products.html?type=Indoor">Indoor Plants</a></li>
+          <li><a href="products.html?type=Outdoor">Outdoor Plants</a></li>
+          <li><a href="products.html?type=Hanging%20Plants">Hanging Plants</a></li>
+          <li><a href="products.html?type=Table%20Plants">Table Plants</a></li>
+          <li><a href="products.html?type=Furniture">Garden Furniture</a></li>
+          <li><a href="products.html?type=Planter">Garden Planters</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html#gardening">Gardening</a></li>
+          <li><a href="services.html#landscaping">Landscaping</a></li>
+          <li><a href="services.html#consultations">Consultations</a></li>
+          <li><a href="services.html#booking">Book a Service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="aboutus.html">About Us</a></li>
+          <li><a href="contactus.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Bulakena Garden. All rights reserved. Made with &#127793; in Talisay</p>
+    </div>
+  </div>
+</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+  /* ── REVEAL ON SCROLL ── */
+  (function () {
+    const els = document.querySelectorAll('.reveal-on-scroll, .js-reveal');
+    if (!els.length) return;
+    if (!('IntersectionObserver' in window)) { els.forEach(el => el.classList.add('visible')); return; }
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    els.forEach(el => obs.observe(el));
+  })();
+
+  /* -- PLANT STYLE FINDER -- */
+  (function () {
+    const qq = document.getElementById('qq');
+    const qo = document.getElementById('qo');
+    const qp = document.getElementById('qp');
+    const qr = document.getElementById('qr');
+    const qrt = document.getElementById('qrt');
+    const qrd = document.getElementById('qrd');
+    const qreset = document.getElementById('qreset');
+    if (!qq || !qo || !qp || !qr || !qrt || !qrd || !qreset) return;
+
+    const qset = [
+      ['How much sunlight does your space get?', ['Mostly shaded|consultation', 'Partial sun|plants', 'Full sun|landscaping']],
+      ['What is your primary goal?', ['Beautify indoor corners|plants', 'Redesign outdoor area|landscaping', 'Fix current plant problems|consultation']],
+      ['How much maintenance time can you do weekly?', ['Less than 1 hour|consultation', '1-3 hours|plants', '3+ hours|landscaping']],
+      ['What setup fits your budget now?', ['Starter plants and essentials|plants', 'Step-by-step site upgrade|consultation', 'Full space transformation|landscaping']]
+    ];
+    const qres = {
+      plants: ['Best Fit: Plant Collection Starter', 'Start with curated indoor/outdoor selections that match your space and care routine.'],
+      landscaping: ['Best Fit: Landscape Design Service', 'A full layout and installation plan is best for your goals.'],
+      consultation: ['Best Fit: Care Consultation', 'A guided consultation helps diagnose issues before major spending.']
+    };
+    let qi = 0;
+    let score = { plants: 0, landscaping: 0, consultation: 0 };
+
+    function renderQ() {
+      const q = qset[qi];
+      qq.textContent = q[0];
+      qp.textContent = `Question ${qi + 1} of ${qset.length}`;
+      qo.innerHTML = '';
+      qr.classList.remove('show');
+      qr.style.display = 'none';
+      q[1].forEach((s) => {
+        const [label, key] = s.split('|');
+        const b = document.createElement('button');
+        b.className = 'opt ripple';
+        b.type = 'button';
+        b.textContent = label;
+        b.addEventListener('click', () => {
+          score[key] += 1;
+          qi += 1;
+          if (qi >= qset.length) {
+            showQRes();
+          } else {
+            renderQ();
+          }
+        });
+        qo.appendChild(b);
+      });
+    }
+
+    function showQRes() {
+      qo.innerHTML = '';
+      qp.textContent = 'Completed';
+      const best = Object.keys(score).reduce((a, b) => (score[a] > score[b] ? a : b));
+      qrt.textContent = qres[best][0];
+      qrd.textContent = qres[best][1];
+      qr.style.display = 'block';
+      qr.classList.add('show');
+    }
+
+    qreset.addEventListener('click', () => {
+      qi = 0;
+      score = { plants: 0, landscaping: 0, consultation: 0 };
+      qr.style.display = 'none';
+      renderQ();
+    });
+
+    renderQ();
+  })();
+  </script>
+</body>
+</html>

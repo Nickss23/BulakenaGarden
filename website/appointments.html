@@ -1,0 +1,1150 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Appointments - Bulakena Garden</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Lora:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style-luxury.css">
+<style>
+/* -- PAGE BASE -- */
+body { background: linear-gradient(160deg,#edf7f0 0%,#f4faf5 55%,#e8f4f0 100%); min-height:100vh; }
+
+/* -- PAGE HERO STRIP -- */
+.appts-hero {
+  background: linear-gradient(155deg, var(--dark) 0%, var(--g1) 55%, var(--b1) 100%);
+  padding: 3.5rem 0 3rem;
+  position: relative; overflow: hidden;
+}
+.appts-hero::before {
+  content:''; position:absolute; border-radius:50%;
+  width:400px; height:400px; background:var(--g3);
+  opacity:.12; filter:blur(80px);
+  top:-120px; left:-80px;
+  animation: orbFloat 14s ease-in-out infinite;
+}
+.appts-hero::after {
+  content:''; position:absolute; border-radius:50%;
+  width:300px; height:300px; background:var(--b3);
+  opacity:.1; filter:blur(70px);
+  bottom:-80px; right:-60px;
+  animation: orbFloat 18s ease-in-out infinite reverse;
+}
+@keyframes orbFloat {
+  0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(22px,-18px) scale(1.04)} 66%{transform:translate(-14px,14px) scale(.97)}
+}
+.appts-hero .container { position:relative; z-index:1; }
+.appts-hero-eyebrow {
+  font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--g4);
+  font-weight:600; display:flex; align-items:center; gap:.5rem; margin-bottom:.75rem;
+}
+.appts-hero-eyebrow::before { content:''; width:28px; height:1.5px; background:var(--g4); display:inline-block; }
+.appts-hero h1 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.2rem,5vw,3.6rem); font-weight:300; color:white; line-height:1.1; margin-bottom:.75rem;
+}
+.appts-hero h1 em { font-style:italic; color:var(--g4); }
+.appts-hero p { color:rgba(255,255,255,.68); font-size:.97rem; line-height:1.75; max-width:480px; }
+
+/* -- FILTER TABS -- */
+.appts-tabs {
+  display:flex; gap:.5rem; flex-wrap:wrap;
+  margin-bottom:2rem;
+  padding-bottom:1.5rem;
+  border-bottom:1px solid var(--border);
+}
+.appt-tab {
+  padding:.45rem 1.2rem; border-radius:2rem;
+  font-size:.78rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase;
+  border:1.5px solid var(--border); background:white;
+  color:var(--muted); cursor:pointer; transition:var(--transition);
+}
+.appt-tab:hover { border-color:var(--g3); color:var(--g2); }
+.appt-tab.active {
+  background:linear-gradient(135deg,var(--g1),var(--g3));
+  color:white; border-color:transparent;
+  box-shadow:0 4px 16px rgba(45,158,104,.3);
+}
+
+/* -- APPOINTMENT CARD -- */
+.appt-card {
+  background:white;
+  border-radius:var(--radius-lg);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-sm);
+  overflow:hidden;
+  margin-bottom:1.25rem;
+  transition:var(--transition);
+  animation:cardSlideIn .45s ease both;
+}
+@keyframes cardSlideIn { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:none} }
+.appt-card:hover { box-shadow:var(--shadow-md); border-color:rgba(45,158,104,.2); transform:translateY(-3px); }
+
+.appt-card-inner { display:flex; }
+.appt-accent {
+  width:5px; flex-shrink:0;
+  background:linear-gradient(180deg,var(--g3),var(--g1));
+}
+.appt-accent.cancelled { background:linear-gradient(180deg,#e05252,#b02a37); }
+.appt-accent.confirmed { background:linear-gradient(180deg,var(--g4),var(--g2)); }
+.appt-accent.completed { background:linear-gradient(180deg,var(--b3),var(--b1)); }
+
+.appt-content { padding:1.5rem 1.8rem; flex:1; }
+
+.appt-top {
+  display:flex; justify-content:space-between; align-items:flex-start;
+  margin-bottom:1rem; flex-wrap:wrap; gap:.75rem;
+}
+.appt-top-left { display:flex; align-items:center; gap:.9rem; }
+.appt-leaf {
+  width:42px; height:42px; border-radius:12px;
+  background:rgba(45,158,104,.1);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--g2);
+  flex-shrink:0;
+}
+.appt-leaf svg {
+  width:22px;
+  height:22px;
+  display:block;
+  stroke:currentColor;
+}
+.appt-service {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.2rem; font-weight:500; color:var(--dark); line-height:1.2;
+}
+.appt-ref { font-size:.75rem; color:var(--muted); margin-top:.15rem; }
+
+.appt-status {
+  font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  padding:.3rem .85rem; border-radius:2rem;
+  display:inline-flex; align-items:center; gap:.35rem;
+}
+.appt-status::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
+.status-pending   { background:rgba(224,154,47,.12);  color:#a0670a; }
+.status-confirmed { background:rgba(45,158,104,.12);  color:var(--g2); }
+.status-cancelled { background:rgba(224,82,82,.12);   color:#b02a37; }
+.status-completed { background:rgba(26,122,138,.12);  color:var(--b2); }
+
+.appt-meta {
+  display:flex; gap:1.5rem; flex-wrap:wrap;
+  margin-bottom:1rem;
+  font-size:.84rem; color:var(--muted);
+}
+.appt-meta-item { display:flex; align-items:center; gap:.35rem; }
+
+.appt-actions { display:flex; gap:.6rem; flex-wrap:wrap; }
+.btn-appt-view {
+  padding:.5rem 1.2rem; border-radius:2rem;
+  background:linear-gradient(135deg,var(--g1),var(--g2));
+  color:white; border:none;
+  font-size:.78rem; font-weight:600; letter-spacing:.06em;
+  cursor:pointer; transition:var(--transition);
+  font-family:'DM Sans',sans-serif;
+}
+.btn-appt-view:hover { box-shadow:0 6px 18px rgba(13,74,47,.3); transform:translateY(-1px); }
+.btn-appt-delete {
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:.45rem;
+  padding:.52rem .95rem;
+  border-radius:999px;
+  border:1px solid rgba(45,158,104,.18);
+  background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(241,250,246,.95));
+  color:var(--g2);
+  font-size:.76rem;
+  font-weight:700;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease, color .2s ease;
+  font-family:'DM Sans',sans-serif;
+  box-shadow:0 10px 22px rgba(13,74,47,.08);
+  overflow:hidden;
+  white-space:nowrap;
+}
+.btn-appt-delete::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, rgba(45,158,104,.14), rgba(26,122,138,.08));
+  opacity:0;
+  transition:opacity .2s ease;
+}
+.btn-appt-delete:hover {
+  transform:translateY(-1px);
+  border-color:rgba(45,158,104,.28);
+  box-shadow:0 14px 28px rgba(13,74,47,.12);
+}
+.btn-appt-delete:hover::before { opacity:1; }
+.btn-appt-delete:active { transform:translateY(0); box-shadow:0 8px 18px rgba(13,74,47,.08); }
+.btn-appt-delete span, .btn-appt-delete i { position:relative; z-index:1; }
+.btn-appt-delete-icon {
+  width:1.35rem;
+  height:1.35rem;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:rgba(45,158,104,.12);
+  color:var(--g2);
+  flex-shrink:0;
+  font-size:.72rem;
+  box-shadow:inset 0 0 0 1px rgba(45,158,104,.12);
+}
+
+.appt-delete-modal .modal-content {
+  border:none;
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 28px 70px rgba(13,74,47,.18);
+}
+.appt-delete-modal .modal-header {
+  border-bottom:none;
+  padding:1.35rem 1.5rem 0;
+  background:linear-gradient(180deg, rgba(217,255,246,.9), rgba(255,255,255,1));
+}
+.appt-delete-modal .modal-body {
+  padding:1rem 1.5rem 1.35rem;
+}
+.appt-delete-modal .modal-footer {
+  border-top:none;
+  padding:0 1.5rem 1.5rem;
+}
+.appt-delete-chip {
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  padding:.45rem .8rem;
+  border-radius:999px;
+  background:rgba(45,158,104,.09);
+  color:var(--g2);
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.appt-delete-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.55rem;
+  font-weight:500;
+  color:var(--dark);
+  margin:.85rem 0 .35rem;
+}
+.appt-delete-text {
+  color:var(--muted);
+  line-height:1.7;
+  font-size:.95rem;
+  margin:0;
+}
+.btn-appt-delete-confirm {
+  border:none;
+  background:linear-gradient(135deg,var(--g1),var(--g2));
+  color:white;
+  border-radius:999px;
+  padding:.62rem 1.2rem;
+  font-weight:700;
+  letter-spacing:.04em;
+  box-shadow:0 12px 24px rgba(13,74,47,.18);
+}
+.btn-appt-delete-confirm:hover { box-shadow:0 16px 28px rgba(13,74,47,.24); transform:translateY(-1px); }
+.btn-appt-delete-cancel {
+  border-radius:999px;
+  padding:.62rem 1.15rem;
+  border:1px solid rgba(45,158,104,.18);
+  background:white;
+  color:var(--g2);
+  font-weight:700;
+}
+.btn-appt-cancel {
+  padding:.5rem 1.2rem; border-radius:2rem;
+  background:transparent; border:1.5px solid rgba(224,82,82,.4);
+  color:#b02a37; font-size:.78rem; font-weight:600;
+  cursor:pointer; transition:var(--transition);
+  font-family:'DM Sans',sans-serif;
+}
+.btn-appt-cancel:hover { background:#b02a37; color:white; border-color:#b02a37; }
+.btn-appt-review {
+  padding:.5rem 1.2rem; border-radius:2rem;
+  background:transparent; border:1.5px solid var(--g3);
+  color:var(--g2); font-size:.78rem; font-weight:600;
+  cursor:pointer; transition:var(--transition);
+  font-family:'DM Sans',sans-serif;
+}
+.btn-appt-review:hover { background:var(--g2); color:white; border-color:var(--g2); }
+
+/* Expandable detail */
+.appt-detail {
+  display:none;
+  border-top:1px solid var(--border);
+  padding:1.4rem 1.8rem;
+  background:var(--section-alt);
+  animation:fadeIn .3s ease;
+}
+.appt-detail.open { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
+.detail-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:1rem;
+}
+.detail-item {}
+.detail-label {
+  font-size:.68rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted); font-weight:600; display:block; margin-bottom:.25rem;
+}
+.detail-value { font-size:.9rem; color:var(--text); font-weight:400; }
+
+/* -- EMPTY STATE -- */
+.appts-empty {
+  text-align:center; padding:5rem 2rem;
+  background:white; border-radius:var(--radius-lg);
+  border:1px solid var(--border);
+}
+.appts-empty-icon { font-size:3.5rem; display:block; margin-bottom:1.2rem; }
+.appts-empty h3 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.8rem; color:var(--dark); margin-bottom:.5rem;
+}
+.appts-empty p { color:var(--muted); max-width:360px; margin:0 auto 1.8rem; font-size:.95rem; }
+
+/* -- REVIEW MODAL UPGRADES -- */
+.review-modal .modal-content { border-radius:var(--radius-lg); overflow:hidden; border:none; box-shadow:var(--shadow-lg); }
+.review-modal .modal-header {
+  background:linear-gradient(135deg,var(--g1),var(--g2));
+  color:white; border-bottom:none; padding:1.5rem 1.8rem;
+}
+.review-modal .modal-title {
+  font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:400;
+}
+.review-modal .modal-body { padding:1.8rem; }
+.review-modal .modal-footer { padding:1.2rem 1.8rem; border-top:1px solid var(--border); }
+.star { font-size:1.8rem; cursor:pointer; color:#ddd; transition:color .15s; }
+.star.selected, .star:hover { color:var(--gold); }
+.file-drop {
+  border:2px dashed rgba(45,158,104,.2); padding:1rem;
+  border-radius:var(--radius-sm); background:#fbfff9;
+  transition:var(--transition);
+}
+.file-drop:hover { border-color:var(--g3); background:rgba(45,158,104,.03); }
+.btn-submit-review {
+  background:linear-gradient(135deg,var(--g1),var(--g2)) !important;
+  border:none !important; border-radius:2rem !important;
+  font-weight:600 !important; padding:.6rem 1.8rem !important;
+  font-family:'DM Sans',sans-serif !important;
+  transition:var(--transition) !important;
+}
+.btn-submit-review:hover { box-shadow:0 6px 20px rgba(13,74,47,.3) !important; transform:translateY(-1px) !important; }
+</style>
+</head>
+<body class="appointments-page">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <img src="../images/logo.JPG" alt="Logo" class="logo-img rounded-circle">
+      <span class="brand-text">Bulakena<span style="color:var(--g3)">Garden</span></span>
+    </a>
+    <button class="navbar-toggler nav-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="nav-toggle-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarMenu">
+      <ul class="navbar-nav mb-2 mb-lg-0 fw-semibold">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="aboutus.html">About Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="contactus.html">Contact</a></li>
+      </ul>
+      <div class="auth-controls auth-pending ms-lg-3">
+        <button type="button" class="btn btn-success px-4 js-auth-login">Login</button>
+        <div class="dropdown d-none js-auth-menu">
+          <button class="btn auth-profile-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="auth-avatar">U</span><span class="auth-label">Profile</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+            <li><h6 class="dropdown-header js-auth-email"></h6></li>
+            <li><button type="button" class="dropdown-item js-auth-account">Account</button></li>
+            <li><button type="button" class="dropdown-item js-auth-orders">My Orders</button></li>
+            <li><button type="button" class="dropdown-item js-auth-appointments">My Appointments</button></li>
+            <li><button type="button" class="dropdown-item js-auth-signout">Sign out</button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO STRIP -->
+<div class="appts-hero">
+  <div class="container">
+    <div class="appts-hero-eyebrow">My Account</div>
+    <h1>My <em>Appointments</em></h1>
+    <p>Track, view, and manage all your booked garden services in one place. Appointments submitted with your email appear here.</p>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container py-5">
+
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" style="margin-bottom:1.5rem;">
+    <ol class="breadcrumb" style="font-size:.82rem;background:none;padding:0;margin:0;">
+      <li class="breadcrumb-item"><a href="index.html" style="color:var(--g2);text-decoration:none;">Home</a></li>
+      <li class="breadcrumb-item active" style="color:var(--muted);">My Appointments</li>
+    </ol>
+  </nav>
+
+  <!-- Header + Book CTA -->
+  <div class="mb-4">
+    <div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--dark);margin-bottom:.25rem;">My Appointments</h2>
+      <p style="font-size:.9rem;color:var(--muted);margin:0;">Your upcoming and past garden service bookings.</p>
+    </div>
+  </div>
+
+  <!-- Status filter tabs -->
+  <div class="appts-tabs" id="apptsTabs">
+    <button class="appt-tab active" data-filter="all">All</button>
+    <button class="appt-tab" data-filter="pending">Pending</button>
+    <button class="appt-tab" data-filter="confirmed">Confirmed</button>
+    <button class="appt-tab" data-filter="completed">Completed</button>
+    <button class="appt-tab" data-filter="cancelled">Cancelled</button>
+  </div>
+
+  <!-- Cards container -->
+  <div id="appointmentsContainer"></div>
+
+  <!-- Empty state -->
+  <div id="noAppointments" class="appts-empty" style="display:none;">
+    <h3>No Appointments Found</h3>
+    <p>You haven't booked any garden services yet. Ready to transform your space?</p>
+    <a href="services.html#booking" class="btnx primary" id="bookServiceCta">Book a Service</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-brand-logo">Bulakena <span>Garden</span></a>
+        <p>Where nature becomes art. Serving Bulacan and the Philippines with premium plants, landscapes, and garden design since 2009.</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/BulkenaGarden" class="social-link" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="products.html?type=Indoor">Indoor Plants</a></li>
+          <li><a href="products.html?type=Outdoor">Outdoor Plants</a></li>
+          <li><a href="products.html?type=Hanging%20Plants">Hanging Plants</a></li>
+          <li><a href="products.html?type=Table%20Plants">Table Plants</a></li>
+          <li><a href="products.html?type=Furniture">Garden Furniture</a></li>
+          <li><a href="products.html?type=Planter">Garden Planters</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html#gardening">Gardening</a></li>
+          <li><a href="services.html#landscaping">Landscaping</a></li>
+          <li><a href="services.html#consultations">Consultations</a></li>
+          <li><a href="services.html#booking">Book a Service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="aboutus.html">About Us</a></li>
+          <li><a href="contactus.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Bulakena Garden. All rights reserved. Made with &#127793; in Talisay</p>
+    </div>
+  </div>
+</footer>
+
+<!-- REVIEW MODAL -->
+<div class="modal fade review-modal" id="reviewModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Write a Review</div>
+          <div style="font-size:.85rem;opacity:.8;margin-top:.2rem;">Tell other customers about your experience</div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-4 p-3" style="background:var(--section-alt);border-radius:var(--radius-sm);">
+          <div id="modalProdTitle" style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--dark);">Service</div>
+          <div style="font-size:.82rem;color:var(--muted);margin-top:.2rem;">Reviewing your appointment experience</div>
+        </div>
+        <div class="mb-4">
+          <label class="form-label" style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;">Rate Your Experience</label>
+          <div class="star-row d-flex gap-2 align-items-center" id="starRow">
+            <span class="star" data-value="1">&#9733;</span><span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span><span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+            <small class="ms-2" style="color:var(--muted);font-size:.85rem;" id="ratingLabel">0 of 5</small>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="form-label" style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;">Your Thoughts</label>
+          <textarea class="form-control" id="reviewText" name="review" rows="4" placeholder="Describe the service quality, professionalism, and overall experience-" style="border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.92rem;"></textarea>
+        </div>
+        <div class="mb-4">
+          <label class="form-label" style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;">Add Photo or Video (Optional)</label>
+          <div class="d-flex gap-3 align-items-center">
+            <div class="file-drop flex-grow-1">
+              <input type="file" id="mediaInput" name="media" accept="image/*,video/*" style="width:100%;">
+              <div style="font-size:.8rem;color:var(--muted);margin-top:.5rem;">One image or short video, max 10MB</div>
+            </div>
+            <div id="mediaPreview" style="min-width:100px;"></div>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <input type="checkbox" id="isAnonymous" class="form-check-input" style="width:1.1em;height:1.1em;">
+          <label for="isAnonymous" style="font-size:.88rem;color:var(--muted);margin:0;cursor:pointer;">Post review anonymously</label>
+        </div>
+        <input type="hidden" id="modal_appt_id" name="appointment_id">
+        <input type="hidden" id="modal_service" name="service">
+        <input type="hidden" id="modal_name" name="name">
+        <input type="hidden" id="modal_email" name="email">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius:2rem;padding:.55rem 1.4rem;">Cancel</button>
+        <button type="button" class="btn btn-submit-review" id="submitReviewBtn">Submit Review</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal fade appt-delete-modal" id="apptDeleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="appt-delete-chip">Hide from My Appointments</div>
+        <h3 class="appt-delete-title">Are you sure you want to delete this appointment?</h3>
+        <p class="appt-delete-text">Choose Yes to remove it from your list, or No to keep it.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-appt-delete-cancel" data-bs-dismiss="modal">No</button>
+        <button type="button" class="btn btn-appt-delete-confirm js-appt-delete-confirm">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="app.js"></script>
+<script>
+/* NAV AUTH FALLBACK */
+(function() {
+  function initials(name) {
+    return String(name || 'User').trim().split(/\s+/).slice(0, 2).map(function(part) {
+      return part.charAt(0).toUpperCase();
+    }).join('') || 'U';
+  }
+
+  function ensureCartEntry(menu) {
+    if (!menu || menu.querySelector('.js-auth-cart')) return;
+    var accountItem = menu.querySelector('.js-auth-account');
+    var li = document.createElement('li');
+    li.innerHTML = '<button type="button" class="dropdown-item auth-cart-link js-auth-cart">Cart <span class="badge text-bg-success rounded-pill js-cart-count d-none">0</span></button>';
+    if (accountItem && accountItem.closest('li')) {
+      accountItem.closest('li').insertAdjacentElement('afterend', li);
+    } else {
+      menu.appendChild(li);
+    }
+  }
+
+  function normalizeMenuOrder(menu) {
+    if (!menu) return;
+    var emailItem = menu.querySelector('.js-auth-email');
+    var accountItem = menu.querySelector('.js-auth-account');
+    var cartItem = menu.querySelector('.js-auth-cart');
+    var appointmentsItem = menu.querySelector('.js-auth-appointments');
+    var ordersItem = menu.querySelector('.js-auth-orders');
+    var signoutItem = menu.querySelector('.js-auth-signout');
+    [emailItem, accountItem, cartItem, appointmentsItem, ordersItem, signoutItem].forEach(function(item) {
+      var li = item ? item.closest('li') : null;
+      if (li) menu.appendChild(li);
+    });
+  }
+
+  function applyNavUser(user) {
+    document.querySelectorAll('.auth-controls').forEach(function(control) {
+      var loginBtn = control.querySelector('.js-auth-login');
+      var menuWrap = control.querySelector('.js-auth-menu');
+      var menu = menuWrap ? menuWrap.querySelector('.dropdown-menu') : null;
+      var avatar = control.querySelector('.auth-avatar');
+      var label = control.querySelector('.auth-label');
+      var emailEl = control.querySelector('.js-auth-email');
+      if (!loginBtn || !menuWrap || !menu) return;
+
+      ensureCartEntry(menu);
+      normalizeMenuOrder(menu);
+
+      if (user && user.email) {
+        loginBtn.classList.add('d-none');
+        menuWrap.classList.remove('d-none');
+        if (avatar) avatar.textContent = initials(user.name);
+        if (label) label.textContent = user.name || 'Profile';
+        if (emailEl) emailEl.textContent = user.email || '';
+      } else {
+        loginBtn.classList.remove('d-none');
+        menuWrap.classList.add('d-none');
+        if (avatar) avatar.textContent = 'U';
+        if (label) label.textContent = 'Profile';
+        if (emailEl) emailEl.textContent = '';
+      }
+
+      control.classList.remove('auth-pending');
+      control.classList.add('auth-ready');
+    });
+  }
+
+  function bindSignOut() {
+    document.querySelectorAll('.js-auth-signout').forEach(function(button) {
+      button.addEventListener('click', function() {
+        fetch('api/logout.php', { method: 'POST', credentials: 'same-origin' })
+          .finally(function() { window.location.href = 'index.html'; });
+      });
+    });
+    document.querySelectorAll('.js-auth-cart').forEach(function(button) {
+      button.addEventListener('click', function() {
+        window.location.href = 'cart.html';
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('api/session_check.php', { credentials: 'same-origin' })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        applyNavUser(data && data.authenticated ? data.user : null);
+        bindSignOut();
+      })
+      .catch(function() {
+        applyNavUser(null);
+        bindSignOut();
+      });
+  });
+})();
+
+/* -- NAV SCROLL -- */
+const mainNav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => mainNav.classList.toggle('scrolled', window.scrollY > 60));
+
+/* -- FILTER TABS -- */
+let activeFilter = 'all';
+let appointmentsHasAny = false;
+document.querySelectorAll('.appt-tab').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.appt-tab').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    activeFilter = this.dataset.filter;
+    filterCards();
+  });
+});
+
+function getEmptyAppointmentsCopy(filter) {
+  const key = String(filter || 'all').toLowerCase();
+  if (key === 'pending') {
+    return {
+      title: 'No pending appointments',
+      body: "You don't have any appointments waiting for confirmation right now."
+    };
+  }
+  if (key === 'confirmed') {
+    return {
+      title: 'No confirmed appointments',
+      body: 'You do not have any confirmed appointments yet.'
+    };
+  }
+  if (key === 'completed') {
+    return {
+      title: 'No completed appointments',
+      body: 'You do not have any completed appointments yet.'
+    };
+  }
+  if (key === 'cancelled') {
+    return {
+      title: 'No cancelled appointments',
+      body: 'You do not have any cancelled appointments yet.'
+    };
+  }
+  return {
+    title: 'No Appointments Found',
+    body: "You haven't booked any garden services yet. Ready to transform your space?"
+  };
+}
+
+function updateEmptyAppointmentsState() {
+  const empty = document.getElementById('noAppointments');
+  if (!empty) return;
+  const titleEl = empty.querySelector('h3');
+  const bodyEl = empty.querySelector('p');
+  const ctaEl = empty.querySelector('#bookServiceCta');
+  const copy = getEmptyAppointmentsCopy(activeFilter);
+  if (titleEl) titleEl.textContent = copy.title;
+  if (bodyEl) bodyEl.textContent = copy.body;
+  if (ctaEl) ctaEl.style.display = appointmentsHasAny ? 'none' : '';
+}
+
+function filterCards() {
+  document.querySelectorAll('.appt-card').forEach(card => {
+    const st = card.dataset.status || 'pending';
+    card.style.display = (activeFilter === 'all' || st === activeFilter) ? '' : 'none';
+  });
+  const visible = [...document.querySelectorAll('.appt-card')].filter(c => c.style.display !== 'none');
+  updateEmptyAppointmentsState();
+  document.getElementById('noAppointments').style.display = visible.length ? 'none' : 'block';
+}
+
+/* -- APPOINTMENTS LOADER (matches original app.js contract) -- */
+(function() {
+  let sessionEmailCache = '';
+  let hiddenAppointmentIds = new Set();
+  let currentAppointmentsEmail = '';
+  let deleteTargetAppointment = null;
+  let deleteModalInstance = null;
+
+  function getHiddenAppointmentIdsKey(email) {
+    return 'bulakena_hidden_appointments_v1:' + String(email || '').trim().toLowerCase();
+  }
+
+  function loadHiddenAppointmentIds(email) {
+    const key = getHiddenAppointmentIdsKey(email);
+    try {
+      const raw = localStorage.getItem(key) || '[]';
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        return new Set(parsed.map(String));
+      }
+    } catch (e) {}
+    return new Set();
+  }
+
+  function saveHiddenAppointmentIds(email, ids) {
+    const key = getHiddenAppointmentIdsKey(email);
+    const list = Array.isArray(ids) ? ids.map(String) : Array.from(ids || []).map(String);
+    localStorage.setItem(key, JSON.stringify(list));
+  }
+
+  function showAppointmentToast(message, kind) {
+    var el = document.getElementById('apptToast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'apptToast';
+      el.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#123f2f;color:#fff;padding:12px 18px;border-radius:999px;box-shadow:0 10px 24px rgba(0,0,0,.18);z-index:3000;opacity:0;transition:opacity .2s ease, transform .2s ease;font:600 14px/1.3 "DM Sans",sans-serif;';
+      document.body.appendChild(el);
+    }
+    el.textContent = (kind === 'error' ? 'Error: ' : 'Success: ') + String(message || '');
+    el.style.background = (kind === 'error') ? '#b02a37' : '#123f2f';
+    el.style.opacity = '1';
+    el.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(el._timer);
+    el._timer = setTimeout(function () {
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 2400);
+  }
+
+  function getSessionEmail() {
+    return sessionEmailCache;
+  }
+
+  function loadSessionEmail() {
+    if (window.BulakenaAuth && typeof window.BulakenaAuth.refreshSession === 'function') {
+      return window.BulakenaAuth.refreshSession({ silent: true }).then(function() {
+        sessionEmailCache = (window.BulakenaAuth.getSessionEmail && window.BulakenaAuth.getSessionEmail()) || '';
+        return sessionEmailCache;
+      }).catch(function() { return ''; });
+    }
+    return fetch('api/session_check.php', { credentials: 'same-origin' })
+      .then(r => r.json())
+      .then(data => {
+        sessionEmailCache = data && data.authenticated && data.user ? String(data.user.email || '') : '';
+        return sessionEmailCache;
+      })
+      .catch(() => '');
+  }
+
+  function escapeHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
+  }
+
+  function capitalize(s) { s = String(s||''); return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
+
+  function normalizeServiceLabel(s) {
+    const raw = String(s||'').trim();
+    if(!raw) return '';
+    const key = raw.toLowerCase();
+    const map = { 'gardening':'Gardening','landscaping':'Landscaping','grotto':'Grotto','waterfalls':'Waterfalls','swimming-pool':'Swimming Pool','swimming pool':'Swimming Pool','consultation':'Consultation' };
+    return map[key] || key.split(/[-_\s]+/g).filter(Boolean).map(w => w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
+  }
+
+  function serviceIcon(s) {
+    const k = String(s||'').toLowerCase();
+    const icons = {
+      garden: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-8"/><path d="M12 13c-4.2 0-7-2.7-7-7 4.3 0 7 2.8 7 7Z"/><path d="M12 13c0-4.2 2.7-7 7-7 0 4.3-2.8 7-7 7Z"/></svg>',
+      landscape: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h18"/><path d="m4 18 6.2-9.5 4.1 6.1 2.2-3.1L21 18"/><path d="M8.5 11.5 10.2 13l1.8-2"/></svg>',
+      grotto: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V9a8 8 0 0 1 16 0v11"/><path d="M8 20V9a4 4 0 0 1 8 0v11"/><path d="M3 20h18"/></svg>',
+      waterfall: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8"/><path d="M10 3c0 4-3 5-3 9a5 5 0 0 0 10 0c0-4-3-5-3-9"/><path d="M7 21c1.2-.8 2.8-.8 4 0s2.8.8 4 0 2.8-.8 4 0"/></svg>',
+      pool: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11V6a3 3 0 0 1 6 0v1"/><path d="M11 11V6a3 3 0 0 1 6 0v1"/><path d="M4 15c1.4-1 2.6-1 4 0s2.6 1 4 0 2.6-1 4 0 2.6 1 4 0"/><path d="M4 19c1.4-1 2.6-1 4 0s2.6 1 4 0 2.6-1 4 0 2.6 1 4 0"/></svg>',
+      consult: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18a7 7 0 1 1 3.1 2.2L4 21l1-3Z"/><path d="M9 10h6"/><path d="M9 14h4"/></svg>',
+      default: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-8"/><path d="M7 13c-2.4 0-4-1.6-4-4 2.4 0 4 1.6 4 4Z"/><path d="M12 13c0-4.8 3.2-8 8-8 0 4.8-3.2 8-8 8Z"/></svg>'
+    };
+    if(k.includes('garden')) return icons.garden;
+    if(k.includes('landscape')) return icons.landscape;
+    if(k.includes('grotto')) return icons.grotto;
+    if(k.includes('water')) return icons.waterfall;
+    if(k.includes('pool')) return icons.pool;
+    if(k.includes('consult')) return icons.consult;
+    return icons.default;
+  }
+
+  function formatAppointmentDate(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return '-';
+    const dateOnly = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    let date;
+    if (dateOnly) {
+      date = new Date(Number(dateOnly[1]), Number(dateOnly[2]) - 1, Number(dateOnly[3]), 9, 0, 0);
+    } else {
+      const normalized = raw.includes(' ') && !raw.includes('T') ? raw.replace(' ', 'T') : raw;
+      date = new Date(normalized);
+    }
+    if (Number.isNaN(date.getTime())) return raw;
+    return date.toLocaleDateString('en-PH', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
+
+  function formatAppointmentTime(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return '09:00 AM';
+    const match = raw.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+    if (match) {
+      let hour = Number(match[1]);
+      const minute = match[2];
+      const suffix = hour >= 12 ? 'PM' : 'AM';
+      hour = hour % 12;
+      if (hour === 0) hour = 12;
+      return `${hour}:${minute} ${suffix}`;
+    }
+    const date = new Date(raw.includes(' ') && !raw.includes('T') ? raw.replace(' ', 'T') : raw);
+    if (!Number.isNaN(date.getTime())) {
+      return date.toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' });
+    }
+    return raw;
+  }
+
+  function isAppointmentHidden(appt) {
+    return hiddenAppointmentIds.has(String(appt && appt.id != null ? appt.id : ''));
+  }
+
+  function openDeleteModal(appt) {
+    deleteTargetAppointment = appt || null;
+    if (!deleteTargetAppointment) return;
+    if (deleteModalInstance) deleteModalInstance.show();
+  }
+
+  function removeAppointmentFromMyList() {
+    if (!deleteTargetAppointment) return;
+    var id = String(deleteTargetAppointment.id || '');
+    if (!id) return;
+    hiddenAppointmentIds.add(id);
+    saveHiddenAppointmentIds(currentAppointmentsEmail, hiddenAppointmentIds);
+    deleteTargetAppointment = null;
+    if (deleteModalInstance) deleteModalInstance.hide();
+    showAppointmentToast('Appointment removed from your list.', 'success');
+    fetchAppointments();
+  }
+
+  function appointmentSortKey(appt) {
+    return String((appt && (appt.appointment_sort || appt.dt || appt.created_at)) || '').trim()
+      .replace('T', ' ')
+      .replace(/\.\d+$/, '');
+  }
+
+  function statusClass(s) {
+    const k = String(s||'').toLowerCase();
+    if(k === 'confirmed') return 'confirmed';
+    if(k === 'cancelled') return 'cancelled';
+    if(k === 'completed' || k === 'done') return 'completed';
+    return 'pending';
+  }
+
+  function appointmentStatusLabel(s) {
+    const k = String(s||'').toLowerCase();
+    if(k === 'completed' || k === 'done') return 'Completed';
+    if(k === 'confirmed') return 'Confirmed';
+    if(k === 'cancelled') return 'Cancelled';
+    return 'Pending';
+  }
+
+  function renderAppointments(list) {
+    const cont = document.getElementById('appointmentsContainer');
+    const empty = document.getElementById('noAppointments');
+    cont.innerHTML = '';
+
+    const sorted = Array.isArray(list)
+      ? list.slice().filter(function (appt) { return !isAppointmentHidden(appt); }).sort((a, b) => appointmentSortKey(b).localeCompare(appointmentSortKey(a)))
+      : [];
+    appointmentsHasAny = sorted.length > 0;
+
+    if (!sorted.length) {
+      updateEmptyAppointmentsState();
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    sorted.forEach((appt, i) => {
+      const st = statusClass(appt.status || 'pending');
+      const svc = normalizeServiceLabel(appt.desired_service || appt.service || '');
+      const icon = serviceIcon(svc);
+      const refNo = appt.id ? `#APT-${String(appt.id).padStart(4,'0')}` : '';
+      const dateStr = formatAppointmentDate(appt.appointment_date || appt.preferred_date || appt.dt || appt.date || '');
+      const timeStr = formatAppointmentTime(appt.appointment_time || (appt.dt ? String(appt.dt).split(' ')[1] : '') || '');
+      const submittedStr = appt.created_at || appt.submitted || '';
+      const hasReview = Number(appt.review_count || 0) > 0 || String(appt.has_review || '') === '1' || appt.has_review === true;
+
+      const card = document.createElement('div');
+      card.className = 'appt-card';
+      card.dataset.status = st;
+      card.id = `card-${appt.id}`;
+      card.style.animationDelay = `${i * 0.07}s`;
+
+      card.innerHTML = `
+        <div class="appt-card-inner">
+          <div class="appt-accent ${st}"></div>
+          <div class="appt-content">
+            <div class="appt-top">
+              <div class="appt-top-left">
+                <div class="appt-leaf">${icon}</div>
+                <div>
+                  <div class="appt-service">${escapeHtml(svc || 'Garden Service')}</div>
+                  <div class="appt-ref">${refNo}${submittedStr ? ' - Submitted ' + escapeHtml(submittedStr.split('T')[0] || submittedStr) : ''}</div>
+                </div>
+              </div>
+              <span class="appt-status status-${st}">${appointmentStatusLabel(appt.status || 'pending')}</span>
+            </div>
+
+            <div class="appt-meta">
+              <div class="appt-meta-item"><span>${escapeHtml(dateStr)}</span></div>
+              <div class="appt-meta-item"><span>${escapeHtml(timeStr)}</span></div>
+              ${appt.full_name ? `<div class="appt-meta-item"><span>${escapeHtml(appt.full_name)}</span></div>` : ''}
+              ${(appt.phone_number || appt.phone) ? `<div class="appt-meta-item"><span>${escapeHtml(appt.phone_number || appt.phone)}</span></div>` : ''}
+            </div>
+
+            <div class="appt-actions">
+              <button class="btn-appt-view" data-id="${appt.id}">View Details</button>
+              ${(st === 'completed' || st === 'cancelled') ? `<button class="btn-appt-delete" data-id="${appt.id}"><span class="btn-appt-delete-icon">-</span><span>Delete</span></button>` : ''}
+              ${(st === 'pending') ? `<button class="btn-appt-cancel" data-id="${appt.id}">Cancel</button>` : ''}
+              ${(st === 'completed' && !hasReview) ? `<button class="btn-appt-review btn-write-review" data-id="${appt.id}" data-service="${escapeHtml(svc)}">Write Review</button>` : ''}
+              ${(st === 'completed' && hasReview) ? `<button class="btn-appt-review" type="button" disabled style="opacity:.6;cursor:not-allowed;">Reviewed</button>` : ''}
+            </div>
+          </div>
+        </div>
+
+        <div class="appt-detail" id="detail-${appt.id}">
+          <div class="detail-grid">
+            <div class="detail-item"><span class="detail-label">Service</span><span class="detail-value">${escapeHtml(svc)}</span></div>
+            <div class="detail-item"><span class="detail-label">Preferred Date</span><span class="detail-value">${escapeHtml(dateStr)}</span></div>
+            <div class="detail-item"><span class="detail-label">Preferred Time</span><span class="detail-value">${escapeHtml(timeStr)}</span></div>
+            <div class="detail-item"><span class="detail-label">Address</span><span class="detail-value">${escapeHtml(appt.address || '-')}</span></div>
+            <div class="detail-item"><span class="detail-label">Email</span><span class="detail-value">${escapeHtml(appt.email || '-')}</span></div>
+            <div class="detail-item"><span class="detail-label">Phone</span><span class="detail-value">${escapeHtml(appt.phone_number || appt.phone || '-')}</span></div>
+            <div class="detail-item"><span class="detail-label">Status</span><span class="detail-value">${appointmentStatusLabel(appt.status || 'pending')}</span></div>
+          </div>
+          ${appt.message ? `<div style="margin-top:1rem;padding:1rem;background:white;border-radius:var(--radius-sm);border:1px solid var(--border);"><div class="detail-label" style="display:block;margin-bottom:.4rem;">Message</div><div style="font-size:.9rem;color:var(--text);line-height:1.7;">${escapeHtml(appt.message)}</div></div>` : ''}
+        </div>
+      `;
+
+      cont.appendChild(card);
+
+      /* View details toggle */
+      card.querySelector('.btn-appt-view').addEventListener('click', function() {
+        const det = document.getElementById(`detail-${appt.id}`);
+        const isOpen = det.classList.contains('open');
+        det.classList.toggle('open', !isOpen);
+        this.textContent = isOpen ? 'View Details' : 'Hide Details';
+      });
+
+      /* Cancel button */
+      const cancelBtn = card.querySelector('.btn-appt-cancel');
+      if (cancelBtn) {
+        cancelBtn.addEventListener('click', function() {
+          if (!confirm('Cancel this appointment?')) return;
+          fetch('api/update_appointment_status.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+            body: new URLSearchParams({ id: String(appt.id), status: 'cancelled' })
+          })
+            .then(r => r.json())
+            .then(j => {
+              if (!j || j.success !== true) throw new Error((j && j.message) ? j.message : 'Cancel failed');
+              appt.status = 'cancelled';
+              card.dataset.status = 'cancelled';
+              card.querySelector('.appt-status').textContent = 'Cancelled';
+              card.querySelector('.appt-status').className = 'appt-status status-cancelled';
+              card.querySelector('.appt-accent').className = 'appt-accent cancelled';
+              this.remove();
+              filterCards();
+            })
+            .catch(() => alert('Could not cancel. Please try again.'));
+        });
+      }
+
+      const deleteBtn = card.querySelector('.btn-appt-delete');
+      if (deleteBtn) {
+        deleteBtn.addEventListener('click', function() {
+          openDeleteModal(appt);
+        });
+      }
+
+      /* Review button */
+      const reviewBtn = card.querySelector('.btn-write-review');
+      if (reviewBtn) {
+        reviewBtn.addEventListener('click', function() {
+          document.getElementById('modal_appt_id').value = appt.id || '';
+          document.getElementById('modal_service').value = svc || '';
+          document.getElementById('modal_name').value = appt.full_name || '';
+          document.getElementById('modal_email').value = appt.email || '';
+          document.getElementById('modalProdTitle').textContent = svc || 'Garden Service';
+          // Reset
+          document.getElementById('ratingLabel').textContent = '0 of 5';
+          document.querySelectorAll('#starRow .star').forEach(s => s.classList.remove('selected'));
+          document.getElementById('reviewText').value = '';
+          document.getElementById('mediaInput').value = '';
+          document.getElementById('mediaPreview').innerHTML = '';
+          document.getElementById('isAnonymous').checked = false;
+          new bootstrap.Modal(document.getElementById('reviewModal')).show();
+        });
+      }
+    });
+
+    filterCards();
+  }
+
+  function fetchAppointments() {
+    loadSessionEmail().then(function(email) {
+      currentAppointmentsEmail = email || '';
+      hiddenAppointmentIds = loadHiddenAppointmentIds(currentAppointmentsEmail);
+      if (email) {
+        fetch('api/get_appointments.php?email=' + encodeURIComponent(email))
+          .then(r => r.text())
+          .then(txt => {
+            try { renderAppointments(JSON.parse(txt)); } catch(e) { renderAppointments([]); }
+          })
+          .catch(() => renderAppointments([]));
+      } else {
+        document.getElementById('noAppointments').style.display = 'block';
+      }
+    });
+  }
+
+  /* Fetch from PHP backend */
+  if (document.getElementById('apptDeleteModal') && window.bootstrap && window.bootstrap.Modal) {
+    deleteModalInstance = window.bootstrap.Modal.getOrCreateInstance(document.getElementById('apptDeleteModal'));
+    document.querySelector('#apptDeleteModal .js-appt-delete-confirm').addEventListener('click', removeAppointmentFromMyList);
+  }
+  fetchAppointments();
+})();
+
+/* -- REVIEW MODAL INTERACTIONS -- */
+(function() {
+  const reviewModalEl = document.getElementById('reviewModal');
+  if (!reviewModalEl) return;
+  const bsModal = new bootstrap.Modal(reviewModalEl);
+  const starRow = document.getElementById('starRow');
+  const stars = Array.from(starRow.querySelectorAll('.star'));
+  const ratingLabel = document.getElementById('ratingLabel');
+  const mediaInput = document.getElementById('mediaInput');
+  const mediaPreview = document.getElementById('mediaPreview');
+  const submitBtn = document.getElementById('submitReviewBtn');
+  const reviewText = document.getElementById('reviewText');
+  const isAnonymous = document.getElementById('isAnonymous');
+  const modalApptId = document.getElementById('modal_appt_id');
+  const modalService = document.getElementById('modal_service');
+  const modalName = document.getElementById('modal_name');
+  const modalEmail = document.getElementById('modal_email');
+  let selectedRating = 0;
+
+  function setStars(n) {
+    selectedRating = n;
+    stars.forEach(s => s.classList.toggle('selected', Number(s.dataset.value) <= n));
+    ratingLabel.textContent = n + ' of 5';
+  }
+  stars.forEach(star => {
+    star.addEventListener('click', function() { setStars(parseInt(this.dataset.value)); });
+    star.addEventListener('mouseenter', function() { stars.forEach(s => s.classList.toggle('selected', Number(s.dataset.value) <= parseInt(this.dataset.value))); });
+    star.addEventListener('mouseleave', function() { setStars(selectedRating); });
+  });
+
+  mediaInput.addEventListener('change', function() {
+    const file = this.files && this.files[0];
+    mediaPreview.innerHTML = '';
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    if (file.type.startsWith('image/')) {
+      const img = document.createElement('img'); img.src = url; img.style.cssText='max-width:100px;max-height:100px;object-fit:cover;border-radius:8px;'; mediaPreview.appendChild(img);
+    } else if (file.type.startsWith('video/')) {
+      const v = document.createElement('video'); v.src = url; v.controls=true; v.style.cssText='max-width:100px;max-height:100px;'; mediaPreview.appendChild(v);
+    }
+  });
+
+  submitBtn.addEventListener('click', function() {
+    if (selectedRating === 0) { alert('Please select a rating.'); return; }
+    const fd = new FormData();
+    fd.append('appointment_id', modalApptId.value||'');
+    fd.append('service', modalService.value||'');
+    fd.append('rating', String(selectedRating));
+    fd.append('text', reviewText.value||'');
+    fd.append('name', modalName.value||'');
+    fd.append('email', modalEmail.value||'');
+    if (mediaInput.files[0]) fd.append('media', mediaInput.files[0]);
+    if (isAnonymous.checked) fd.append('anonymous','1');
+
+    fetch('api/save_feedback.php', { method:'POST', body:fd })
+      .then(r => r.json().then(j => ({ ok: r.ok, status: r.status, body: j })).catch(() => ({ ok: r.ok, status: r.status, body: null })))
+      .then(result => {
+        if (!result.ok || !result.body || result.body.success !== true) {
+          throw new Error((result.body && (result.body.error || result.body.message)) || 'Failed to submit review.');
+        }
+        bsModal.hide();
+        const id = modalApptId.value;
+        if (id) {
+          const btn = document.querySelector(`#card-${id} .btn-write-review`);
+          if (btn) { btn.textContent='Reviewed'; btn.disabled=true; btn.classList.remove('btn-write-review'); btn.style.opacity='.6'; btn.style.cursor='not-allowed'; }
+        }
+        alert('Thank you - your review has been submitted!');
+      })
+      .catch(err => alert(err && err.message ? err.message : 'Failed to submit review.'));
+  });
+})();
+</script>
+</body>
+</html>

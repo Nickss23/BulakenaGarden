@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Checkout Confirm</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .test-section { border: 1px solid #ccc; padding: 15px; margin: 10px 0; }
+    .success { color: green; }
+    .error { color: red; }
+    .info { color: blue; }
+    code { background: #f0f0f0; padding: 2px 5px; }
+  </style>
+</head>
+<body>
+  <h1>Checkout Confirm Debug Test</h1>
+  
+  <div class="test-section">
+    <h3>Test 1: Direct URL Parameters</h3>
+    <p>Click this link to test with URL parameters:</p>
+    <p>
+      <a href="checkout-confirm.html?order_ref=BG-20260814100522-3612&session_id=cs_e0157d65281d0e1876ff1c47&checkout_url=https://checkout.paymongo.com/e0157d65281d0e1876ff1c47&total=150" target="_blank">
+        Open checkout-confirm.html with test parameters
+      </a>
+    </p>
+  </div>
+
+  <div class="test-section">
+    <h3>Test 2: sessionStorage Simulation</h3>
+    <p>This test will set sessionStorage and then open checkout-confirm.html</p>
+    <button onclick="testSessionStorage()">Test sessionStorage</button>
+  </div>
+
+  <div class="test-section">
+    <h3>Test 3: Check sessionStorage Content</h3>
+    <button onclick="checkStorage()">Check Session Storage</button>
+    <div id="storage-output"></div>
+  </div>
+
+  <script>
+    function testSessionStorage() {
+      // Set test data in sessionStorage
+      sessionStorage.setItem('checkout_url', 'https://checkout.paymongo.com/e0157d65281d0e1876ff1c47');
+      sessionStorage.setItem('order_ref', 'BG-20260814100522-3612');
+      sessionStorage.setItem('session_id', 'cs_e0157d65281d0e1876ff1c47');
+      sessionStorage.setItem('order_total', '150');
+      
+      alert('sessionStorage set! Now opening checkout-confirm.html...');
+      window.location.href = 'checkout-confirm.html';
+    }
+
+    function checkStorage() {
+      const output = document.getElementById('storage-output');
+      const data = {
+        checkout_url: sessionStorage.getItem('checkout_url'),
+        order_ref: sessionStorage.getItem('order_ref'),
+        session_id: sessionStorage.getItem('session_id'),
+        order_total: sessionStorage.getItem('order_total')
+      };
+      
+      output.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+    }
+  </script>
+</body>
+</html>

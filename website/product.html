@@ -1,0 +1,624 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulakena Garden | Product</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+  <link rel="stylesheet" href="style-luxury.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Lora:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body { background: linear-gradient(160deg,#edf7f0 0%,#f4faf5 55%,#e8f4f0 100%); min-height:100vh; }
+
+    /* -- HERO -- */
+    .product-hero{
+      background:linear-gradient(155deg,var(--dark) 0%,var(--g1) 55%,var(--b1) 100%);
+      padding:3.5rem 0 3rem;
+      position:relative; overflow:hidden;
+    }
+    .product-hero::before{content:'';position:absolute;border-radius:50%;width:420px;height:420px;background:var(--g3);opacity:.12;filter:blur(80px);top:-130px;left:-90px;animation:orbFloat 14s ease-in-out infinite;}
+    .product-hero::after{content:'';position:absolute;border-radius:50%;width:320px;height:320px;background:var(--b3);opacity:.1;filter:blur(70px);bottom:-90px;right:-70px;animation:orbFloat 18s ease-in-out infinite reverse;}
+    @keyframes orbFloat{0%,100%{transform:translate(0,0)}33%{transform:translate(22px,-18px)}66%{transform:translate(-14px,14px)}}
+    .product-hero .container{position:relative;z-index:1;}
+    .product-hero-eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g4);font-weight:600;display:flex;align-items:center;gap:.5rem;margin-bottom:.65rem;}
+    .product-hero-eyebrow::before{content:'';width:28px;height:1.5px;background:var(--g4);}
+    .product-hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.4rem);font-weight:300;color:white;line-height:1.1;margin-bottom:.65rem;}
+    .product-hero h1 em{font-style:italic;color:var(--g4);}
+    .product-hero p{color:rgba(255,255,255,.66);font-size:.97rem;max-width:560px;line-height:1.75;}
+
+    /* -- PAGE HEADER -- */
+    .pd-section-title{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--dark);margin:0;}
+    .pd-section-subtitle{font-size:.92rem;color:var(--muted);margin:.35rem 0 0;max-width:720px;}
+
+    /* -- PRODUCT CARD -- */
+    .pd-card{
+      background:white;
+      border-radius:var(--radius-lg);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-sm);
+      overflow:hidden;
+    }
+    .pd-media{
+      background:linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(234,247,240,0.85) 100%);
+      border-right:1px solid var(--border);
+      height:100%;
+      min-height:460px;
+      display:flex;align-items:center;justify-content:center;
+      padding:1.4rem;
+      position:relative;
+    }
+    .pd-media img{width:100%;height:520px;object-fit:contain;display:block;}
+    .pd-badge{
+      position:absolute;top:1.25rem;left:1.25rem;
+      font-size:.68rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+      padding:.35rem .85rem;border-radius:2rem;
+      background:rgba(45,158,104,.12);color:var(--g2);
+      border:1px solid rgba(45,158,104,.18);
+    }
+    .pd-body{padding:1.6rem 1.6rem;}
+    .pd-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:500;color:var(--dark);margin:0 0 .35rem 0;line-height:1.1;}
+    .pd-price{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--g2);margin:.2rem 0 1rem 0;}
+    .pd-short{color:var(--muted);margin:0 0 1rem 0;line-height:1.75;}
+    .pd-desc{color:var(--text);margin:0 0 1.2rem 0;line-height:1.8;}
+    .pd-size-wrap{
+      padding:1rem 0 1.2rem;
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+      margin:1.2rem 0 1.2rem;
+    }
+    .pd-size-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.75rem;}
+    .pd-size-option{position:relative;}
+    .pd-size-option input{position:absolute;opacity:0;pointer-events:none;}
+    .pd-size-option label{
+      display:flex;align-items:center;justify-content:center;
+      border:1px solid var(--border);
+      border-radius:1rem;
+      padding:.85rem .95rem;
+      background:white;
+      cursor:pointer;
+      transition:var(--transition);
+      min-height:56px;
+      text-align:center;
+    }
+    .pd-size-option label strong{font-size:.95rem;color:var(--dark);}
+    .pd-size-option input:checked + label{
+      border-color:var(--g2);
+      background:rgba(45,158,104,.08);
+      box-shadow:0 10px 24px rgba(13,74,47,.08);
+    }
+
+    .qty-wrap{
+      display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;
+      padding:1rem 0 1.2rem;
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+      margin:1.2rem 0 1.2rem;
+    }
+    .qty-label{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:800;}
+    .qty-stepper{
+      display:inline-flex;align-items:center;justify-content:center;
+      border:1px solid var(--border);
+      border-radius:2rem;
+      overflow:hidden;
+      background:white;
+    }
+    .qty-btn{
+      border:none;background:var(--section-alt);
+      padding:.5rem .85rem;
+      font-weight:900;color:var(--text);
+      transition:var(--transition);
+    }
+    .qty-btn:hover{background:rgba(45,158,104,.10);}
+    .qty-input{
+      width:74px;
+      text-align:center;
+      border:none !important;
+      outline:none !important;
+      padding:.55rem .6rem !important;
+      font-weight:700;
+      font-family:'DM Sans',sans-serif;
+      color:var(--dark);
+      background:white;
+    }
+
+    .pd-actions{display:flex;gap:.75rem;flex-wrap:wrap;}
+    .btn-primary-lux{
+      background:linear-gradient(135deg,var(--g1),var(--g2));
+      color:white;border:none;
+      border-radius:2rem;
+      padding:.75rem 1.2rem;
+      font-weight:800;letter-spacing:.04em;
+      transition:var(--transition);
+      box-shadow:0 12px 30px rgba(13,74,47,.16);
+      font-family:'DM Sans',sans-serif;
+      flex:1 1 200px;
+    }
+    .btn-primary-lux:hover{transform:translateY(-1px);box-shadow:0 16px 36px rgba(13,74,47,.22);}
+    .btn-outline-lux{
+      background:transparent;border:1.5px solid rgba(45,158,104,.35);
+      color:var(--g2);
+      border-radius:2rem;
+      padding:.75rem 1.2rem;
+      font-weight:800;letter-spacing:.04em;
+      transition:var(--transition);
+      font-family:'DM Sans',sans-serif;
+      flex:1 1 200px;
+    }
+    .btn-outline-lux:hover{background:var(--g2);border-color:var(--g2);color:white;}
+
+    /* Related sections */
+    .pd-section{
+      background:white;
+      border-radius:var(--radius-lg);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-sm);
+      padding:2rem 1.6rem;
+    }
+    #youMayAlsoLike .card-img-top,
+    #recentlyViewed .card-img-top{
+      height:220px;
+      object-fit:contain;
+      background:#fff;
+      padding:18px;
+    }
+    #youMayAlsoLike .card,
+    #recentlyViewed .card{
+      border-radius:14px;
+      overflow:hidden;
+      height:100%;
+    }
+    @media (max-width: 768px){
+      #youMayAlsoLike .card-img-top,
+      #recentlyViewed .card-img-top{
+        height:160px;
+        padding:12px;
+      }
+    }
+
+    @media (max-width: 991.98px){
+      .pd-media{border-right:none;border-bottom:1px solid var(--border);}
+      .pd-media img{height:420px;}
+    }
+    @media (max-width: 576px){
+      .pd-media{padding:1.1rem;}
+      .pd-body{padding:1.25rem 1.25rem;}
+      .pd-title{font-size:1.9rem;}
+      .pd-price{font-size:1.7rem;}
+      .pd-section{padding:1.6rem 1.2rem;}
+    }
+  </style>
+</head>
+<body class="product-detail-page">
+  <!-- NAV SCROLL -->
+  <script>
+    (function(){
+      var mainNav = document.getElementById('mainNav');
+      if (!mainNav) return;
+      window.addEventListener('scroll', function(){ mainNav.classList.toggle('scrolled', window.scrollY > 60); });
+    })();
+  </script>
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3" id="mainNav">
+    <div class="container">
+
+ <!-- Logo + Brand Text -->
+<a class="navbar-brand d-flex align-items-center" href="index.html">
+  <img src="../images/logo.JPG" alt="Logo" class="logo-img rounded-circle">
+  <span class="brand-text">Bulakena<span style="color:var(--g3)">Garden</span></span>
+</a>
+
+      <!-- Toggle Button (Mobile View) -->
+      <button class="navbar-toggler nav-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation"><span class="nav-toggle-lines" aria-hidden="true"><span></span><span></span><span></span></span></button>
+
+      <!-- Navigation Links -->
+      <div class="collapse navbar-collapse justify-content-end" id="navbarMenu">
+        <ul class="navbar-nav mb-2 mb-lg-0 fw-semibold">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="products.html">Products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="services.html">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="aboutus.html">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contactus.html">Contact</a>
+          </li>
+        </ul>
+
+        <div class="auth-controls auth-pending ms-lg-3">
+          <button type="button" class="btn btn-success px-4 js-auth-login">Login</button>
+          <div class="dropdown d-none js-auth-menu">
+            <button class="btn auth-profile-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="auth-avatar">U</span>
+              <span class="auth-label">Profile</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+              <li><h6 class="dropdown-header js-auth-email"></h6></li>
+              <li><button type="button" class="dropdown-item js-auth-account">Account</button></li>
+              <li><button type="button" class="dropdown-item js-auth-orders">My Orders</button></li>
+              <li><button type="button" class="dropdown-item js-auth-appointments">My Appointments</button></li>
+              <li><button type="button" class="dropdown-item js-auth-signout">Sign out</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="product-hero">
+    <div class="container">
+      <div class="product-hero-eyebrow">Shop</div>
+      <h1>Product <em>Details</em></h1>
+      <p>Explore the full description, adjust quantity, and add to cart or checkout instantly.</p>
+    </div>
+  </div>
+
+  <main class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" style="margin-bottom:1.5rem;">
+      <ol class="breadcrumb" style="font-size:.82rem;background:none;padding:0;margin:0;">
+        <li class="breadcrumb-item"><a href="index.html" style="color:var(--g2);text-decoration:none;">Home</a></li>
+        <li class="breadcrumb-item"><a href="products.html" style="color:var(--g2);text-decoration:none;">Products</a></li>
+        <li class="breadcrumb-item active" style="color:var(--muted);" id="pdCrumb">Product</li>
+      </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="pd-section-title">Product</h2>
+        <p class="pd-section-subtitle">Premium plants curated for your space. Availability and pricing update in real-time.</p>
+      </div>
+
+    </div>
+
+    <div id="productNotFound" class="alert alert-warning d-none">Product not found.</div>
+    <div id="productDetail" class="pd-card d-none">
+      <div class="row g-0">
+        <div class="col-lg-7">
+          <div class="pd-media">
+            <div class="pd-badge" id="pdBadge" style="display:none;">In Stock</div>
+            <img id="pdImg" src="" alt="" class="img-fluid">
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="pd-body">
+            <h1 id="pdTitle" class="pd-title"></h1>
+            <div id="pdPrice" class="pd-price"></div>
+            <p id="pdShort" class="pd-short"></p>
+            <p id="pdDesc" class="pd-desc"></p>
+
+            <div id="pdSizeWrap" class="pd-size-wrap d-none">
+              <div id="pdSizeOptions" class="pd-size-grid"></div>
+            </div>
+
+            <div class="qty-wrap">
+              <div style="flex:1;min-width:160px;">
+                <div class="qty-label">Quantity</div>
+                <div style="font-size:.86rem;color:var(--muted);margin-top:.25rem;">Adjust quantity before adding to cart.</div>
+              </div>
+              <div class="qty-stepper">
+                <button id="qtyMinus" class="qty-btn" type="button" aria-label="Decrease quantity">-</button>
+                <input id="pdQty" type="number" value="1" min="1" class="qty-input" aria-label="Quantity">
+                <button id="qtyPlus" class="qty-btn" type="button" aria-label="Increase quantity">+</button>
+              </div>
+            </div>
+
+            <div class="pd-actions">
+              <button id="pdAddToCart" class="btn-outline-lux" type="button">Add to Cart</button>
+              <button id="pdBuyNow" class="btn-primary-lux" type="button">Buy Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- You May Also Like Section -->
+    <section id="youMayAlsoLike" class="mt-5 d-none">
+      <div class="text-center">
+        <h5 class="mb-1 also-like-title">You May Also Like</h5>
+        <p class="also-like-subtitle">Combine your style with these products</p>
+      </div>
+      <div class="row g-3 js-also-like"></div>
+    </section>
+
+    <!-- Recently Viewed Section -->
+    <section id="recentlyViewed" class="mt-4 d-none">
+      <h5 class="mb-3 recently-title">Recently Viewed</h5>
+      <div class="row g-3 js-recently-list"></div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer mt-5">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="footer-brand-logo">Bulakena <span>Garden</span></a>
+          <p>Premium plants and garden essentials, delivered to your door with care.</p>
+          <div class="footer-socials">
+            <a href="https://www.facebook.com/BulkenaGarden" class="social-link" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+          </div>
+        </div>
+        <div class="footer-col"><h4>Shop</h4><ul><li><a href="products.html">All Products</a></li><li><a href="products.html?type=Indoor">Indoor Plants</a></li><li><a href="products.html?type=Outdoor">Outdoor Plants</a></li><li><a href="products.html?type=Hanging%20Plants">Hanging Plants</a></li><li><a href="products.html?type=Table%20Plants">Table Plants</a></li><li><a href="products.html?type=Furniture">Garden Furniture</a></li><li><a href="products.html?type=Planter">Garden Planters</a></li><li><a href="cart.html">Your Cart</a></li></ul></div>
+        <div class="footer-col"><h4>Account</h4><ul><li><a href="orders.html">My Orders</a></li><li><a href="appointments.html">My Appointments</a></li></ul></div>
+        <div class="footer-col"><h4>Help</h4><ul><li><a href="contactus.html">Contact Us</a></li><li><a href="aboutus.html">About Us</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>&copy; 2026 Bulakena Garden. All rights reserved. Made with &#127793; in Talisay</p></div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Helper functions
+    function resolveWebsiteAsset(path) {
+      var value = String(path || '').trim().replace(/\\/g, '/');
+      if (!value) return '';
+      if (/^(https?:)?\/\//i.test(value) || value.charAt(0) === '/') return value;
+      if (value.indexOf('../') === 0) return value;
+      if (value.indexOf('uploads/') === 0 || value.indexOf('images/') === 0) return '../' + value;
+      if (value.indexOf('feedback/') === 0 || value.indexOf('reviews/') === 0 || value.indexOf('products/') === 0) return '../uploads/' + value;
+      return value;
+    }
+    function truncateText(text, maxLength) {
+      var source = String(text || "").trim();
+      if (source.length <= maxLength) return source;
+      return source.slice(0, Math.max(0, maxLength - 3)).trimEnd() + "...";
+    }
+    function formatPeso(n){
+      if (n == null) return '';
+      return 'PHP ' + Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function renderStars(r){
+      if (!r) return '';
+      var full = Math.floor(r);
+      var out = '';
+      for (var i=0;i<full;i++) out += '&#9733;';
+      return '<div class="rating-stars">'+out+'</div>';
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function normalizeProductSizes(rawSizes) {
+      var parsed = rawSizes;
+      if (typeof parsed === 'string') {
+        var text = parsed.trim();
+        if (!text) return [];
+        try {
+          parsed = JSON.parse(text);
+        } catch (e) {
+          return [];
+        }
+      }
+      if (!Array.isArray(parsed)) return [];
+      return parsed.map(function(entry) {
+        return {
+          label: String(entry && (entry.label || entry.size || entry.name) || '').trim(),
+          price: Number(entry && entry.price) || 0,
+          stock: Math.max(0, Number(entry && entry.stock) || 0)
+        };
+      }).filter(function(entry) {
+        return entry.label && entry.price >= 0;
+      });
+    }
+
+    // Load product data from server instead of using a hardcoded array
+    let products = [];
+
+    function param(name) {
+      return new URLSearchParams(window.location.search).get(name);
+    }
+
+    var pid = parseInt(param('id') || param('product') || '0');
+
+    // Fetch product by id from server
+    if (!pid || pid <= 0) {
+      document.getElementById('productNotFound').classList.remove('d-none');
+    } else {
+      fetch('api/get_products.php?id=' + encodeURIComponent(pid))
+        .then(r => r.text())
+        .then(text => {
+          try {
+            var prod = JSON.parse(text);
+          } catch (e) {
+            console.error('Invalid JSON from api/get_products.php:', text);
+            prod = null;
+          }
+
+          if (!prod || !prod.id) {
+            document.getElementById('productNotFound').classList.remove('d-none');
+            return;
+          }
+
+          document.getElementById('productDetail').classList.remove('d-none');
+          document.getElementById('pdImg').src = resolveWebsiteAsset(prod.img) || '';
+          document.getElementById('pdImg').alt = prod.title || '';
+          document.getElementById('pdTitle').textContent = prod.title || '';
+          var sizeOptions = normalizeProductSizes(prod.sizes || prod.sizes_json);
+          var selectedSize = sizeOptions.length ? sizeOptions[0] : null;
+          var priceEl = document.getElementById('pdPrice');
+          var stockNote = document.createElement('div');
+          stockNote.id = 'pdStockNote';
+          stockNote.style.marginTop = '6px';
+          stockNote.style.fontSize = '0.95rem';
+          priceEl.parentNode.insertBefore(stockNote, priceEl.nextSibling);
+          function updateDisplayedPrice() {
+            var activePrice = selectedSize ? selectedSize.price : Number(prod.price || 0);
+            priceEl.textContent = activePrice ? formatPeso(activePrice) : 'Contact Us';
+          }
+          function updateStockState() {
+            var stockQty = selectedSize ? Number(selectedSize.stock || 0) : Number(prod.stock || 0);
+            var addBtn = document.getElementById('pdAddToCart');
+            var buyBtn = document.getElementById('pdBuyNow');
+            if (stockQty <= 0) {
+              stockNote.innerHTML = '<span style="color:#b02a37;font-weight:700;display:inline-flex;align-items:center;gap:8px;">Out of stock</span>';
+              if (addBtn) { addBtn.disabled = true; addBtn.classList.add('disabled'); addBtn.title = 'Out of stock'; }
+              if (buyBtn) { buyBtn.disabled = true; buyBtn.classList.add('disabled'); buyBtn.title = 'Out of stock'; }
+            } else {
+              stockNote.innerHTML = '<span style="color:#2f8a6f;font-weight:600;">In stock: ' + stockQty + '</span>';
+              if (addBtn) { addBtn.disabled = false; addBtn.classList.remove('disabled'); addBtn.title = ''; }
+              if (buyBtn) { buyBtn.disabled = false; buyBtn.classList.remove('disabled'); buyBtn.title = ''; }
+            }
+          }
+          updateDisplayedPrice();
+          updateStockState();
+          var shortParts = [];
+          if (prod.type) shortParts.push(prod.type);
+          if (prod.rating == null || prod.rating === '') shortParts.push('No rating yet');
+          else shortParts.push('Rating: ' + Number(prod.rating).toFixed(1) + (Number(prod.review_count || 0) > 0 ? ' (' + Number(prod.review_count) + ' review' + (Number(prod.review_count || 0) === 1 ? '' : 's') + ')' : ''));
+          document.getElementById('pdShort').textContent = shortParts.join(' - ');
+          document.getElementById('pdDesc').textContent = prod.desc || prod.description || '';
+
+          var sizeWrap = document.getElementById('pdSizeWrap');
+          var sizeOptionsEl = document.getElementById('pdSizeOptions');
+          if (sizeWrap && sizeOptionsEl && sizeOptions.length) {
+            sizeWrap.classList.remove('d-none');
+            sizeOptionsEl.innerHTML = sizeOptions.map(function(option, index) {
+              return '<div class="pd-size-option">' +
+                '<input type="radio" name="pd-size" id="pd-size-' + index + '" value="' + index + '"' + (index === 0 ? ' checked' : '') + '>' +
+                '<label for="pd-size-' + index + '"><strong>' + escapeHtml(truncateText(option.label, 24)) + '</strong></label>' +
+              '</div>';
+            }).join('');
+            sizeOptionsEl.querySelectorAll('input[name="pd-size"]').forEach(function(input) {
+              input.addEventListener('change', function() {
+                var nextIndex = Number(this.value);
+                selectedSize = sizeOptions[nextIndex] || sizeOptions[0] || null;
+                updateDisplayedPrice();
+                updateStockState();
+              });
+            });
+          } else if (sizeWrap) {
+            sizeWrap.classList.add('d-none');
+          }
+
+          if (false) {
+          var stockQty = Number(prod.stock || 0);
+          var stockNote = document.createElement('div');
+          stockNote.id = 'pdStockNote';
+          stockNote.style.marginTop = '6px';
+          stockNote.style.fontSize = '0.95rem';
+          if (stockQty <= 0) {
+            stockNote.innerHTML = '<span style="color:#b02a37;font-weight:700;display:inline-flex;align-items:center;gap:8px;">? Out of stock</span>';
+            priceEl.parentNode.insertBefore(stockNote, priceEl.nextSibling);
+            // disable buttons
+            var addBtn = document.getElementById('pdAddToCart');
+            var buyBtn = document.getElementById('pdBuyNow');
+            if (addBtn) { addBtn.disabled = true; addBtn.classList.add('disabled'); addBtn.title = 'Out of stock'; }
+            if (buyBtn) { buyBtn.disabled = true; buyBtn.classList.add('disabled'); buyBtn.title = 'Out of stock'; }
+          } else {
+            stockNote.innerHTML = '<span style="color:#2f8a6f;font-weight:600;">In stock: ' + stockQty + '</span>';
+            priceEl.parentNode.insertBefore(stockNote, priceEl.nextSibling);
+          }
+
+          }
+          var qtyEl = document.getElementById('pdQty');
+          document.getElementById('qtyMinus').addEventListener('click', function(){ qtyEl.value = Math.max(1, Number(qtyEl.value||1)-1); });
+          document.getElementById('qtyPlus').addEventListener('click', function(){ qtyEl.value = Number(qtyEl.value||1)+1 });
+
+          document.getElementById('pdAddToCart').addEventListener('click', function(){
+            var addBtn = this;
+            if (addBtn.disabled) { alert('This product is currently out of stock.'); return; }
+            var q = Math.max(1, Number(qtyEl.value||1));
+            var selectedProduct = Object.assign({}, prod, { selectedSize: selectedSize });
+            if (window.BulakenaCart && typeof window.BulakenaCart.addItem === 'function') {
+              var res = window.BulakenaCart.addItem(selectedProduct, q);
+              if (res && res.ok) {
+                // item added
+              }
+            } else {
+              alert('Add to cart not available');
+            }
+          });
+
+          document.getElementById('pdBuyNow').addEventListener('click', function(){
+            var buyBtn = this;
+            if (buyBtn.disabled) { alert('This product is currently out of stock.'); return; }
+            var q = Math.max(1, Number(qtyEl.value||1));
+            var selectedProduct = Object.assign({}, prod, { selectedSize: selectedSize });
+            if (window.BulakenaCart && typeof window.BulakenaCart.checkoutNow === 'function') {
+              window.BulakenaCart.checkoutNow(selectedProduct, q);
+              return;
+            }
+            try {
+              var itemTitle = prod.title + (selectedSize ? ' (' + selectedSize.label + ')' : '');
+              var item = {
+                id: prod.id,
+                cartKey: String(prod.id) + (selectedSize ? ('::' + selectedSize.label.toLowerCase()) : ''),
+                title: itemTitle,
+                baseTitle: prod.title,
+                desc: prod.desc || prod.description,
+                price: selectedSize ? selectedSize.price : prod.price,
+                qty: q,
+                img: resolveWebsiteAsset(prod.img),
+                sizeLabel: selectedSize ? selectedSize.label : ''
+              };
+              localStorage.setItem('bulakena_checkout_items', JSON.stringify([item]));
+              window.location.href = 'checkout.html#place-order';
+            } catch (e) {
+              console.error('Buy now fallback failed', e);
+              alert('Unable to start checkout. Please try adding to cart and checking out instead.');
+            }
+          });
+
+          // You may also like: fetch related products (simple fallback: get all and filter)
+          fetch('api/get_products.php')
+            .then(r=>r.text())
+            .then(txt=>{
+              try {
+                var all = JSON.parse(txt) || [];
+                var otherProducts = (Array.isArray(all) ? all : []).filter(function(p){ return Number(p.id) !== pid; }).slice(0,8);
+                if (otherProducts.length) document.getElementById('youMayAlsoLike').classList.remove('d-none');
+                document.querySelector('.js-also-like').innerHTML = otherProducts.map(function(p){
+                  return '<div class="col-6 col-md-3"><div class="card h-100"><img src="'+resolveWebsiteAsset(p.img)+'" data-id="'+(p.id||'')+'" class="card-img-top" alt="'+(p.title||'')+'"><div class="card-body d-flex flex-column"><h6 class="card-title">'+truncateText(p.title||'',30)+'</h6><span class="price-small">FROM '+formatPeso(p.price)+'</span><div class="mt-auto"></div></div></div></div>';
+                }).join('');
+                try { document.querySelectorAll('.js-also-like .card-img-top').forEach(function(img){ img.style.cursor='pointer'; img.addEventListener('click', function(){ var id = this.dataset.id; if (id) window.location.href = 'product.html?id=' + encodeURIComponent(id); }); }); } catch(e){}
+              } catch(e){ console.error('Could not load related products', e); }
+            })
+            .catch(()=>{});
+
+          // Persist current product into recently viewed (localStorage)
+          try {
+            var rv = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+            rv = rv.filter(function(x){ return Number(x.id) !== Number(pid); });
+            rv.unshift({ id: prod.id, title: prod.title, img: resolveWebsiteAsset(prod.img), price: prod.price });
+            if (rv.length > 8) rv = rv.slice(0,8);
+            localStorage.setItem('recentlyViewed', JSON.stringify(rv));
+          } catch(e) { console.error(e); }
+
+          // Render Recently Viewed (exclude current)
+          try {
+            var rvList = JSON.parse(localStorage.getItem('recentlyViewed') || '[]').filter(function(x){ return Number(x.id) !== Number(pid); });
+            if (rvList.length > 0) {
+              document.getElementById('recentlyViewed').classList.remove('d-none');
+              document.querySelector('.js-recently-list').innerHTML = rvList.map(function(p){
+                return '<div class="col-6 col-md-3"><div class="card h-100"><img src="'+resolveWebsiteAsset(p.img)+'" data-id="'+p.id+'" class="card-img-top" alt="'+p.title+'"><div class="card-body d-flex flex-column"><h6 class="card-title">'+truncateText(p.title,30)+'</h6><span class="price-small">FROM '+formatPeso(p.price)+'</span><div class="mt-auto"></div></div></div></div>';
+              }).join('');
+              try { document.querySelectorAll('.js-recently-list .card-img-top').forEach(function(img){ img.style.cursor='pointer'; img.addEventListener('click', function(){ var id = this.dataset.id; if (id) window.location.href = 'product.html?id=' + encodeURIComponent(id); }); }); } catch(e){}
+            } else {
+              document.getElementById('recentlyViewed').classList.add('d-none');
+            }
+          } catch(e) { console.error(e); }
+        })
+        .catch(err => {
+          console.error('Failed to fetch product:', err);
+          document.getElementById('productNotFound').classList.remove('d-none');
+        });
+    }
+  </script>
+</body>
+</html>

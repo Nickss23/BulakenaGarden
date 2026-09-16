@@ -1,0 +1,1683 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders - Bulakena Garden</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Lora:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style-luxury.css">
+  <style>
+  body { background:linear-gradient(160deg,#edf7f0 0%,#f4faf5 55%,#e8f4f0 100%); min-height:100vh; }
+
+  /* -- HERO -- */
+  .orders-hero {
+    background:linear-gradient(155deg,var(--dark) 0%,var(--g1) 55%,var(--b1) 100%);
+    padding:3.5rem 0 3rem; position:relative; overflow:hidden;
+  }
+  .orders-hero::before{content:'';position:absolute;border-radius:50%;width:400px;height:400px;background:var(--g3);opacity:.12;filter:blur(80px);top:-120px;left:-80px;animation:orbFloat 14s ease-in-out infinite;}
+  .orders-hero::after{content:'';position:absolute;border-radius:50%;width:300px;height:300px;background:var(--b3);opacity:.1;filter:blur(70px);bottom:-80px;right:-60px;animation:orbFloat 18s ease-in-out infinite reverse;}
+  @keyframes orbFloat{0%,100%{transform:translate(0,0)}33%{transform:translate(20px,-16px)}66%{transform:translate(-12px,12px)}}
+  .orders-hero .container{position:relative;z-index:1;}
+  .orders-hero-eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g4);font-weight:600;display:flex;align-items:center;gap:.5rem;margin-bottom:.65rem;}
+  .orders-hero-eyebrow::before{content:'';width:28px;height:1.5px;background:var(--g4);}
+  .orders-hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.6rem);font-weight:300;color:white;line-height:1.1;margin-bottom:.65rem;}
+  .orders-hero h1 em{font-style:italic;color:var(--g4);}
+  .orders-hero p{color:rgba(255,255,255,.66);font-size:.97rem;max-width:460px;}
+
+  /* -- ORDER CARD -- */
+  .order-card-lux {
+    background:white;
+    border-radius:var(--radius-lg);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow-sm);
+    overflow:hidden;
+    margin-bottom:1.25rem;
+    transition:var(--transition);
+    animation:cardIn .45s ease both;
+  }
+  @keyframes cardIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  .order-card-lux:hover{box-shadow:var(--shadow-md);border-color:rgba(45,158,104,.2);transform:translateY(-2px);}
+
+  .order-card-header {
+    padding:1.2rem 1.8rem;
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.75rem;
+    background:var(--section-alt);
+  }
+  .order-id {
+    font-family:'Cormorant Garamond',serif; font-size:1.15rem;
+    color:var(--dark); font-weight:500;
+  }
+  .order-date { font-size:.78rem; color:var(--muted); margin-top:.1rem; }
+  .order-status-pill {
+    font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    padding:.3rem .9rem; border-radius:2rem;
+    display:inline-flex; align-items:center; gap:.35rem;
+  }
+  .order-status-pill::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .status-pending    { background:rgba(224,154,47,.12);color:#a0670a; }
+  .status-confirmed  { background:rgba(45,158,104,.12);color:var(--g2); }
+  .status-shipped    { background:rgba(26,122,138,.12);color:var(--b2); }
+  .status-delivered  { background:rgba(45,158,104,.15);color:#1a6b45; }
+  .status-pickedup   { background:rgba(45,158,104,.15);color:#1a6b45; }
+  .status-cancelled  { background:rgba(224,82,82,.12);color:#b02a37; }
+
+  .order-card-body { padding:1.5rem 1.8rem; }
+
+  /* Product row inside order */
+  .order-product-row {
+    display:flex; align-items:center; gap:1rem;
+    padding:.75rem 0; border-bottom:1px solid var(--border);
+  }
+  .order-product-row:last-of-type { border-bottom:none; }
+  .order-prod-img {
+    width:58px;height:58px;border-radius:var(--radius-sm);
+    overflow:hidden;flex-shrink:0;background:var(--section-alt);
+  }
+  .order-prod-img img{width:100%;height:100%;object-fit:cover;display:block;}
+  .order-prod-name{font-size:.92rem;font-weight:500;color:var(--dark);}
+  .order-prod-meta{font-size:.78rem;color:var(--muted);margin-top:.15rem;}
+  .btn-write-review-lux {
+    margin-left:auto;flex-shrink:0;
+    padding:.42rem 1rem; border-radius:2rem;
+    background:transparent; border:1.5px solid var(--g3);
+    color:var(--g2); font-size:.75rem; font-weight:600;
+    cursor:pointer; transition:var(--transition);
+    font-family:'DM Sans',sans-serif; white-space:nowrap;
+  }
+  .btn-write-review-lux:hover{background:var(--g2);color:white;border-color:var(--g2);}
+  .btn-write-review-lux:disabled{opacity:.5;cursor:not-allowed;}
+
+  /* Order footer / totals */
+  .order-card-footer {
+    padding:.9rem 1.8rem 1.2rem;
+    border-top:1px solid var(--border);
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.75rem;
+    background:var(--section-alt);
+  }
+  .order-delivery-info{font-size:.84rem;color:var(--muted);}
+  .order-total-wrap {text-align:right;}
+  .order-total-label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;}
+  .order-total-amount{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:var(--g2);}
+
+  /* -- EMPTY STATE -- */
+  .orders-empty{
+    text-align:center;padding:5rem 2rem;
+    background:white;border-radius:var(--radius-lg);border:1px solid var(--border);
+  }
+  .orders-empty-icon{font-size:3.5rem;display:block;margin-bottom:1.2rem;}
+  .orders-empty h3{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--dark);margin-bottom:.5rem;}
+  .orders-empty p{color:var(--muted);max-width:360px;margin:0 auto 1.8rem;font-size:.95rem;}
+
+  /* -- FILTER TABS -- */
+  .orders-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+  .orders-tab{padding:.45rem 1.2rem;border-radius:2rem;font-size:.78rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;border:1.5px solid var(--border);background:white;color:var(--muted);cursor:pointer;transition:var(--transition);}
+  .orders-tab:hover{border-color:var(--g3);color:var(--g2);}
+  .orders-tab.active{background:linear-gradient(135deg,var(--g1),var(--g3));color:white;border-color:transparent;box-shadow:0 4px 16px rgba(45,158,104,.3);}
+
+  /* -- DETAILS -- */
+  .order-actions{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;}
+  .btn-order-view{
+    padding:.5rem 1.15rem;border-radius:2rem;
+    background:linear-gradient(135deg,var(--g1),var(--g2));
+    color:white;border:none;
+    font-size:.78rem;font-weight:600;letter-spacing:.06em;
+    cursor:pointer;transition:var(--transition);
+    font-family:'DM Sans',sans-serif;
+  }
+  .btn-order-view:hover{box-shadow:0 6px 18px rgba(13,74,47,.3);transform:translateY(-1px);}
+
+  .order-detail{
+    display:none;
+    border-top:1px solid var(--border);
+    padding:1.4rem 1.8rem;
+    background:var(--section-alt);
+    animation:fadeIn .3s ease;
+  }
+  .order-detail.open{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+  .detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;}
+  .detail-label{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;margin-bottom:.25rem;}
+  .detail-value{font-size:.9rem;color:var(--text);font-weight:400;word-break:break-word;}
+  .detail-item-important .detail-label{color:var(--g2);font-weight:700;}
+  .detail-item-important .detail-value{color:var(--dark);font-size:1rem;font-weight:700;}
+  .detail-value-total{font-family:'Cormorant Garamond',serif;font-size:1.18rem;color:var(--g2) !important;}
+  .detail-value-sub{display:block;margin-top:.16rem;font-size:.76rem;font-weight:500;color:var(--muted);line-height:1.45;}
+  .proof-delivery-card{
+    margin-top:1rem;
+    padding:1rem;
+    background:white;
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+  }
+  .proof-delivery-image{
+    display:block;
+    width:min(100%,360px);
+    max-height:320px;
+    object-fit:cover;
+    border-radius:var(--radius-sm);
+    border:1px solid var(--border);
+    background:var(--section-alt);
+  }
+
+  /* Shipped delivery tracker */
+  .order-map-card{
+    margin:0;
+    padding:0;
+    background:transparent;
+    border:0;
+    border-radius:0;
+    overflow:visible;
+  }
+  .order-map-banner{
+    margin:0;
+    padding:0;
+    width:100%;
+  }
+  .delivery-tracker{
+    margin-top:1.2rem;
+    background:white;
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    overflow:hidden;
+  }
+  .delivery-tracker-head{
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    align-items:flex-start;
+    padding:1rem 1rem .85rem;
+    border-bottom:1px solid var(--border);
+  }
+  .delivery-tracker-title{
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.25rem;
+    color:var(--dark);
+    font-weight:600;
+    line-height:1.2;
+  }
+  .delivery-tracker-subtitle{font-size:.8rem;color:var(--muted);margin-top:.2rem;}
+  .eta-pill{
+    text-align:right;
+    background:rgba(26,122,138,.1);
+    color:var(--b2);
+    border:1px solid rgba(26,122,138,.16);
+    border-radius:1rem;
+    padding:.55rem .8rem;
+    min-width:145px;
+  }
+  .eta-pill span{display:block;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:rgba(26,122,138,.78);}
+  .eta-pill strong{display:block;font-size:1rem;line-height:1.2;margin-top:.15rem;}
+  .delivery-map{
+    position:relative;
+    min-height:220px;
+    padding:1.15rem;
+    overflow:hidden;
+    background:
+      linear-gradient(90deg, rgba(13,74,47,.05) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(13,74,47,.05) 1px, transparent 1px),
+      linear-gradient(145deg,#f7fcf9 0%,#eef8f3 55%,#f8fbff 100%);
+    background-size:34px 34px,34px 34px,auto;
+  }
+  .delivery-map::before,
+  .delivery-map::after{
+    content:'';
+    position:absolute;
+    border-radius:999px;
+    background:rgba(45,158,104,.12);
+  }
+  .delivery-map::before{width:180px;height:54px;left:8%;top:24%;transform:rotate(-18deg);}
+  .delivery-map::after{width:220px;height:58px;right:7%;bottom:20%;transform:rotate(16deg);background:rgba(26,122,138,.1);}
+  .route-line{
+    position:absolute;
+    left:12%;
+    right:12%;
+    top:50%;
+    height:8px;
+    border-radius:999px;
+    background:repeating-linear-gradient(90deg, var(--g2) 0 18px, transparent 18px 30px);
+    transform:translateY(-50%);
+    opacity:.55;
+  }
+  .route-line::after{
+    content:'';
+    position:absolute;
+    inset:-12px -3px;
+    border-top:2px solid rgba(26,122,138,.16);
+    border-radius:50%;
+    transform:translateY(9px);
+  }
+  .route-progress{
+    position:absolute;
+    left:12%;
+    top:50%;
+    width:var(--truck-progress-pct, 27%);
+    height:8px;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--g1),var(--g3),var(--b2));
+    transform:translateY(-50%);
+    box-shadow:0 4px 18px rgba(45,158,104,.24);
+  }
+  .map-pin{
+    position:absolute;
+    z-index:2;
+    width:min(34%, 260px);
+    padding:.75rem .85rem;
+    background:rgba(255,255,255,.92);
+    border:1px solid rgba(13,74,47,.12);
+    border-radius:var(--radius-sm);
+    box-shadow:var(--shadow-sm);
+  }
+  .map-pin.shop{left:1rem;top:1rem;}
+  .map-pin.customer{right:1rem;bottom:1rem;}
+  .map-pin-label{font-size:.65rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:.2rem;}
+  .map-pin-value{font-size:.84rem;color:var(--dark);font-weight:600;line-height:1.35;}
+  .map-truck{
+    position:absolute;
+    z-index:3;
+    left:calc(12% + var(--truck-progress-pct, 27%));
+    top:50%;
+    width:50px;
+    height:32px;
+    transform:translate(-50%,-62%);
+    animation:truckBounce 1.4s ease-in-out infinite;
+  }
+  .map-truck::before{
+    content:'';
+    position:absolute;
+    left:5px;
+    top:8px;
+    width:34px;
+    height:16px;
+    background:linear-gradient(135deg,var(--g1),var(--g3));
+    border-radius:5px 8px 4px 4px;
+    box-shadow:0 8px 16px rgba(13,74,47,.2);
+  }
+  .map-truck::after{
+    content:'';
+    position:absolute;
+    left:31px;
+    top:11px;
+    width:13px;
+    height:13px;
+    background:var(--b2);
+    border-radius:3px 7px 3px 2px;
+    box-shadow:5px 15px 0 -3px #21342c,-20px 15px 0 -3px #21342c;
+  }
+  @keyframes truckBounce{0%,100%{margin-top:0}50%{margin-top:-4px}}
+  .delivery-metrics{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:.75rem;
+    padding:1rem;
+    border-top:1px solid var(--border);
+  }
+  .delivery-metric{
+    background:var(--section-alt);
+    border:1px solid rgba(45,158,104,.1);
+    border-radius:var(--radius-sm);
+    padding:.75rem;
+  }
+  .delivery-metric span{display:block;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:.22rem;}
+  .delivery-metric strong{font-size:.88rem;color:var(--dark);}
+  .delivery-factors{
+    padding:0 1rem 1rem;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:.65rem;
+  }
+  .delivery-factor{
+    display:flex;
+    gap:.55rem;
+    align-items:flex-start;
+    padding:.7rem;
+    border:1px solid rgba(26,122,138,.12);
+    border-radius:var(--radius-sm);
+    background:#fbfffd;
+    font-size:.8rem;
+    color:var(--text);
+    line-height:1.45;
+  }
+  .delivery-factor span{
+    flex:0 0 24px;
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:rgba(26,122,138,.1);
+    color:var(--b2);
+    font-size:.68rem;
+    font-weight:800;
+  }
+  .delivery-factor b{display:block;color:var(--dark);font-size:.8rem;margin-bottom:.1rem;}
+
+  /* Checkout-style shipped map */
+  .order-map-card{
+    margin:0;
+    background:transparent;
+    border:0;
+    border-radius:0;
+    overflow:visible;
+  }
+  .order-map-head{
+    padding:1rem 1.2rem;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(135deg, rgba(245,250,247,.9), rgba(255,255,255,.98));
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:1rem;
+    flex-wrap:wrap;
+  }
+  .order-map-head h3{
+    margin:0;
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.25rem;
+    font-weight:500;
+    color:var(--dark);
+  }
+  .order-map-head p{margin:.15rem 0 0;font-size:.82rem;color:var(--muted);}
+  .order-map-eta{
+    text-align:right;
+    background:rgba(26,122,138,.1);
+    color:var(--b2);
+    border:1px solid rgba(26,122,138,.16);
+    border-radius:1rem;
+    padding:.55rem .8rem;
+    min-width:150px;
+  }
+  .order-map-eta span{display:block;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:rgba(26,122,138,.78);}
+  .order-map-eta strong{display:block;font-size:1rem;line-height:1.2;margin-top:.15rem;}
+  .order-map-banner{
+    width:100%;
+    height:360px;
+    position:relative;
+    overflow:hidden;
+    background:#edf7f0;
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+  }
+  .order-leaflet-map{width:100%;height:100%;}
+  .order-map-overlay{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    z-index:400;
+    background:linear-gradient(to bottom, transparent 62%, rgba(244,250,245,.55) 100%);
+  }
+  .order-map-badge{
+    position:absolute;
+    top:16px;
+    left:16px;
+    right:16px;
+    z-index:500;
+    background:white;
+    border-radius:10px;
+    padding:8px 14px 8px 10px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    box-shadow:0 2px 16px rgba(13,74,47,.14);
+    border:1px solid rgba(45,158,104,.15);
+    font-size:.82rem;
+    color:var(--dark);
+    font-weight:600;
+    max-width:460px;
+    line-height:1.35;
+  }
+  .order-map-badge .dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--g2);
+    box-shadow:0 0 0 3px rgba(45,158,104,.25);
+    flex-shrink:0;
+  }
+  .order-map-empty{
+    position:absolute;
+    inset:0;
+    z-index:450;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:2rem;
+    background:linear-gradient(135deg, #edf7f0, #f4faf5);
+  }
+  .order-map-empty.show{display:flex;}
+  .order-map-empty strong{
+    display:block;
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.2rem;
+    color:var(--dark);
+    margin-bottom:.3rem;
+  }
+  .order-map-empty span{font-size:.88rem;color:var(--muted);line-height:1.65;}
+  .leaflet-container{font-family:'DM Sans',sans-serif !important;background:#edf7f0 !important;}
+  .leaflet-popup-content-wrapper{
+    border-radius:12px !important;
+    box-shadow:0 8px 32px rgba(13,74,47,.16) !important;
+    border:1px solid rgba(45,158,104,.14) !important;
+  }
+  .map-popup-title{font-weight:700;color:var(--g2);margin-bottom:.2rem;font-size:.92rem;}
+  .map-popup-sub{color:var(--muted);font-size:.82rem;line-height:1.5;}
+  .order-truck-marker{
+    width:70px;
+    height:44px;
+    transform-origin:35px 44px;
+    will-change:transform;
+  }
+  .order-truck-marker svg{display:block;overflow:visible;filter:drop-shadow(0 6px 10px rgba(13,74,47,.25));}
+
+  @media (max-width: 576px){
+    .order-card-header,.order-card-body,.order-card-footer,.order-detail{padding-left:1.2rem;padding-right:1.2rem;}
+    .order-product-row{align-items:flex-start;}
+    .btn-write-review-lux{margin-left:0;width:100%;}
+    .order-actions{width:100%;}
+    .btn-order-view{width:100%;}
+    .order-total-wrap{text-align:left;}
+    .delivery-tracker-head{display:block;}
+    .eta-pill{text-align:left;margin-top:.75rem;}
+    .delivery-map{min-height:280px;}
+    .map-pin{width:calc(100% - 2rem);}
+    .delivery-metrics{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .order-map-head{display:block;}
+    .order-map-eta{text-align:left;margin-top:.75rem;}
+    .order-map-banner{height:300px;}
+  }
+
+  /* Review modal */
+  .review-modal .modal-content{border-radius:var(--radius-lg);overflow:hidden;border:none;box-shadow:var(--shadow-lg);}
+  .review-modal .modal-header{background:linear-gradient(135deg,var(--g1),var(--g2));color:white;border-bottom:none;padding:1.5rem 1.8rem;}
+  .review-modal .modal-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;}
+  .review-modal .modal-body{padding:1.8rem;}
+  .review-modal .modal-footer{padding:1.2rem 1.8rem;border-top:1px solid var(--border);}
+  .star-lux{font-size:1.8rem;cursor:pointer;color:#ddd;transition:color .15s;}
+  .star-lux.selected,.star-lux:hover{color:var(--gold);}
+  .btn-submit-review{background:linear-gradient(135deg,var(--g1),var(--g2)) !important;border:none !important;border-radius:2rem !important;font-weight:600 !important;padding:.6rem 1.8rem !important;font-family:'DM Sans',sans-serif !important;transition:var(--transition) !important;}
+  .btn-submit-review:hover{box-shadow:0 6px 20px rgba(13,74,47,.3) !important;transform:translateY(-1px) !important;}
+  </style>
+</head>
+<body class="orders-page">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <img src="../images/logo.JPG" alt="Logo" class="logo-img rounded-circle">
+      <span class="brand-text">Bulakena<span style="color:var(--g3)">Garden</span></span>
+    </a>
+    <button class="navbar-toggler nav-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="nav-toggle-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarMenu">
+      <ul class="navbar-nav mb-2 mb-lg-0 fw-semibold">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="aboutus.html">About Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="contactus.html">Contact</a></li>
+      </ul>
+      <div class="auth-controls auth-pending ms-lg-3">
+        <button type="button" class="btn btn-success px-4 js-auth-login">Login</button>
+      <div class="dropdown d-none js-auth-menu">
+        <button class="btn auth-profile-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <span class="auth-avatar">U</span><span class="auth-label">Profile</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+          <li><h6 class="dropdown-header js-auth-email"></h6></li>
+          <li><button type="button" class="dropdown-item js-auth-account">Account</button></li>
+          <li><button type="button" class="dropdown-item js-auth-orders">My Orders</button></li>
+          <li><button type="button" class="dropdown-item js-auth-appointments">My Appointments</button></li>
+          <li><button type="button" class="dropdown-item js-auth-signout">Sign out</button></li>
+        </ul>
+      </div>
+    </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="orders-hero">
+  <div class="container">
+    <div class="orders-hero-eyebrow">My Account</div>
+    <h1>My <em>Orders</em></h1>
+    <p>Track your plant deliveries and order history. Orders placed with your email appear here.</p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="container py-5">
+
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" style="margin-bottom:1.5rem;">
+    <ol class="breadcrumb" style="font-size:.82rem;background:none;padding:0;margin:0;">
+      <li class="breadcrumb-item"><a href="index.html" style="color:var(--g2);text-decoration:none;">Home</a></li>
+      <li class="breadcrumb-item active" style="color:var(--muted);">My Orders</li>
+    </ol>
+  </nav>
+
+  <!-- Header -->
+  <div class="mb-4">
+    <div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--dark);margin-bottom:.25rem;">My Orders</h2>
+      <p style="font-size:.9rem;color:var(--muted);margin:0;">Your purchase history and delivery tracking.</p>
+    </div>
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="orders-tabs" id="ordersTabs">
+    <button class="orders-tab active" data-filter="all">All Orders</button>
+    <button class="orders-tab" data-filter="pending">Pending</button>
+    <button class="orders-tab" data-filter="confirmed">Confirmed</button>
+    <button class="orders-tab" data-filter="shipped">In Transit</button>
+    <button class="orders-tab" data-filter="delivered">Delivered</button>
+    <button class="orders-tab" data-filter="cancelled">Cancelled</button>
+  </div>
+
+  <div id="ordersContainer"></div>
+  <div id="noOrders" class="orders-empty" style="display:none;">
+    <h3>No Orders Found</h3>
+    <p>You haven't placed any orders yet. Start exploring our premium plant collection!</p>
+    <a href="products.html" class="btnx primary">Shop Now ?</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-brand-logo">Bulakena <span>Garden</span></a>
+        <p>Where nature becomes art. Serving Bulacan and the Philippines with premium plants, landscapes, and garden design since 2009.</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/BulkenaGarden" class="social-link" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="products.html?type=Indoor">Indoor Plants</a></li>
+          <li><a href="products.html?type=Outdoor">Outdoor Plants</a></li>
+          <li><a href="products.html?type=Hanging%20Plants">Hanging Plants</a></li>
+          <li><a href="products.html?type=Table%20Plants">Table Plants</a></li>
+          <li><a href="products.html?type=Furniture">Garden Furniture</a></li>
+          <li><a href="products.html?type=Planter">Garden Planters</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html#gardening">Gardening</a></li>
+          <li><a href="services.html#landscaping">Landscaping</a></li>
+          <li><a href="services.html#consultations">Consultations</a></li>
+          <li><a href="services.html#booking">Book a Service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="aboutus.html">About Us</a></li>
+          <li><a href="contactus.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Bulakena Garden. All rights reserved. Made with &#127793; in Talisay</p>
+    </div>
+  </div>
+</footer>
+
+<!-- REVIEW MODAL -->
+<div class="modal fade review-modal" id="reviewModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Write a Review</div>
+          <div style="font-size:.85rem;opacity:.8;margin-top:.2rem;">Tell other shoppers about your purchase</div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex gap-3 align-items-center mb-4 p-3" style="background:var(--section-alt);border-radius:var(--radius-sm);">
+          <img src="" alt="Product" id="modalProdImg" style="width:72px;height:72px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--border);">
+          <div>
+            <div id="modalProdTitle" style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--dark);"></div>
+            <div style="font-size:.8rem;color:var(--muted);margin-top:.2rem;">Order: <strong id="modalOrderId" style="color:var(--g2);"></strong></div>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;margin-bottom:.5rem;">Rating</label>
+          <div class="d-flex gap-2 align-items-center" id="starRow">
+            <span class="star-lux" data-value="1">★</span><span class="star-lux" data-value="2">★</span>
+            <span class="star-lux" data-value="3">★</span><span class="star-lux" data-value="4">★</span>
+            <span class="star-lux" data-value="5">★</span>
+            <small class="ms-2" style="color:var(--muted);" id="ratingLabel">0 of 5</small>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;margin-bottom:.5rem;">Your Review</label>
+          <textarea class="form-control" id="reviewText" rows="4" placeholder="Describe product quality, packaging, delivery experience?" style="border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:.92rem;"></textarea>
+        </div>
+        <div class="mb-4">
+          <label style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;margin-bottom:.5rem;">Add Photo / Video (Optional)</label>
+          <div class="d-flex gap-3 align-items-center">
+            <div style="flex:1;border:2px dashed rgba(45,158,104,.2);padding:1rem;border-radius:var(--radius-sm);background:#fbfff9;">
+              <input type="file" id="mediaInput" accept="image/*,video/*" style="width:100%;">
+              <div style="font-size:.78rem;color:var(--muted);margin-top:.4rem;">One image or short video, max 10MB.</div>
+            </div>
+            <div id="mediaPreview" style="min-width:90px;"></div>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <input type="checkbox" id="isAnonymous" class="form-check-input" style="width:1.1em;height:1.1em;accent-color:var(--g2);">
+          <label for="isAnonymous" style="font-size:.88rem;color:var(--muted);margin:0;cursor:pointer;">Post review anonymously</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius:2rem;padding:.55rem 1.4rem;">Cancel</button>
+        <button type="button" class="btn btn-submit-review" id="submitReviewBtn">Submit Review</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="app.js"></script>
+<script>
+/* NAV AUTH FALLBACK */
+(function() {
+  function initials(name) {
+    return String(name || 'User').trim().split(/\s+/).slice(0, 2).map(function(part) {
+      return part.charAt(0).toUpperCase();
+    }).join('') || 'U';
+  }
+
+  function ensureCartEntry(menu) {
+    if (!menu || menu.querySelector('.js-auth-cart')) return;
+    var accountItem = menu.querySelector('.js-auth-account');
+    var li = document.createElement('li');
+    li.innerHTML = '<button type="button" class="dropdown-item auth-cart-link js-auth-cart">Cart <span class="badge text-bg-success rounded-pill js-cart-count d-none">0</span></button>';
+    if (accountItem && accountItem.closest('li')) {
+      accountItem.closest('li').insertAdjacentElement('afterend', li);
+    } else {
+      menu.appendChild(li);
+    }
+  }
+
+  function normalizeMenuOrder(menu) {
+    if (!menu) return;
+    var emailItem = menu.querySelector('.js-auth-email');
+    var accountItem = menu.querySelector('.js-auth-account');
+    var cartItem = menu.querySelector('.js-auth-cart');
+    var appointmentsItem = menu.querySelector('.js-auth-appointments');
+    var ordersItem = menu.querySelector('.js-auth-orders');
+    var signoutItem = menu.querySelector('.js-auth-signout');
+    [emailItem, accountItem, cartItem, appointmentsItem, ordersItem, signoutItem].forEach(function(item) {
+      var li = item ? item.closest('li') : null;
+      if (li) menu.appendChild(li);
+    });
+  }
+
+  function applyNavUser(user) {
+    document.querySelectorAll('.auth-controls').forEach(function(control) {
+      var loginBtn = control.querySelector('.js-auth-login');
+      var menuWrap = control.querySelector('.js-auth-menu');
+      var menu = menuWrap ? menuWrap.querySelector('.dropdown-menu') : null;
+      var avatar = control.querySelector('.auth-avatar');
+      var label = control.querySelector('.auth-label');
+      var emailEl = control.querySelector('.js-auth-email');
+      if (!loginBtn || !menuWrap || !menu) return;
+
+      ensureCartEntry(menu);
+      normalizeMenuOrder(menu);
+
+      if (user && user.email) {
+        loginBtn.classList.add('d-none');
+        menuWrap.classList.remove('d-none');
+        if (avatar) avatar.textContent = initials(user.name);
+        if (label) label.textContent = user.name || 'Profile';
+        if (emailEl) emailEl.textContent = user.email || '';
+      } else {
+        loginBtn.classList.remove('d-none');
+        menuWrap.classList.add('d-none');
+        if (avatar) avatar.textContent = 'U';
+        if (label) label.textContent = 'Profile';
+        if (emailEl) emailEl.textContent = '';
+      }
+
+      control.classList.remove('auth-pending');
+      control.classList.add('auth-ready');
+    });
+  }
+
+  function bindSignOut() {
+    document.querySelectorAll('.js-auth-signout').forEach(function(button) {
+      button.addEventListener('click', function() {
+        fetch('api/logout.php', { method: 'POST', credentials: 'same-origin' })
+          .finally(function() { window.location.href = 'index.html'; });
+      });
+    });
+    document.querySelectorAll('.js-auth-cart').forEach(function(button) {
+      button.addEventListener('click', function() {
+        window.location.href = 'cart.html';
+      });
+    });
+    document.querySelectorAll('.js-auth-appointments').forEach(function(button) {
+      button.addEventListener('click', function() {
+        window.location.href = 'appointments.html';
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('api/session_check.php', { credentials: 'same-origin' })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        applyNavUser(data && data.authenticated ? data.user : null);
+        bindSignOut();
+      })
+      .catch(function() {
+        applyNavUser(null);
+        bindSignOut();
+      });
+  });
+})();
+
+/* -- NAV SCROLL -- */
+const mainNav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => mainNav.classList.toggle('scrolled', window.scrollY > 60));
+
+/* -- FILTER TABS -- */
+let activeFilter = 'all';
+let ordersHasAny = false;
+document.querySelectorAll('.orders-tab').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.orders-tab').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    activeFilter = this.dataset.filter;
+    filterOrderCards();
+  });
+});
+function getEmptyOrdersCopy(filter) {
+  const key = String(filter || 'all').toLowerCase();
+  if (key === 'pending') {
+    return {
+      title: 'No Pending Orders',
+      body: 'You do not have any orders waiting for confirmation right now.'
+    };
+  }
+  if (key === 'confirmed') {
+    return {
+      title: 'No Confirmed Orders',
+      body: 'You do not have any confirmed orders yet.'
+    };
+  }
+  if (key === 'shipped') {
+    return {
+      title: 'No In Transit Orders',
+      body: 'You do not have any orders currently on the way.'
+    };
+  }
+  if (key === 'delivered') {
+    return {
+      title: 'No Delivered Orders',
+      body: 'You do not have any delivered orders yet.'
+    };
+  }
+  if (key === 'cancelled') {
+    return {
+      title: 'No Cancelled Orders',
+      body: 'You do not have any cancelled orders.'
+    };
+  }
+  return {
+    title: 'No Orders Found',
+    body: "You haven't placed any orders yet. Start exploring our premium plant collection!"
+  };
+}
+function updateEmptyOrdersState() {
+  const empty = document.getElementById('noOrders');
+  if (!empty) return;
+  const titleEl = empty.querySelector('h3');
+  const bodyEl = empty.querySelector('p');
+  const ctaEl = empty.querySelector('a');
+  const copy = getEmptyOrdersCopy(activeFilter);
+  if (titleEl) titleEl.textContent = copy.title;
+  if (bodyEl) bodyEl.textContent = copy.body;
+  if (ctaEl) ctaEl.style.display = ordersHasAny ? 'none' : '';
+}
+function filterOrderCards() {
+  const cards = document.querySelectorAll('.order-card-lux');
+  let visible = 0;
+  cards.forEach(c => {
+    const st = c.dataset.status || 'pending';
+    const show = activeFilter === 'all' || st === activeFilter;
+    c.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  updateEmptyOrdersState();
+  document.getElementById('noOrders').style.display = visible ? 'none' : 'block';
+}
+
+/* -- UTILS -- */
+function resolveWebsiteAsset(path){
+  const value = String(path || '').trim().replace(/\\/g, '/');
+  if (!value) return '';
+  if (/^(https?:)?\/\//i.test(value) || value.charAt(0) === '/') return value;
+  if (value.indexOf('../') === 0) return value;
+  if (value.indexOf('uploads/') === 0 || value.indexOf('images/') === 0) return '../' + value;
+  if (value.indexOf('proof_delivery/') === 0) return '../uploads/' + value;
+  if (value.indexOf('feedback/') === 0 || value.indexOf('reviews/') === 0 || value.indexOf('products/') === 0) return '../uploads/' + value;
+  return value;
+}
+function escapeHtml(s){
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function formatPeso(n){
+  const num = Number(n);
+  if (!Number.isFinite(num)) return 'PHP 0.00';
+  return 'PHP ' + num.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function formatDateTime(value){
+  if (!value) return 'N/A';
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return String(value);
+  try {
+    return new Intl.DateTimeFormat(undefined, {
+      year:'numeric', month:'short', day:'2-digit',
+      hour:'numeric', minute:'2-digit',
+      timeZone:'Asia/Manila'
+    }).format(d);
+  } catch (e) {
+    return d.toLocaleString(undefined, { timeZone:'Asia/Manila' });
+  }
+}
+function domIdFrom(raw){
+  return String(raw || '').replace(/[^a-zA-Z0-9_-]/g,'_');
+}
+function formatCustomerName(c){
+  const first = (c && c.firstName) ? String(c.firstName).trim() : '';
+  const last = (c && c.lastName) ? String(c.lastName).trim() : '';
+  const full = (first + ' ' + last).trim();
+  return full || 'N/A';
+}
+function formatAddress(c){
+  if (!c) return 'N/A';
+  const parts = [
+    c.street_address || c.address, c.apartment, c.barangay, c.municipality, c.province, c.region, c.postalCode, c.country
+  ].map(x => String(x || '').trim()).filter(Boolean);
+  if (parts.length) return parts.join(', ');
+  return String(c.fullAddress || c.address || 'N/A').trim() || 'N/A';
+}
+function getDestinationDistanceKm(customer){
+  const municipality = String((customer && customer.municipality) || '').toLowerCase();
+  const province = String((customer && customer.province) || '').toLowerCase();
+  const address = formatAddress(customer).toLowerCase();
+  const distanceByArea = {
+    daet: 3,
+    talisay: 7,
+    vinzons: 10,
+    mercedes: 11,
+    basud: 14,
+    'san vicente': 9,
+    sanvicente: 9,
+    'san lorenzo ruiz': 19,
+    sanlorenzoruiz: 19,
+    labo: 25,
+    paracale: 38,
+    'jose panganiban': 50,
+    josepanganiban: 50,
+    capalonga: 72,
+    'santa elena': 84,
+    santaelena: 84,
+    'sta elena': 84,
+    staelena: 84,
+    sipocot: 75,
+    naga: 105,
+    legazpi: 205
+  };
+  const compact = municipality.replace(/\s+/g, '');
+  if (distanceByArea[municipality] || distanceByArea[compact]) return distanceByArea[municipality] || distanceByArea[compact];
+  if (address.includes('daet')) return 3;
+  if (address.includes('talisay')) return 7;
+  if (address.includes('vinzons')) return 10;
+  if (address.includes('labo')) return 25;
+  if (province.includes('camarines norte') || address.includes('camarines norte')) return 18;
+  if (province.includes('camarines sur') || address.includes('camarines sur')) return 95;
+  if (address.includes('quezon')) return 165;
+  if (address.includes('metro manila') || address.includes('manila') || address.includes('quezon city') || address.includes('caloocan')) return 350;
+  return 18;
+}
+function getTrafficProfile(date){
+  const d = date instanceof Date && !Number.isNaN(date.getTime()) ? date : new Date();
+  let hour = d.getHours();
+  let day = d.getDay();
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone:'Asia/Manila',
+      hour:'2-digit',
+      hour12:false,
+      weekday:'short'
+    }).formatToParts(d);
+    const hourPart = parts.find(part => part.type === 'hour');
+    const dayPart = parts.find(part => part.type === 'weekday');
+    if (hourPart) hour = Number(hourPart.value) || hour;
+    if (dayPart) day = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(dayPart.value);
+    if (day < 0) day = d.getDay();
+  } catch (e) {}
+  if ((hour >= 7 && hour <= 9) || (hour >= 17 && hour <= 20)) {
+    return { label:'Heavy traffic window', multiplier:1.35, note:'Rush-hour flow can slow the L300 on town centers and main roads.' };
+  }
+  if (day === 0 || day === 6 || (hour >= 11 && hour <= 14)) {
+    return { label:'Moderate traffic', multiplier:1.18, note:'Market trips, weekend errands, and lunch-hour movement may add delay.' };
+  }
+  return { label:'Light traffic', multiplier:1.05, note:'Normal local traffic allowance is included.' };
+}
+function estimateDeliveryTracking(order, distanceKmOverride){
+  const customer = order.customer || {};
+  const overrideKm = Number(distanceKmOverride);
+  const distanceKm = Number.isFinite(overrideKm) && overrideKm > 0 ? overrideKm : getDestinationDistanceKm(customer);
+  const baseL300SpeedKmh = 42;
+  const startRaw = order.shipped_at || order.status_updated_at || order.date;
+  const startDate = startRaw ? new Date(startRaw) : new Date();
+  const validStart = Number.isNaN(startDate.getTime()) ? new Date() : startDate;
+  const traffic = getTrafficProfile(validStart);
+  const routeComplexity = distanceKm > 50 ? 1.16 : distanceKm > 28 ? 1.1 : 1.04;
+  const plantCargoBufferMin = Math.max(12, Math.min(28, Math.round((order.items || []).length * 6 + 10)));
+  const obstacleBufferMin = distanceKm > 45 ? 22 : distanceKm > 25 ? 16 : 10;
+  const adjustedSpeed = Math.max(22, Math.round(baseL300SpeedKmh / (traffic.multiplier * (routeComplexity - .02))));
+  const drivingMinutes = Math.round((distanceKm / adjustedSpeed) * 60);
+  const totalMinutes = Math.max(35, drivingMinutes + plantCargoBufferMin + obstacleBufferMin);
+  const elapsedMinutes = Math.max(0, Math.round((Date.now() - validStart.getTime()) / 60000));
+  const remainingMinutes = Math.max(8, totalMinutes - elapsedMinutes);
+  const progress = Math.min(.92, Math.max(.08, elapsedMinutes / totalMinutes));
+  const etaStart = new Date(Date.now() + Math.max(0, remainingMinutes - 10) * 60000);
+  const etaEnd = new Date(Date.now() + (remainingMinutes + 12) * 60000);
+  const timeFmt = new Intl.DateTimeFormat(undefined, { hour:'numeric', minute:'2-digit', timeZone:'Asia/Manila' });
+  return {
+    distanceKm,
+    adjustedSpeed,
+    baseL300SpeedKmh,
+    totalMinutes,
+    remainingMinutes,
+    progress,
+    etaWindow: timeFmt.format(etaStart) + ' - ' + timeFmt.format(etaEnd),
+    traffic,
+    plantCargoBufferMin,
+    obstacleBufferMin
+  };
+}
+function buildDeliveryEta(order, etaId){
+  const st = String(order.status || '').toLowerCase();
+  const isPickup = String(order.deliveryType || '').toLowerCase() === 'pickup';
+  if (st !== 'shipped' || isPickup) return '';
+  const tracking = estimateDeliveryTracking(order);
+  return `<div class="detail-item-important" id="${escapeHtml(etaId)}" data-order-eta="true">
+    <span class="detail-label">Delivery ETA</span>
+    <span class="detail-value">${escapeHtml(tracking.etaWindow)}
+      <span class="detail-value-sub">${escapeHtml(buildDeliveryEtaMeta(tracking))}</span>
+    </span>
+  </div>`;
+}
+function buildDeliveryEtaMeta(tracking){
+  return `${Math.round(tracking.distanceKm)} km route - about ${tracking.remainingMinutes} min remaining - ${tracking.traffic.label}`;
+}
+function updateDeliveryEtaDom(order, tracking){
+  const etaId = 'eta-' + domIdFrom(order.orderId || 'pending');
+  const el = document.getElementById(etaId);
+  if (!el || !tracking) return;
+  el.innerHTML = `
+    <span class="detail-label">Delivery ETA</span>
+    <span class="detail-value">${escapeHtml(tracking.etaWindow)}
+      <span class="detail-value-sub">${escapeHtml(buildDeliveryEtaMeta(tracking))}</span>
+    </span>
+  `;
+}
+function buildDeliveryTracker(order){
+  const st = String(order.status || '').toLowerCase();
+  const isPickup = String(order.deliveryType || '').toLowerCase() === 'pickup';
+  if (st !== 'shipped' || isPickup) return '';
+  const customer = order.customer || {};
+  const mapId = 'order-map-' + domIdFrom(order.orderId || 'pending');
+  const emptyId = mapId + '-empty';
+  return `
+    <section class="order-map-card js-order-map-card" data-map-id="${escapeHtml(mapId)}" aria-label="Delivery tracking map">
+      <div class="order-map-banner">
+        <div class="order-leaflet-map" id="${escapeHtml(mapId)}" aria-label="Customer delivery route map"></div>
+        <div class="order-map-overlay"></div>
+        <div class="order-map-badge">
+          <span class="dot"></span>
+          L300 en route to ${escapeHtml(formatAddress(customer))}
+        </div>
+        <div class="order-map-empty show" id="${escapeHtml(emptyId)}">
+          <div>
+            <strong>Map loading</strong>
+            <span>Preparing the delivery route and moving L300 truck.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+const orderMapOrdersByDetailId = {};
+const orderMapController = (function() {
+  const maps = {};
+  const TRUCK_SPEED_MULTIPLIER = 0.5;
+  const BASE_TRUCK_PREVIEW_MS = 90000;
+  const SHOP = {
+    lat: 14.1153,
+    lng: 122.9553,
+    name: 'Bulakena Garden',
+    address: 'Vinzons Ave, Daet, Camarines Norte'
+  };
+
+  function makeShopIcon() {
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+        <defs><filter id="shopShadow"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#2d9e68" flood-opacity="0.45"/></filter></defs>
+        <g filter="url(#shopShadow)">
+          <circle cx="30" cy="30" r="27" fill="#ffffff" stroke="#2d9e68" stroke-width="1.5" opacity="0.98"/>
+          <rect x="8" y="22" width="24" height="17" rx="2" fill="#2d9e68"/>
+          <path d="M32 26 L32 39 L52 39 L52 32 L46 26 Z" fill="#66b88f"/>
+          <rect x="34" y="27.5" width="7" height="7" rx="1.5" fill="#eaf6ef" opacity="0.95"/>
+          <rect x="43" y="29" width="4" height="5.5" rx="1" fill="#eaf6ef" opacity="0.95"/>
+          <circle cx="17" cy="41" r="4.5" fill="#0f3d28" stroke="#cde8d9" stroke-width="1.2"/>
+          <circle cx="41" cy="41" r="4.5" fill="#0f3d28" stroke="#cde8d9" stroke-width="1.2"/>
+          <text x="20" y="33.5" text-anchor="middle" font-size="7" font-weight="700" font-family="DM Sans, sans-serif" fill="white" opacity="0.9">SHOP</text>
+        </g>
+      </svg>`;
+    return L.divIcon({ html: svg, className: '', iconSize: [60, 60], iconAnchor: [30, 48], popupAnchor: [0, -52] });
+  }
+
+  function makeCustomerIcon() {
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="42" height="54" viewBox="0 0 42 54">
+        <defs><filter id="pinShadow"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.28"/></filter></defs>
+        <g filter="url(#pinShadow)">
+          <path d="M21 2C12.2 2 5 9.2 5 18c0 12.5 16 34 16 34s16-21.5 16-34C37 9.2 29.8 2 21 2z" fill="#17A382"/>
+          <circle cx="21" cy="18" r="8.5" fill="rgba(255,255,255,.16)"/>
+        </g>
+        <circle cx="21" cy="18" r="5.5" fill="#ffffff" opacity=".95"/>
+      </svg>`;
+    return L.divIcon({ html: svg, className: '', iconSize: [42, 54], iconAnchor: [21, 54], popupAnchor: [0, -50] });
+  }
+
+  function makeTruckIcon() {
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="70" height="44" viewBox="0 0 70 44" aria-hidden="true">
+        <defs>
+          <linearGradient id="orderTruckBody" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#b7e4d0"/>
+            <stop offset="100%" stop-color="#2d9e68"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="35" cy="41" rx="28" ry="3" fill="rgba(13,74,47,.22)"/>
+        <circle cx="1" cy="28" r="3.5" fill="rgba(45,158,104,.18)"/>
+        <circle cx="-3" cy="25" r="2.5" fill="rgba(45,158,104,.1)"/>
+        <rect x="2" y="8" width="42" height="26" rx="3" fill="url(#orderTruckBody)"/>
+        <rect x="44" y="12" width="18" height="22" rx="3" fill="#66b88f"/>
+        <rect x="46" y="13.5" width="13" height="11" rx="2" fill="#0d4a2f" opacity=".82"/>
+        <rect x="60" y="18" width="6" height="8" rx="1.5" fill="#1a7a8a"/>
+        <rect x="62" y="19" width="3.5" height="2.5" rx="1" fill="#fff6bf"/>
+        <rect x="2" y="8" width="42" height="3" rx="2" fill="rgba(255,255,255,.18)"/>
+        <text x="23" y="24" text-anchor="middle" font-size="7" font-weight="800" font-family="DM Sans, Arial, sans-serif" fill="#07351f" letter-spacing="1">L300</text>
+        <text x="23" y="31" text-anchor="middle" font-size="5" font-weight="700" font-family="DM Sans, Arial, sans-serif" fill="rgba(7,53,31,.68)" letter-spacing=".5">EN ROUTE</text>
+        <rect x="2" y="14" width="2" height="4" rx="1" fill="#e05252" opacity=".9"/>
+        <circle cx="14" cy="36" r="6" fill="#173328" stroke="#cde8d9" stroke-width="1.4"/>
+        <circle cx="14" cy="36" r="2.5" fill="#49675b"/>
+        <circle cx="36" cy="36" r="6" fill="#173328" stroke="#cde8d9" stroke-width="1.4"/>
+        <circle cx="36" cy="36" r="2.5" fill="#49675b"/>
+        <circle cx="52" cy="36" r="5.5" fill="#173328" stroke="#cde8d9" stroke-width="1.4"/>
+        <circle cx="52" cy="36" r="2.3" fill="#49675b"/>
+      </svg>`;
+    return L.divIcon({ html: '<div class="order-truck-marker">' + svg + '</div>', className: '', iconSize: [70, 44], iconAnchor: [35, 44], popupAnchor: [0, -48] });
+  }
+
+  function getMapId(order) {
+    return 'order-map-' + domIdFrom(order.orderId || 'pending');
+  }
+
+  function setEmpty(mapId, show, title, message) {
+    const el = document.getElementById(mapId + '-empty');
+    if (!el) return;
+    el.classList.toggle('show', !!show);
+    if (show) {
+      el.innerHTML = '<div><strong>' + escapeHtml(title || 'Map loading') + '</strong><span>' + escapeHtml(message || '') + '</span></div>';
+    }
+  }
+
+  function buildAddressCandidates(customer) {
+    if (!customer) return [];
+    const detailAddress = formatAddress(customer);
+    const street = String(customer.street_address || customer.streetAddress || customer.address || customer.fullAddress || '').trim();
+    const barangay = String(customer.barangay || '').trim();
+    const municipality = String(customer.municipality || customer.city || '').trim();
+    const province = String(customer.province || '').trim();
+    const region = String(customer.region || '').trim();
+    const postalCode = String(customer.postalCode || customer.postal_code || '').trim();
+    const country = String(customer.country || 'Philippines').trim();
+    const candidates = [];
+    const seen = {};
+    function add(parts) {
+      const value = parts.filter(Boolean).join(', ').replace(/\s+/g, ' ').trim();
+      if (!value || value === 'N/A' || seen[value.toLowerCase()]) return;
+      seen[value.toLowerCase()] = true;
+      candidates.push(value);
+    }
+    add([detailAddress, country && !detailAddress.toLowerCase().includes(country.toLowerCase()) ? country : '']);
+    add([street, barangay, municipality, province, region, postalCode, country]);
+    add([street, barangay, municipality, province, region, country]);
+    add([street, municipality, province, region, country]);
+    add([barangay, municipality, province, region, country]);
+    add([municipality, province, region, country]);
+    add([municipality, province, country]);
+    add([province, region, country]);
+    return candidates;
+  }
+
+  function geocodeAddress(address) {
+    const url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=ph&q=' + encodeURIComponent(address);
+    return fetch(url, { credentials: 'omit' })
+      .then(response => {
+        if (!response.ok) throw new Error('Could not look up the customer location.');
+        return response.json();
+      })
+      .then(data => {
+        if (!data || !data.length) throw new Error('No map result was found for the saved address.');
+        return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), displayName: data[0].display_name || address };
+      });
+  }
+
+  function geocodeWithFallback(candidates, index) {
+    const candidate = candidates[index];
+    if (!candidate) return Promise.reject(new Error('No address candidates available.'));
+    return geocodeAddress(candidate).catch(error => {
+      if (index + 1 >= candidates.length) throw error;
+      return geocodeWithFallback(candidates, index + 1);
+    });
+  }
+
+  function getRoute(from, to) {
+    const url = 'https://router.project-osrm.org/route/v1/driving/' +
+      from.lng + ',' + from.lat + ';' + to.lng + ',' + to.lat +
+      '?overview=full&geometries=geojson';
+    return fetch(url, { credentials: 'omit' })
+      .then(response => {
+        if (!response.ok) throw new Error('Could not calculate the delivery route.');
+        return response.json();
+      })
+      .then(data => {
+        if (!data || data.code !== 'Ok' || !data.routes || !data.routes.length) throw new Error('No road route was found for this address.');
+        return data.routes[0].geometry.coordinates.map(point => [point[1], point[0]]);
+      });
+  }
+
+  function distanceMeters(a, b) {
+    const radius = 6371000;
+    const lat1 = a[0] * Math.PI / 180;
+    const lat2 = b[0] * Math.PI / 180;
+    const dLat = (b[0] - a[0]) * Math.PI / 180;
+    const dLng = (b[1] - a[1]) * Math.PI / 180;
+    const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+    return 2 * radius * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+  }
+
+  function buildArcTable(coordinates) {
+    const distances = [0];
+    for (let i = 1; i < coordinates.length; i++) {
+      distances.push(distances[i - 1] + distanceMeters(coordinates[i - 1], coordinates[i]));
+    }
+    return distances;
+  }
+
+  function getRoutePointAtDistance(coordinates, arcTable, distance) {
+    if (!coordinates || !coordinates.length) return null;
+    if (coordinates.length === 1) return coordinates[0];
+    const total = arcTable[arcTable.length - 1] || 0;
+    const bounded = Math.min(total, Math.max(0, distance));
+    for (let i = 1; i < arcTable.length; i++) {
+      if (arcTable[i] >= bounded) {
+        const segment = arcTable[i] - arcTable[i - 1];
+        const local = segment > 0 ? (bounded - arcTable[i - 1]) / segment : 0;
+        const a = coordinates[i - 1];
+        const b = coordinates[i];
+        return [
+          a[0] + (b[0] - a[0]) * local,
+          a[1] + (b[1] - a[1]) * local
+        ];
+      }
+    }
+    return coordinates[coordinates.length - 1];
+  }
+
+  function getRoutePointAtProgress(coordinates, arcTable, progress) {
+    const total = arcTable[arcTable.length - 1] || 0;
+    return getRoutePointAtDistance(coordinates, arcTable, total * Math.min(1, Math.max(0, progress)));
+  }
+
+  function getBearing(a, b) {
+    const toDeg = 180 / Math.PI;
+    const toRad = Math.PI / 180;
+    const dLng = (b[1] - a[1]) * toRad;
+    const lat1 = a[0] * toRad;
+    const lat2 = b[0] * toRad;
+    const y = Math.sin(dLng) * Math.cos(lat2);
+    const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
+    return (Math.atan2(y, x) * toDeg + 360) % 360;
+  }
+
+  function angleDifference(from, to) {
+    let diff = ((to - from) % 360 + 360) % 360;
+    if (diff > 180) diff -= 360;
+    return diff;
+  }
+
+  function bearingAtDistance(coordinates, arcTable, distance) {
+    const total = arcTable[arcTable.length - 1] || 0;
+    const current = getRoutePointAtDistance(coordinates, arcTable, distance);
+    const ahead = getRoutePointAtDistance(coordinates, arcTable, Math.min(total, distance + 80));
+    if (!current || !ahead) return 90;
+    return getBearing(current, ahead);
+  }
+
+  function rotateTruck(state, bearing) {
+    if (!state.truckMarker) return;
+    if (!state.truckInner) {
+      const el = state.truckMarker.getElement();
+      if (el) state.truckInner = el.querySelector('.order-truck-marker');
+    }
+    if (state.truckInner) {
+      state.truckInner.style.transform = 'rotate(' + (bearing - 90) + 'deg)';
+    }
+  }
+
+  function animateTruck(state, coordinates, startProgress) {
+    if (!state.truckMarker || !coordinates || coordinates.length < 2) return;
+    if (state.animationFrame) cancelAnimationFrame(state.animationFrame);
+    const arcTable = buildArcTable(coordinates);
+    const totalDistance = arcTable[arcTable.length - 1] || 0;
+    if (!totalDistance) return;
+    const boundedStart = Math.min(.95, Math.max(0, Number(startProgress) || 0));
+    const startDistance = totalDistance * boundedStart;
+    const duration = BASE_TRUCK_PREVIEW_MS / TRUCK_SPEED_MULTIPLIER;
+    const start = performance.now();
+    let lastBearing = bearingAtDistance(coordinates, arcTable, startDistance);
+    rotateTruck(state, lastBearing);
+    function tick(now) {
+      const elapsedRatio = Math.min(1, (now - start) / duration);
+      const routeProgress = boundedStart + ((1 - boundedStart) * elapsedRatio);
+      const distance = totalDistance * routeProgress;
+      const point = getRoutePointAtDistance(coordinates, arcTable, distance);
+      if (point) state.truckMarker.setLatLng(point);
+      const rawBearing = bearingAtDistance(coordinates, arcTable, distance);
+      lastBearing = (lastBearing + angleDifference(lastBearing, rawBearing) * 0.12 + 360) % 360;
+      rotateTruck(state, lastBearing);
+      if (elapsedRatio < 1) {
+        state.animationFrame = requestAnimationFrame(tick);
+      }
+    }
+    state.animationFrame = requestAnimationFrame(tick);
+  }
+
+  function render(order) {
+    if (!order || typeof L === 'undefined') return;
+    const mapId = getMapId(order);
+    const mapEl = document.getElementById(mapId);
+    if (!mapEl) return;
+    if (maps[mapId] && maps[mapId].ready) {
+      if (maps[mapId].map && maps[mapId].map._container === mapEl) {
+        maps[mapId].map.invalidateSize(true);
+        return;
+      }
+      if (maps[mapId].animationFrame) cancelAnimationFrame(maps[mapId].animationFrame);
+      if (maps[mapId].map) maps[mapId].map.remove();
+      delete maps[mapId];
+    }
+    setEmpty(mapId, true, 'Map loading', 'Preparing the delivery route and moving L300 truck.');
+    const map = L.map(mapId, { zoomControl: false, scrollWheelZoom: false, preferCanvas: true }).setView([SHOP.lat, SHOP.lng], 14);
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      maxZoom: 19
+    }).addTo(map);
+    const state = { map, ready: true, truckMarker: null, truckInner: null, animationFrame: null };
+    maps[mapId] = state;
+    L.marker([SHOP.lat, SHOP.lng], { icon: makeShopIcon(), zIndexOffset: 1000 }).addTo(map).bindPopup(
+      '<div class="map-popup"><div class="map-popup-title">Bulakena Garden</div><div class="map-popup-sub">' + escapeHtml(SHOP.address) + '</div></div>'
+    );
+    const candidates = buildAddressCandidates(order.customer || {});
+    if (!candidates.length) {
+      setEmpty(mapId, true, 'No customer location yet', 'The order does not have a complete delivery address.');
+      return;
+    }
+    window.setTimeout(() => map.invalidateSize(true), 120);
+    geocodeWithFallback(candidates, 0)
+      .then(customer => getRoute(SHOP, customer).then(route => ({ customer, route, fallbackRoute: false })).catch(() => ({
+        customer,
+        route: [[SHOP.lat, SHOP.lng], [customer.lat, customer.lng]],
+        fallbackRoute: true
+      })))
+      .then(result => {
+        setEmpty(mapId, false);
+        L.marker([result.customer.lat, result.customer.lng], { icon: makeCustomerIcon() }).addTo(map).bindPopup(
+          '<div class="map-popup"><div class="map-popup-title">Customer Location</div><div class="map-popup-sub">' + escapeHtml(formatAddress(order.customer || {})) + '</div></div>'
+        );
+        const mainRouteOptions = { color:'#2d9e68', weight:4, opacity:.92 };
+        if (result.fallbackRoute) mainRouteOptions.dashArray = '10 10';
+        L.polyline(result.route, { color:'#2d9e68', weight:10, opacity:.16 }).addTo(map);
+        L.polyline(result.route, mainRouteOptions).addTo(map);
+        L.polyline(result.route, { color:'#b7e4d0', weight:2, opacity:.6, dashArray:'7 10' }).addTo(map);
+        const arcTable = buildArcTable(result.route);
+        const routeDistanceKm = (arcTable[arcTable.length - 1] || 0) / 1000;
+        order.__routeDistanceKm = routeDistanceKm;
+        const tracking = estimateDeliveryTracking(order, routeDistanceKm);
+        updateDeliveryEtaDom(order, tracking);
+        const startPoint = getRoutePointAtProgress(result.route, arcTable, tracking.progress) || result.route[0];
+        state.truckMarker = L.marker(startPoint, { icon: makeTruckIcon(), zIndexOffset: 1200 }).addTo(map);
+        map.fitBounds(L.latLngBounds(result.route), { padding: [40, 40] });
+        animateTruck(state, result.route, tracking.progress);
+      })
+      .catch(error => {
+        console.error('Order map error:', error);
+        setEmpty(mapId, true, 'Location not found', 'We could not locate the customer address. Please check the saved delivery details.');
+        map.setView([SHOP.lat, SHOP.lng], 14);
+      });
+  }
+
+  return { render };
+})();
+let sessionUserCache = null;
+let renderedOrderList = [];
+let deliveryEtaTimer = null;
+function getSessionEmail(){ return sessionUserCache && sessionUserCache.email ? String(sessionUserCache.email) : ''; }
+function getSessionUser(){ return sessionUserCache; }
+function loadSessionUser(){
+  if (window.BulakenaAuth && typeof window.BulakenaAuth.refreshSession === 'function') {
+    return window.BulakenaAuth.refreshSession({ silent: true }).then(function(){
+      sessionUserCache = window.BulakenaAuth.getCurrentUser ? window.BulakenaAuth.getCurrentUser() : null;
+      return sessionUserCache;
+    }).catch(function(){ return null; });
+  }
+  return fetch('api/session_check.php', { credentials: 'same-origin' })
+    .then(r => r.json())
+    .then(data => {
+      sessionUserCache = data && data.authenticated ? data.user : null;
+      return sessionUserCache;
+    })
+    .catch(() => null);
+}
+function refreshDeliveryEtas(){
+  (renderedOrderList || []).forEach(order => {
+    const st = String(order && order.status || '').toLowerCase();
+    const isPickup = String(order && order.deliveryType || '').toLowerCase() === 'pickup';
+    if (st !== 'shipped' || isPickup) return;
+    updateDeliveryEtaDom(order, estimateDeliveryTracking(order, order.__routeDistanceKm));
+  });
+}
+function syncDeliveryEtaTimer(){
+  const hasInTransit = (renderedOrderList || []).some(order => {
+    const st = String(order && order.status || '').toLowerCase();
+    const isPickup = String(order && order.deliveryType || '').toLowerCase() === 'pickup';
+    return st === 'shipped' && !isPickup;
+  });
+  if (hasInTransit && !deliveryEtaTimer) {
+    deliveryEtaTimer = window.setInterval(refreshDeliveryEtas, 60000);
+  } else if (!hasInTransit && deliveryEtaTimer) {
+    window.clearInterval(deliveryEtaTimer);
+    deliveryEtaTimer = null;
+  }
+}
+
+/* -- RENDER ORDERS -- */
+  function renderOrders(list) {
+    const cont = document.getElementById('ordersContainer');
+    cont.innerHTML = '';
+    renderedOrderList = Array.isArray(list) ? list : [];
+    Object.keys(orderMapOrdersByDetailId).forEach(key => delete orderMapOrdersByDetailId[key]);
+  ordersHasAny = Array.isArray(list) && list.length > 0;
+  if (!Array.isArray(list) || list.length === 0) {
+    syncDeliveryEtaTimer();
+    updateEmptyOrdersState();
+    document.getElementById('noOrders').style.display = 'block';
+    return;
+  }
+  document.getElementById('noOrders').style.display = 'none';
+
+  list.forEach((o, idx) => {
+    const st = (o.status || 'pending').toLowerCase();
+    const statusMap = { confirmed:'confirmed', delivered:'delivered', shipped:'shipped', pickedup:'pickedup', cancelled:'cancelled', pending:'pending' };
+    const stClass = statusMap[st] || 'pending';
+    const label = st === 'pickedup' ? 'Picked Up' : (st === 'shipped' ? 'In Transit' : (st.charAt(0).toUpperCase() + st.slice(1)));
+    const hasReview = Number(o.review_count || 0) > 0 || !!o.has_review;
+
+    const card = document.createElement('div');
+    card.className = 'order-card-lux';
+    card.dataset.status = stClass;
+    card.style.animationDelay = `${idx * 0.07}s`;
+
+    const itemsHtml = (o.items || []).map(it => {
+      const reviewBtn = st === 'delivered'
+        ? (hasReview
+          ? `<button class="btn-write-review-lux" type="button" disabled title="This order has already been reviewed">Reviewed</button>`
+          : `<button class="btn-write-review-lux write-review-btn" data-prod-id="${encodeURIComponent(it.id||'')}" data-prod-title="${encodeURIComponent(it.title||'')}" data-prod-img="${encodeURIComponent(resolveWebsiteAsset(it.img)||'')}" data-order-id="${encodeURIComponent(o.orderId||'')}">Review</button>`)
+        : '';
+      return `<div class="order-product-row">
+        <div class="order-prod-img"><img src="${escapeHtml(resolveWebsiteAsset(it.img)||'')}" alt="${escapeHtml(it.title||'')}"></div>
+        <div style="flex:1;min-width:0;">
+          <div class="order-prod-name">${escapeHtml(it.title||'Plant')}</div>
+          <div class="order-prod-meta">Qty: ${it.qty} - ${formatPeso(it.price)}</div>
+        </div>
+        ${reviewBtn}
+      </div>`;
+    }).join('');
+
+    const deliveryLabel = o.deliveryType === 'pickup'
+      ? '<span style="color:var(--g2);font-weight:600;">Free Pickup</span>'
+      : `${formatPeso(o.shippingFee)}`;
+
+    const orderId = o.orderId || '';
+    const detailId = 'detail-' + domIdFrom(orderId);
+    const etaId = 'eta-' + domIdFrom(orderId || 'pending');
+    orderMapOrdersByDetailId[detailId] = o;
+    const customer = o.customer || {};
+    const rawNotes = (o.notes || '').trim();
+    const notes = /^PayMongo paid\. Session:/i.test(rawNotes) ? '' : rawNotes;
+    const proofImage = o.proofDeliveryImage || o.proof_delivery_image || '';
+    const proofImageUrl = resolveWebsiteAsset(proofImage);
+    const proofDeliveryHtml = st === 'delivered' && proofImageUrl
+      ? `<div class="proof-delivery-card">
+          <span class="detail-label">Proof of Delivery</span>
+          <img class="proof-delivery-image" src="${escapeHtml(proofImageUrl)}" alt="Proof of Delivery for order ${escapeHtml(orderId || '')}">
+        </div>`
+      : '';
+    const deliveryTrackerHtml = buildDeliveryTracker(o);
+    const detailGrid = `
+      ${deliveryTrackerHtml}
+      <div class="detail-grid">
+        <div class="detail-item-important"><span class="detail-label">Order ID</span><span class="detail-value">${escapeHtml(orderId || 'N/A')}</span></div>
+        <div class="detail-item-important"><span class="detail-label">Date Ordered</span><span class="detail-value">${escapeHtml(formatDateTime(o.date))}</span></div>
+        <div class="detail-item-important"><span class="detail-label">Status</span><span class="detail-value">${escapeHtml(label)}</span></div>
+        ${buildDeliveryEta(o, etaId)}
+        <div><span class="detail-label">Shipping Fee</span><span class="detail-value">${escapeHtml((o.deliveryType||'').toLowerCase()==='pickup' ? 'PHP 0.00' : formatPeso(o.shippingFee))}</span></div>
+        <div class="detail-item-important"><span class="detail-label">Total</span><span class="detail-value detail-value-total">${escapeHtml(formatPeso(o.total))}</span></div>
+        <div class="detail-item-important"><span class="detail-label">Payment</span><span class="detail-value">${escapeHtml(o.paymentMethod || 'N/A')}</span></div>
+        <div class="detail-item-important"><span class="detail-label">Recipient</span><span class="detail-value">${escapeHtml(formatCustomerName(customer))}</span></div>
+        <div><span class="detail-label">Email</span><span class="detail-value">${escapeHtml(customer.email || 'N/A')}</span></div>
+        <div class="detail-item-important"><span class="detail-label">Phone</span><span class="detail-value">${escapeHtml(customer.phone || 'N/A')}</span></div>
+        <div class="detail-item-important" style="grid-column:1/-1;"><span class="detail-label">Address</span><span class="detail-value">${escapeHtml(formatAddress(customer))}</span></div>
+      </div>
+      ${notes ? `<div style="margin-top:1rem;padding:1rem;background:white;border-radius:var(--radius-sm);border:1px solid var(--border);"><div class="detail-label" style="display:block;margin-bottom:.4rem;">Notes</div><div style="font-size:.9rem;color:var(--text);line-height:1.7;">${escapeHtml(notes)}</div></div>` : ''}
+      ${proofDeliveryHtml}
+    `;
+
+    card.innerHTML = `
+      <div class="order-card-header">
+        <div>
+          <div class="order-id">Order ${escapeHtml(o.orderId || 'N/A')}</div>
+          <div class="order-date">${escapeHtml(formatDateTime(o.date))}</div>
+        </div>
+        <span class="order-status-pill status-${stClass}">${label}</span>
+      </div>
+      <div class="order-card-body">${itemsHtml}</div>
+      <div class="order-card-footer">
+        <div>
+          <div class="order-delivery-info">Shipping: ${deliveryLabel}</div>
+          <div class="order-actions mt-2">
+            <button type="button" class="btn-order-view js-order-detail-toggle" data-detail-id="${escapeHtml(detailId)}">View details</button>
+          </div>
+        </div>
+        <div class="order-total-wrap">
+          <span class="order-total-label">Order Total</span>
+          <span class="order-total-amount">${formatPeso(o.total)}</span>
+        </div>
+      </div>
+      <div class="order-detail" id="${escapeHtml(detailId)}">${detailGrid}</div>
+    `;
+    cont.appendChild(card);
+  });
+  syncDeliveryEtaTimer();
+  filterOrderCards();
+}
+
+/* -- FETCH ORDERS -- */
+(function() {
+  function fetchOrders(e) {
+    fetch('api/orders_list.php?email=' + encodeURIComponent(e))
+      .then(r => r.json())
+      .then(list => renderOrders(Array.isArray(list) ? list : []))
+      .catch(err => {
+        console.error(err);
+        ordersHasAny = false;
+        document.getElementById('noOrders').style.display = 'block';
+        document.getElementById('noOrders').querySelector('h3').textContent = 'Could Not Load Orders';
+        document.getElementById('noOrders').querySelector('p').textContent = 'Error loading orders. Please try again.';
+      });
+  }
+  loadSessionUser().then(function() {
+    const email = getSessionEmail();
+    if (email) {
+      fetchOrders(email);
+    } else {
+      ordersHasAny = false;
+      updateEmptyOrdersState();
+      document.getElementById('noOrders').style.display = 'block';
+    }
+  });
+})();
+
+/* -- REVIEW MODAL -- */
+(function() {
+  const reviewModalEl = document.getElementById('reviewModal');
+  const bsModal = new bootstrap.Modal(reviewModalEl);
+  const starRow = reviewModalEl.querySelector('#starRow');
+  const stars = Array.from(starRow.querySelectorAll('.star-lux'));
+  const ratingLabel = reviewModalEl.querySelector('#ratingLabel');
+  const mediaInput = reviewModalEl.querySelector('#mediaInput');
+  const mediaPreview = reviewModalEl.querySelector('#mediaPreview');
+  const submitBtn = document.getElementById('submitReviewBtn');
+  const reviewText = reviewModalEl.querySelector('#reviewText');
+  const isAnonymous = reviewModalEl.querySelector('#isAnonymous');
+  let currentProduct = {};
+  let selectedRating = 0;
+
+  function setRating(n) {
+    selectedRating = n;
+    stars.forEach(s => s.classList.toggle('selected', Number(s.dataset.value) <= n));
+    ratingLabel.textContent = n + ' of 5';
+    reviewModalEl.dataset.rating = n;
+  }
+  stars.forEach(s => {
+    s.addEventListener('click', () => setRating(Number(s.dataset.value)));
+    s.addEventListener('mouseenter', () => stars.forEach(x => x.classList.toggle('selected', Number(x.dataset.value) <= Number(s.dataset.value))));
+    s.addEventListener('mouseleave', () => setRating(selectedRating));
+  });
+
+  mediaInput.addEventListener('change', function() {
+    mediaPreview.innerHTML = '';
+    const f = this.files && this.files[0];
+    if (!f) return;
+    if (f.size > 10*1024*1024) { alert('File too large (max 10MB)'); this.value=''; return; }
+    const url = URL.createObjectURL(f);
+    if ((f.type||'').startsWith('image/')) { const img=document.createElement('img');img.src=url;img.style.cssText='max-width:90px;max-height:90px;object-fit:cover;border-radius:8px;';mediaPreview.appendChild(img); }
+    else if ((f.type||'').startsWith('video/')) { const v=document.createElement('video');v.src=url;v.controls=true;v.style.cssText='max-width:90px;max-height:90px;';mediaPreview.appendChild(v); }
+    else { mediaPreview.textContent = f.name; }
+  });
+
+  function openReview(prod) {
+    currentProduct = prod;
+    selectedRating = 0;
+    setRating(0);
+    document.getElementById('modalProdImg').src = resolveWebsiteAsset(prod.img) || '';
+    document.getElementById('modalProdTitle').textContent = prod.title || '';
+    document.getElementById('modalOrderId').textContent = prod.orderId || '';
+    reviewText.value = '';
+    mediaInput.value = '';
+    mediaPreview.innerHTML = '';
+    isAnonymous.checked = false;
+    bsModal.show();
+  }
+  window.openReviewModal = openReview;
+
+  /* Delegated click handlers */
+  document.getElementById('ordersContainer').addEventListener('click', function(e) {
+    const detailBtn = e.target.closest('.js-order-detail-toggle');
+    if (detailBtn) {
+      const id = detailBtn.getAttribute('data-detail-id');
+      const det = id ? document.getElementById(id) : null;
+      if (!det) return;
+      const isOpen = det.classList.contains('open');
+      det.classList.toggle('open', !isOpen);
+      detailBtn.textContent = isOpen ? 'View details' : 'Hide details';
+      if (!isOpen && orderMapOrdersByDetailId[id]) {
+        window.setTimeout(function() {
+          orderMapController.render(orderMapOrdersByDetailId[id]);
+        }, 80);
+      }
+      return;
+    }
+
+    const btn = e.target.closest('.write-review-btn');
+    if (!btn) return;
+    const pid = decodeURIComponent(btn.getAttribute('data-prod-id')||'');
+    const title = decodeURIComponent(btn.getAttribute('data-prod-title')||'');
+    const img = decodeURIComponent(btn.getAttribute('data-prod-img')||'');
+    const orderId = decodeURIComponent(btn.getAttribute('data-order-id')||'');
+    openReview({id:pid,title:title,img:img,orderId:orderId});
+  });
+
+  submitBtn.addEventListener('click', function() {
+    const rating = Number(reviewModalEl.dataset.rating || 0);
+    if (rating <= 0) { alert('Please select a rating (1?5 stars).'); return; }
+    const fd = new FormData();
+    fd.append('product_id', currentProduct.id||'');
+    fd.append('order_id', currentProduct.orderId||'');
+    fd.append('rating', String(rating));
+    fd.append('text', reviewText.value.trim());
+    fd.append('anonymous', isAnonymous.checked?'1':'0');
+    if (mediaInput.files && mediaInput.files[0]) fd.append('media', mediaInput.files[0]);
+    const u = getSessionUser();
+    if (u && u.name) fd.append('name', u.name);
+    if (u && u.email) fd.append('email', u.email);
+
+    fetch('api/save_review.php', {method:'POST',body:fd})
+      .then(r => r.text())
+      .then(txt => {
+        try { const res=JSON.parse(txt); if(res&&res.success){bsModal.hide();alert('Thank you - your review has been submitted!');return;} } catch(e){}
+        bsModal.hide(); alert('Review submitted!');
+      })
+      .catch(err => { console.error(err); alert('Network error submitting review.'); });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Verification Redirecting</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0d2416, #184b3f);
+      color: #f5f0e8;
+    }
+    .card {
+      width: min(92vw, 560px);
+      padding: 32px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      text-align: center;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 1.8rem;
+    }
+    p {
+      margin: 0;
+      line-height: 1.6;
+      color: rgba(245,240,232,.85);
+    }
+    a {
+      color: #7ce0b5;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Email verification moved</h1>
+    <p>This page is no longer part of the normal signup flow. Verification now opens inside the account modal.</p>
+    <p style="margin-top:16px;">Redirecting to the homepage...</p>
+    <p style="margin-top:12px;"><a href="index.html">Go to homepage now</a></p>
+  </div>
+  <script>
+    setTimeout(function () {
+      window.location.href = 'index.html';
+    }, 2500);
+  </script>
+</body>
+</html>

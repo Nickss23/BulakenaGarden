@@ -1,0 +1,545 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulakena Garden | Products</title>
+
+  <!-- Bootstrap 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts (Luxury pair) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Lora:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style-luxury.css">
+
+  <style>
+    /* Products page: luxury layout layer (no JS changes) */
+    .products-hero {
+      min-height: 440px;
+      background: linear-gradient(155deg, var(--dark, #0a1a0f) 0%, var(--g1, #0d4a2f) 55%, var(--b1, #0a3d55) 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding: 5rem 0 4rem;
+      color: #fff;
+    }
+    .products-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: .2;
+      pointer-events: none;
+    }
+    .products-orb.left  { width: 380px; height: 380px; background: var(--g3, #2d9e68); top: -100px; left: -80px; animation: orbFloat 12s ease-in-out infinite; }
+    .products-orb.right { width: 300px; height: 300px; background: var(--b3, #4ab8cc); bottom: -80px; right: -60px; animation: orbFloat 16s ease-in-out infinite reverse; }
+    @keyframes orbFloat {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33%      { transform: translate(28px,-22px) scale(1.04); }
+      66%      { transform: translate(-18px,18px) scale(.97); }
+    }
+    .products-hero .container { position: relative; z-index: 1; }
+    .products-hero p.text-uppercase { font-size: .75rem; letter-spacing: .16em; color: var(--g4, #4dc98a); margin-bottom: .8rem; }
+    .products-hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      font-weight: 300;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .products-hero > .container > p {
+      color: rgba(255,255,255,.72);
+      font-size: 1rem;
+      line-height: 1.75;
+      max-width: 500px;
+      margin-bottom: 2rem;
+    }
+    .products-hero-actions { display: flex; gap: .9rem; flex-wrap: wrap; }
+
+    .products-filter-bar {
+      background: #fff;
+      border-bottom: 1px solid var(--border, #d8e8dc);
+      padding: 1.5rem 0;
+      position: sticky;
+      top: var(--nav-h, 74px);
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(13,74,47,.06);
+    }
+    .filter-search-wrap { position: relative; }
+    .filter-search-wrap .search-icon {
+      position: absolute;
+      left: 1rem; top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted, #6b8a72);
+      font-size: .95rem;
+      pointer-events: none;
+    }
+    .filter-search-wrap input { padding-left: 2.6rem !important; }
+    .products-filter-bar .form-control,
+    .products-filter-bar .form-select {
+      border: 1.5px solid var(--border, #d8e8dc) !important;
+      border-radius: var(--radius-sm, 10px) !important;
+      font-size: .88rem !important;
+      color: var(--text, #1c2e1f) !important;
+      background: var(--section-alt, #f2f7f3) !important;
+      padding: .65rem 1rem !important;
+      transition: var(--transition, all .35s cubic-bezier(.25,.8,.25,1)) !important;
+      height: auto !important;
+    }
+    .products-filter-bar .form-control:focus,
+    .products-filter-bar .form-select:focus {
+      border-color: var(--g3, #2d9e68) !important;
+      box-shadow: 0 0 0 4px rgba(45,158,104,.1) !important;
+      background: #fff !important;
+    }
+    .filter-select-wrap {
+      position: relative;
+    }
+    .filter-select-wrap::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 1rem;
+      width: .65rem;
+      height: .65rem;
+      border-right: 2px solid rgba(28,46,31,.6);
+      border-bottom: 2px solid rgba(28,46,31,.6);
+      transform: translateY(-70%) rotate(45deg);
+      pointer-events: none;
+    }
+    .filter-select-wrap .form-select {
+      appearance: none;
+      padding-right: 2.75rem !important;
+      background-image: linear-gradient(180deg, rgba(255,255,255,.65), rgba(242,247,243,.95)) !important;
+    }
+    .filter-toggle-row { display: flex; align-items: center; gap: .6rem; justify-content: flex-end; }
+    .filter-toggle-label {
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted, #6b8a72);
+      margin: 0;
+    }
+    .form-check-input:checked { background-color: var(--g2, #1a6b45) !important; border-color: var(--g2, #1a6b45) !important; }
+
+    .products-main { background: var(--off-white, #fafaf8); }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    @media (max-width: 1100px) { .products-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 768px)  { .products-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px)  { .products-grid { grid-template-columns: 1fr 1fr; gap: .75rem; } }
+
+    /* Keep app.js column hooks, but let CSS grid control layout */
+    .products-grid > .col-6,
+    .products-grid > .col-md-3 {
+      width: auto !important;
+      max-width: none !important;
+      padding: 0 !important;
+      flex: initial !important;
+    }
+
+    .product-card.product-card-lux {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+      transition: all .4s cubic-bezier(.25,.8,.25,1);
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      border: 1px solid rgba(13,74,47,.08);
+      transform-style: preserve-3d;
+    }
+    .product-card.product-card-lux:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 50px rgba(13,74,47,.15);
+      border-color: rgba(45,158,104,.2);
+    }
+
+    .product-card.product-card-lux .pc-media {
+      height: 260px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(180deg, #f9fcfa 0%, #eef7f1 100%);
+    }
+    .product-card.product-card-lux .pc-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .6s ease;
+    }
+    .product-card.product-card-lux:hover .pc-media img { transform: scale(1.08); }
+
+    .product-card.product-card-lux .card-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      gap: 0;
+      flex: 1 1 auto;
+    }
+    .product-card.product-card-lux .pc-type {
+      font-size: .72rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted, #6b8a72);
+      margin-bottom: .4rem;
+      font-weight: 700;
+    }
+    .product-card.product-card-lux .pc-stars {
+      color: var(--gold, #c9a84c);
+      font-size: .8rem;
+      margin-bottom: .3rem;
+      line-height: 1;
+      position: relative;
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .product-card.product-card-lux .pc-stars-empty {
+      color: rgba(28,46,31,.18);
+    }
+    .product-card.product-card-lux .pc-stars-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      overflow: hidden;
+      color: var(--gold, #c9a84c);
+      white-space: nowrap;
+    }
+    .product-card.product-card-lux .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 500;
+      color: var(--dark, #0a1a0f);
+      margin-bottom: .45rem;
+      line-height: 1.3;
+    }
+    .product-card.product-card-lux .card-text {
+      font-size: .85rem;
+      color: var(--muted, #6b8a72);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .product-card.product-card-lux .card-body > .price-small {
+      display: none;
+    }
+    .product-card.product-card-lux .product-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+      width: 100%;
+      margin-top: auto;
+    }
+    .product-card.product-card-lux .price-small {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--g2, #1a6b45);
+      margin: 0;
+      text-transform: none;
+      line-height: 1;
+    }
+
+    .product-card.product-card-lux .pc-view-btn {
+      border: 0;
+      border-radius: 2rem;
+      padding: .6rem 1.2rem;
+      background: linear-gradient(135deg, var(--g1, #0d4a2f), var(--g2, #1a6b45));
+      color: #fff;
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .05em;
+      white-space: nowrap;
+      transition: all .3s ease;
+    }
+    .product-card.product-card-lux .pc-view-btn:hover { box-shadow: 0 6px 20px rgba(13,74,47,.3); transform: translateY(-2px); }
+    .product-card.product-card-lux .pc-view-btn:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(77,201,138,.18), 0 6px 20px rgba(13,74,47,.3); }
+
+    /* Skeleton placeholders (cleared once app.js renders) */
+    .pc-skeleton {
+      border-radius: var(--radius-md, 16px);
+      border: 1px solid var(--border, #d8e8dc);
+      overflow: hidden;
+      background: #fff;
+      box-shadow: var(--shadow-sm, 0 2px 12px rgba(13,74,47,.06));
+    }
+    .skeleton-img { height: 190px; background: linear-gradient(135deg, rgba(245,240,232,.95), rgba(242,247,243,.95)); }
+    .skeleton-body { padding: 1rem 1.05rem 1.15rem; }
+    .skeleton-line {
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(13,74,47,.08), rgba(13,74,47,.14), rgba(13,74,47,.08));
+      background-size: 240px 100%;
+      animation: shimmer 1.2s ease-in-out infinite;
+      margin-bottom: .65rem;
+    }
+    .skeleton-line.short { width: 70%; }
+    .skeleton-line.price { width: 45%; height: 12px; margin-top: .9rem; }
+    @keyframes shimmer { 0%{ background-position: 0 0; } 100%{ background-position: 240px 0; } }
+  </style>
+</head>
+
+<body class="product-page">
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+    <div class="container">
+
+ <!-- Logo + Brand Text -->
+<a class="navbar-brand d-flex align-items-center" href="index.html">
+  <img src="../images/logo.JPG" alt="Logo" class="logo-img rounded-circle">
+  <span class="brand-text">Bulakena<span style="color:var(--g3)">Garden</span></span>
+</a>
+
+      <!-- Toggle Button (Mobile View) -->
+      <button class="navbar-toggler nav-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation"><span class="nav-toggle-lines" aria-hidden="true"><span></span><span></span><span></span></span></button>
+
+      <!-- Navigation Links -->
+      <div class="collapse navbar-collapse justify-content-end" id="navbarMenu">
+        <ul class="navbar-nav mb-2 mb-lg-0 fw-semibold">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="products.html">Products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="services.html">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="aboutus.html">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contactus.html">Contact</a>
+          </li>
+        </ul>
+
+        <div class="auth-controls auth-pending ms-lg-3">
+          <button type="button" class="btn btn-success px-4 js-auth-login">Login</button>
+          <div class="dropdown d-none js-auth-menu">
+            <button class="btn auth-profile-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="auth-avatar">U</span>
+              <span class="auth-label">Profile</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+              <li><h6 class="dropdown-header js-auth-email"></h6></li>
+              <li><button type="button" class="dropdown-item js-auth-account">Account</button></li>
+              <li><button type="button" class="dropdown-item js-auth-orders">My Orders</button></li>
+              <li><button type="button" class="dropdown-item js-auth-appointments">My Appointments</button></li>
+              <li><button type="button" class="dropdown-item js-auth-signout">Sign out</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <section class="products-hero">
+    <div class="products-orb left" aria-hidden="true"></div>
+    <div class="products-orb right" aria-hidden="true"></div>
+    <div class="container">
+      <p class="text-uppercase small fw-bold mb-2" style="letter-spacing:.08em;color:var(--g4);">Bulakena Products</p>
+      <h1 class="services-hero-title">Find Your <em style="color:var(--g4);font-style:italic;">Ideal Garden</em><br>Collection</h1>
+      <p>Browse curated selections, filter by type and price, and open each item for details before booking or purchasing.</p>
+      <div class="products-hero-actions">
+        <a class="btnx primary" href="#products-section">Shop Collection</a>
+        <a class="btnx secondary" href="services.html#consultations">Need Consultation?</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filters (visual layer only; IDs preserved for app.js) -->
+  <div class="products-filter-bar" aria-label="Product filters">
+    <div class="container">
+      <div class="row g-3 align-items-center">
+        <div class="col-12 col-lg-4">
+          <div class="filter-search-wrap">
+            <span class="search-icon" aria-hidden="true">?</span>
+            <input id="productSearch" type="search" class="form-control" placeholder="Search products, e.g. 'Snake'">
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <div class="filter-select-wrap">
+            <select id="typeFilter" class="form-select" aria-label="Filter by product type">
+              <option value="All">All Types</option>
+              <option value="Indoor">Indoor plants</option>
+              <option value="Outdoor">Outdoor plants</option>
+              <option value="Hanging Plants">Hanging plants</option>
+              <option value="Table Plants">Table plants</option>
+              <option value="Planter">Garden planters</option>
+              <option value="Furniture">Garden furniture</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-6 col-lg-2">
+          <select id="priceFilter" class="form-select">
+            <option value="all">Prices</option>
+            <option value="low-high">Low to High</option>
+            <option value="high-low">High to Low</option>
+          </select>
+        </div>
+
+        <div class="col-6 col-lg-1">
+          <div class="filter-toggle-row">
+            <label class="filter-toggle-label" for="newestToggle">Newest</label>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" id="newestToggle" style="width:2.2em;height:1.15em;cursor:pointer;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Products Section (rendered by app.js) -->
+  <section id="products-section" class="products-main py-5">
+    <div class="container">
+      <div class="products-grid" id="productsGrid" aria-live="polite">
+        <div class="pc-skeleton" aria-hidden="true"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div><div class="skeleton-line price"></div></div></div>
+        <div class="pc-skeleton" aria-hidden="true"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div><div class="skeleton-line price"></div></div></div>
+        <div class="pc-skeleton" aria-hidden="true"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div><div class="skeleton-line price"></div></div></div>
+        <div class="pc-skeleton" aria-hidden="true"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div><div class="skeleton-line price"></div></div></div>
+      </div>
+      <div id="productsPagination" class="products-pagination d-none mt-4" aria-label="Products pagination"></div>
+    </div>
+  </section>
+  <!-- Template + data-driven renderer -->
+  <template id="productTpl">
+    <div class="col-6 col-md-3">
+      <div class="card h-100 shadow-sm product-card product-card-lux">
+        <div class="pc-media">
+          <img class="card-img-top plant-img" alt="product image">
+        </div>
+        <div class="card-body">
+          <div class="pc-type">All</div>
+          <div class="pc-stars" aria-label="5 out of 5 stars"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+          <h5 class="card-title product-name">Title</h5>
+          <p class="card-text d-none"></p>
+          <span class="price-small">FROM PHP 0.00</span>
+          <div class="product-footer">
+            <span class="price-small">PHP 0.00</span>
+            <button type="button" class="pc-view-btn">View Product</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- Product detail modal removed: product details now live on product.html -->
+
+  <!-- Footer -->
+  <footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-brand-logo">Bulakena <span>Garden</span></a>
+        <p>Where nature becomes art. Serving Bulacan and the Philippines with premium plants, landscapes, and garden design since 2009.</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/BulkenaGarden" class="social-link" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="products.html?type=Indoor">Indoor Plants</a></li>
+          <li><a href="products.html?type=Outdoor">Outdoor Plants</a></li>
+          <li><a href="products.html?type=Hanging%20Plants">Hanging Plants</a></li>
+          <li><a href="products.html?type=Table%20Plants">Table Plants</a></li>
+          <li><a href="products.html?type=Furniture">Garden Furniture</a></li>
+          <li><a href="products.html?type=Planter">Garden Planters</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html#gardening">Gardening</a></li>
+          <li><a href="services.html#landscaping">Landscaping</a></li>
+          <li><a href="services.html#consultations">Consultations</a></li>
+          <li><a href="services.html#booking">Book a Service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="aboutus.html">About Us</a></li>
+          <li><a href="contactus.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Bulakena Garden. All rights reserved. Made with &#127793; in Talisay</p>
+    </div>
+  </div>
+</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    (function(){
+      const grid = document.getElementById('productsGrid');
+      if (!grid) return;
+
+      function enhanceCard(card){
+        if (!card || card.dataset.luxCardEnhanced === '1') return;
+        card.dataset.luxCardEnhanced = '1';
+
+        const typeEl = card.querySelector('.pc-type');
+        if (typeEl) {
+          const t = (card.dataset.type || 'All');
+          typeEl.textContent = String(t).toUpperCase();
+        }
+
+        const footerPrice = card.querySelector('.product-footer .price-small');
+        if (footerPrice && typeof footerPrice.textContent === 'string') {
+          footerPrice.textContent = footerPrice.textContent.replace(/^FROM\s+/i, '');
+        }
+      }
+
+      grid.querySelectorAll('.product-card.product-card-lux').forEach(enhanceCard);
+
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((m) => {
+          m.addedNodes.forEach((node) => {
+            if (!node || node.nodeType !== 1) return;
+            const el = /** @type {HTMLElement} */ (node);
+            if (el.matches && el.matches('.product-card.product-card-lux')) {
+              enhanceCard(el);
+              return;
+            }
+            if (el.querySelectorAll) {
+              el.querySelectorAll('.product-card.product-card-lux').forEach(enhanceCard);
+            }
+          });
+        });
+      });
+      observer.observe(grid, { childList: true, subtree: true });
+    })();
+  </script>
+</body>
+</html>
